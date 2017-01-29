@@ -22,8 +22,7 @@ namespace YellowJacket.Core.Base
         [AfterScenario()]
         public static void AfterScenario()
         {
-            //if (ScenarioContext.Current.TestError != null)
-            //    new ScreenshotHelper().TakeScreenshot(Settings.LogPath);
+
         }
 
         /// <summary>
@@ -50,8 +49,7 @@ namespace YellowJacket.Core.Base
         [BeforeScenario()]
         public static void BeforeScenario()
         {
-            //if (ScenarioContext.Current.TestError != null)
-            //    new ScreenshotHelper().TakeScreenshot(Settings.LogPath);
+
         }
 
         /// <summary>

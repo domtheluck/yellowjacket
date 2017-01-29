@@ -64,7 +64,7 @@
     <Compile Include="Base\DriverContext.cs" />
     <Compile Include="Base\HookBase.cs" />
     <Compile Include="Base\InitializeHook.cs" />
-    <Compile Include="Enums\Browser.cs" />
+    <Compile Include="Enums\BrowserType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

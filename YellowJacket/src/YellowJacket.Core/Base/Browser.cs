@@ -1,4 +1,5 @@
 ﻿using OpenQA.Selenium;
+using YellowJacket.Core.Enums;
 
 namespace YellowJacket.Core.Base
 {
@@ -28,13 +29,13 @@ namespace YellowJacket.Core.Base
 
         #region Properties
 
-        ///// <summary>
-        ///// Gets or sets the type.
-        ///// </summary>
-        ///// <value>
-        ///// The type.
-        ///// </value>
-        //public BrowserType type { get; set; }
+        /// <summary>
+        /// Gets or sets the browser type.
+        /// </summary>
+        /// <value>
+        /// The browser type.
+        /// </value>
+        public BrowserType type { get; set; }
 
         #endregion
 

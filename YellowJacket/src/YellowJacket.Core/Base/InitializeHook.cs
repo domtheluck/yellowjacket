@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.IE;
+using YellowJacket.Core.Enums;
 
 namespace YellowJacket.Core.Base
 {
@@ -15,20 +16,20 @@ namespace YellowJacket.Core.Base
     {
         #region Public Members
 
-        //public readonly BrowserType Browser;
+        public readonly BrowserType Browser;
 
         #endregion
 
         #region Constructors
 
-        ///// <summary>
-        ///// Initializes a new instance of the <see cref="InitializeHook"/> class.
-        ///// </summary>
-        ///// <param name="browser">The browser.</param>
-        //protected InitializeHook(BrowserType browser)
-        //{
-        //    Browser = browser;
-        //}
+        /// <summary>
+        /// Initializes a new instance of the <see cref="InitializeHook"/> class.
+        /// </summary>
+        /// <param name="browser">The browser.</param>
+        protected InitializeHook(BrowserType browser)
+        {
+            Browser = browser;
+        }
 
         #endregion
 
@@ -86,11 +87,11 @@ namespace YellowJacket.Core.Base
             //return File.ReadAllText(filePath);
         //}
 
-        /// <summary>
-        /// Cleanups the run setting files.
-        /// </summary>
-        private void CleanupRunSettingFiles()
-        {
+        ///// <summary>
+        ///// Cleanups the run setting files.
+        ///// </summary>
+        //private void CleanupRunSettingFiles()
+        //{
             //string path = $"{AssemblyHelper.GetExecutingAssemblyDirectory()}\\runs";
 
             //DirectoryInfo di = new DirectoryInfo(path);
@@ -101,7 +102,7 @@ namespace YellowJacket.Core.Base
 
             //for (int cpt = 1; cpt < files.Length - 1; cpt++)
             //    File.Delete(files[cpt].FullName);
-        }
+        //}
 
         ///// <summary>
         ///// Opens the browser.

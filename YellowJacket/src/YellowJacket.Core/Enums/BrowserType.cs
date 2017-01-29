@@ -3,9 +3,9 @@
 namespace YellowJacket.Core.Enums
 {
     /// <summary>
-    /// Contains the browsers.
+    /// Contains the browser type.
     /// </summary>
-    public enum Browser
+    public enum BrowserType
     {
         [Description("InternetExplorer32")]
         InternetExplorer32 = 0,
