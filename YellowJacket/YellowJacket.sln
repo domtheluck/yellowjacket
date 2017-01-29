@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YellowJacket.Core", "YellowJacket.Core\YellowJacket.Core.csproj", "{4F02B61B-241A-48EF-A6D8-FDB94700202F}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{AA56D832-3C1B-44C1-9F68-02428AE74F4A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{9B17E28E-6960-4C5F-B3D1-6C5301711854}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YellowJacket.Core", "src\YellowJacket.Core\YellowJacket.Core.csproj", "{4F02B61B-241A-48EF-A6D8-FDB94700202F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -18,5 +22,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{4F02B61B-241A-48EF-A6D8-FDB94700202F} = {AA56D832-3C1B-44C1-9F68-02428AE74F4A}
 	EndGlobalSection
 EndGlobal
