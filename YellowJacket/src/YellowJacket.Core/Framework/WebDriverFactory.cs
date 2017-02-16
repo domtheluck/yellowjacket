@@ -8,6 +8,8 @@ namespace YellowJacket.Core.Framework
     {
         public static IWebDriver Get(BrowserType browser)
         {
+            return null;
+
             switch (browser)
             {
                 case BrowserType.InternetExplorer32:

@@ -20,6 +20,12 @@ namespace YellowJacket.Core
 
         #region Properties
 
+        /// <summary>
+        /// Gets the current context.
+        /// </summary>
+        /// <value>
+        /// The current context.
+        /// </value>
         public static Context CurrentContext => _context.Value;
 
         #endregion
