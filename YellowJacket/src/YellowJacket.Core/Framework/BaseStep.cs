@@ -1,9 +1,9 @@
-﻿namespace YellowJacket.Core.Base
+﻿namespace YellowJacket.Core.Framework
 {
     /// <summary>
     /// Base step class.
     /// </summary>
-    public abstract class BaseStep: Base
+    public abstract class BaseStep: Framework.Base
     {
         #region Public Methods
 

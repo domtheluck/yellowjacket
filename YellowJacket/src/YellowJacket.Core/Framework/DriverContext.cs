@@ -1,6 +1,6 @@
 ﻿using OpenQA.Selenium;
 
-namespace YellowJacket.Core.Base
+namespace YellowJacket.Core.Framework
 {
     /// <summary>
     /// The driver context.

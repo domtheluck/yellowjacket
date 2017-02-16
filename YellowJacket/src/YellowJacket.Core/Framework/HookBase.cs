@@ -1,6 +1,7 @@
 ﻿using TechTalk.SpecFlow;
+using YellowJacket.Core.Enums;
 
-namespace YellowJacket.Core.Base
+namespace YellowJacket.Core.Framework
 {
     [Binding]
     public class HookBase
@@ -40,7 +41,7 @@ namespace YellowJacket.Core.Base
         [BeforeFeature()]
         public static void BeforeFeature()
         {
-
+            Initialize();
         }
 
         /// <summary>
@@ -62,5 +63,10 @@ namespace YellowJacket.Core.Base
         }
 
         #endregion
+
+        private static void Initialize()
+        {
+            DriverContext.Driver = WebDriverFactory.Get(BrowserType.Chrome);
+        }
     }
 }

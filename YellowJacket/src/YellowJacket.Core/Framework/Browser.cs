@@ -1,7 +1,7 @@
 ﻿using OpenQA.Selenium;
 using YellowJacket.Core.Enums;
 
-namespace YellowJacket.Core.Base
+namespace YellowJacket.Core.Framework
 {
     /// <summary>
     /// Contains browser and driver implementation.

@@ -1,6 +1,6 @@
 ﻿using OpenQA.Selenium.Support.PageObjects;
 
-namespace YellowJacket.Core.Base
+namespace YellowJacket.Core.Framework
 {
     /// <summary>
     /// Base page.

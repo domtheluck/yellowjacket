@@ -2,7 +2,7 @@
 using OpenQA.Selenium.Support.PageObjects;
 using TechTalk.SpecFlow;
 
-namespace YellowJacket.Core.Base
+namespace YellowJacket.Core.Framework
 {
     /// <summary>
     /// Base framework class.
@@ -89,7 +89,7 @@ namespace YellowJacket.Core.Base
         /// </summary>
         public virtual void NavigateSite()
         {
-            //DriverContext.Browser.GoToUrl(EnvironmentHelper.GetLoginUrl(Settings.Environment));
+
         }
 
         #endregion
