@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using NUnit.Engine;
 using YellowJacket.Core.Hook;
@@ -50,7 +49,7 @@ namespace YellowJacket.Core
         /// <param name="assembly">The assembly.</param>
         private void RegisterHooks(Assembly assembly)
         {
-            Context.CleanHook();
+            Context.CurrentContext.CleanHook();
 
             List<Type> hooks = _typeLocator.GetHookTypes(assembly);
 
@@ -64,7 +63,7 @@ namespace YellowJacket.Core
                 if (hookPriorityAttribute != null)
                     priority = hookPriorityAttribute.Priority;
 
-                Context.RegisterHook(
+                Context.CurrentContext.RegisterHook(
                     new HookInstance
                     {
                         Instance = ClassActivator<IHook>.CreateInstance(type),

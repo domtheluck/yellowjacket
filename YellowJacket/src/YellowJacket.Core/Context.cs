@@ -48,7 +48,7 @@ namespace YellowJacket.Core
         /// Registers the hook in the context.
         /// </summary>
         /// <param name="hook">The hook to register.</param>
-        public static void RegisterHook(HookInstance hook)
+        public void RegisterHook(HookInstance hook)
         {
             _hookInstances.Add(hook);
         }
@@ -56,7 +56,7 @@ namespace YellowJacket.Core
         /// <summary>
         /// Cleans the hook.
         /// </summary>
-        public static void CleanHook()
+        public void CleanHook()
         {
             _hookInstances.Clear();
         }
