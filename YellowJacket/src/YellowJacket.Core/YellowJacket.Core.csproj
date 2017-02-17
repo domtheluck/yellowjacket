@@ -54,6 +54,10 @@
       <HintPath>..\..\packages\NUnit.Engine.3.6.0\lib\nunit.engine.api.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="nunit.framework, Version=3.6.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\NUnit.3.6.0\lib\net45\nunit.framework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -77,6 +81,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Engine\Engine.cs" />
     <Compile Include="Framework\Base.cs" />
     <Compile Include="Framework\BasePage.cs" />
     <Compile Include="Framework\BaseStep.cs" />
@@ -84,7 +89,6 @@
     <Compile Include="Framework\DriverContext.cs" />
     <Compile Include="Framework\HookBase.cs" />
     <Compile Include="Context.cs" />
-    <Compile Include="Engine.cs" />
     <Compile Include="Enums\BrowserType.cs" />
     <Compile Include="Framework\WebDriverFactory.cs" />
     <Compile Include="Utils\ClassActivator.cs" />
@@ -98,9 +102,7 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Engine\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

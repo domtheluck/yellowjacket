@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using YellowJacket.Core.Hook;
 
 namespace YellowJacket.Core
 {
     /// <summary>
-    /// Engine context.
+    /// Execution context.
     /// </summary>
     public sealed class Context
     {
@@ -65,9 +66,9 @@ namespace YellowJacket.Core
         /// Gets the hooks.
         /// </summary>
         /// <returns></returns>
-        public List<HookInstance> GetHooks()
+        public IEnumerable<HookInstance> GetHooks()
         {
-            return _hookInstances;
+            return _hookInstances.OrderBy(x => x.Priority).ToList();
         }
 
         #endregion

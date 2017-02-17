@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Xml;
 using NUnit.Engine;
 using YellowJacket.Core.Hook;
 using YellowJacket.Core.Utils;
 
-namespace YellowJacket.Core
+namespace YellowJacket.Core.Engine
 {
     public class Engine
     {
@@ -39,6 +40,24 @@ namespace YellowJacket.Core
             Assembly assembly = Assembly.LoadFile(assemblyPath);
 
             RegisterHooks(assembly);
+
+            TestPackage testPackage = new TestPackage(assemblyPath);
+
+            ITestFilterBuilder filterBuilder = new TestFilterBuilder();
+
+            filterBuilder.AddTest("YellowJacket.WebApp.Automation.Features.MyFeatureFeature");
+
+            TestFilter testFilter = filterBuilder.GetFilter();
+
+            ITestRunner testRunner = _testEngine.GetRunner(testPackage);
+
+            int count = testRunner.CountTestCases(testFilter);
+
+            XmlNode tests = testRunner.Explore(testFilter);
+
+            Console.WriteLine(count);
+
+
         }
 
         #region Private Methods
