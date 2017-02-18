@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Xml;
 using NUnit.Engine;
+using NUnit.Engine.Runners;
 using YellowJacket.Core.Hook;
 using YellowJacket.Core.Utils;
 
@@ -69,15 +70,19 @@ namespace YellowJacket.Core.Engine
 
                 int count = testRunner.CountTestCases(testFilter);
 
-                if (count == 0)
-                    throw new Exception($"The feature {feature} doesn't exist in assembly {assemblyPath}");
+                //if (count == 0)
+                //    throw new Exception($"The feature {feature} doesn't exist in assembly {assemblyPath}");
 
-                if (count > 1)
-                    throw new Exception($"More than one feature have been found for the name {feature}");
+                //if (count > 1)
+                //    throw new Exception($"More than one feature have been found for the name {feature}");
 
                 XmlNode testNode = testRunner.Explore(testFilter);
 
                 Console.WriteLine(count);
+
+                ITestEventListener testEventListener = new TestEventDispatcher();
+        
+                XmlNode run = testRunner.Run(testEventListener, testFilter);
             }
             catch (Exception ex)
             {
