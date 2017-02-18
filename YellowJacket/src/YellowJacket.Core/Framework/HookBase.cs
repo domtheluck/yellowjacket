@@ -64,8 +64,12 @@ namespace YellowJacket.Core.Framework
 
         #endregion
 
+        /// <summary>
+        /// Initializes the HookBase.
+        /// </summary>
         private static void Initialize()
         {
+            // TODO: Modify this code to get the right driver according to the execution context
             DriverContext.Driver = WebDriverFactory.Get(BrowserType.Chrome);
         }
     }

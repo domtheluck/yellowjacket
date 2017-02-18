@@ -8,6 +8,11 @@ using YellowJacket.Core.Utils;
 
 namespace YellowJacket.Core.Engine
 {
+    public delegate void ExecutionStartHandler(object sender, ExecutionStartEventArgs eventArgs);
+    public delegate void ExecutionStopHandler(object sender, ExecutionStopEventArgs eventArgs);
+    public delegate void ExecutionCompletedHandler(object sender, ExecutionCompletedEventArgs eventArgs);
+    public delegate void ExecutionProgressHandler(object sender, ExecutionProgressEventArgs eventArgs);
+
     public class Engine
     {
         #region Private Members
@@ -17,6 +22,11 @@ namespace YellowJacket.Core.Engine
         private readonly TypeLocator _typeLocator = new TypeLocator();
 
         #endregion
+
+        protected event ExecutionStartHandler ExecutionStart;
+        protected event ExecutionStopHandler ExecutionStop;
+        protected event ExecutionCompletedHandler ExecutionCompleted;
+        protected event ExecutionProgressHandler ExecutionProgress;
 
         #region Constructors
 
@@ -37,27 +47,47 @@ namespace YellowJacket.Core.Engine
         /// <param name="feature">The feature.</param>
         public void ExecuteFeature(string assemblyPath, string feature)
         {
-            Assembly assembly = Assembly.LoadFile(assemblyPath);
+            RaiseExecutionStartEvent();
 
-            RegisterHooks(assembly);
+            try
+            {
+                Assembly assembly = Assembly.LoadFile(assemblyPath);
 
-            TestPackage testPackage = new TestPackage(assemblyPath);
+                RegisterHooks(assembly);
 
-            ITestFilterBuilder filterBuilder = new TestFilterBuilder();
+                TestPackage testPackage = new TestPackage(assemblyPath);
 
-            filterBuilder.AddTest("YellowJacket.WebApp.Automation.Features.MyFeatureFeature");
+                ITestFilterBuilder filterBuilder = new TestFilterBuilder();
 
-            TestFilter testFilter = filterBuilder.GetFilter();
+                //filterBuilder.AddTest("YellowJacket.WebApp.Automation.Features.MyFeatureFeature");
 
-            ITestRunner testRunner = _testEngine.GetRunner(testPackage);
+                filterBuilder.SelectWhere($"test =~ {feature}Feature");
 
-            int count = testRunner.CountTestCases(testFilter);
+                TestFilter testFilter = filterBuilder.GetFilter();
 
-            XmlNode tests = testRunner.Explore(testFilter);
+                ITestRunner testRunner = _testEngine.GetRunner(testPackage);
 
-            Console.WriteLine(count);
+                int count = testRunner.CountTestCases(testFilter);
 
+                if (count == 0)
+                    throw new Exception($"The feature {feature} doesn't exist in assembly {assemblyPath}");
 
+                if (count > 1)
+                    throw new Exception($"More than one feature have been found for the name {feature}");
+
+                XmlNode testNode = testRunner.Explore(testFilter);
+
+                Console.WriteLine(count);
+            }
+            catch (Exception ex)
+            {
+                // TODO: we need to log the possible exception
+                Console.WriteLine(ex);
+
+                RaiseExecutionStopEvent();
+            }
+
+            RaiseExecutionCompletedEvent();
         }
 
         #region Private Methods
@@ -68,7 +98,7 @@ namespace YellowJacket.Core.Engine
         /// <param name="assembly">The assembly.</param>
         private void RegisterHooks(Assembly assembly)
         {
-            Context.CurrentContext.CleanHook();
+            ExecutionContext.CurrentContext.CleanHook();
 
             List<Type> hooks = _typeLocator.GetHookTypes(assembly);
 
@@ -82,7 +112,7 @@ namespace YellowJacket.Core.Engine
                 if (hookPriorityAttribute != null)
                     priority = hookPriorityAttribute.Priority;
 
-                Context.CurrentContext.RegisterHook(
+                ExecutionContext.CurrentContext.RegisterHook(
                     new HookInstance
                     {
                         Instance = ClassActivator<IHook>.CreateInstance(type),
@@ -101,6 +131,31 @@ namespace YellowJacket.Core.Engine
 
             //_testEngine.WorkDirectory = ""; // TODO: check if we need to put the WorkDirectory elsewhere
             _testEngine.InternalTraceLevel = InternalTraceLevel.Off; // TODO: should be customizable
+        }
+
+        private void RaiseExecutionStartEvent()
+        {
+            ExecutionStart?.Invoke(this, new ExecutionStartEventArgs());
+        }
+
+        private void RaiseExecutionStopEvent()
+        {
+            ExecutionStop?.Invoke(this, new ExecutionStopEventArgs());
+        }
+
+        private void RaiseExecutionCompletedEvent()
+        {
+            ExecutionCompleted?.Invoke(this, new ExecutionCompletedEventArgs());
+        }
+
+        private void RaiseExecutionProgressEvent(double progress)
+        {
+            ExecutionProgress?.Invoke(this, new ExecutionProgressEventArgs(progress));
+        }
+
+        private void ParseTestNode(XmlNode testNode)
+        {
+            
         }
 
         #endregion

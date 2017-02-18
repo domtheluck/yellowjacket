@@ -17,6 +17,9 @@ namespace YellowJacket.Core.Enums
         Firefox = 2,
 
         [Description("Chrome")]
-        Chrome = 3
+        Chrome = 3,
+
+        [Description("Edge")]
+        Edge = 4
     }
 }

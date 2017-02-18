@@ -82,13 +82,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Engine\Engine.cs" />
+    <Compile Include="Engine\ExecutionProgressEventArgs.cs" />
+    <Compile Include="Engine\ExecutionStopEventArgs.cs" />
+    <Compile Include="Engine\ExecutionCompletedEventArgs.cs" />
+    <Compile Include="Engine\ExecutionStartEventArgs.cs" />
     <Compile Include="Framework\Base.cs" />
     <Compile Include="Framework\BasePage.cs" />
     <Compile Include="Framework\BaseStep.cs" />
     <Compile Include="Framework\Browser.cs" />
     <Compile Include="Framework\DriverContext.cs" />
     <Compile Include="Framework\HookBase.cs" />
-    <Compile Include="Context.cs" />
+    <Compile Include="ExecutionContext.cs" />
     <Compile Include="Enums\BrowserType.cs" />
     <Compile Include="Framework\WebDriverFactory.cs" />
     <Compile Include="Utils\ClassActivator.cs" />

@@ -8,12 +8,12 @@ namespace YellowJacket.Core
     /// <summary>
     /// Execution context.
     /// </summary>
-    public sealed class Context
+    public sealed class ExecutionContext
     {
         #region Private Members
 
-        private static readonly Lazy<Context> _context =
-            new Lazy<Context>(() => new Context());
+        private static readonly Lazy<ExecutionContext> _context =
+            new Lazy<ExecutionContext>(() => new ExecutionContext());
 
         private static readonly List<HookInstance> _hookInstances = new List<HookInstance>();
 
@@ -27,16 +27,16 @@ namespace YellowJacket.Core
         /// <value>
         /// The current context.
         /// </value>
-        public static Context CurrentContext => _context.Value;
+        public static ExecutionContext CurrentContext => _context.Value;
 
         #endregion
 
         #region Constructors
 
         /// <summary>
-        /// Prevents a default instance of the <see cref="Context"/> class from being created.
+        /// Prevents a default instance of the <see cref="ExecutionContext"/> class from being created.
         /// </summary>
-        private Context()
+        private ExecutionContext()
         {
 
         }
