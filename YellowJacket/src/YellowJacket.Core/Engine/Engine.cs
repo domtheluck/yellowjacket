@@ -1,11 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 using System.Xml;
+using System.Xml.Serialization;
 using NUnit.Engine;
-using NUnit.Engine.Runners;
+using NUnit.Framework.Internal;
 using YellowJacket.Core.Hook;
+using YellowJacket.Core.NUnit;
+using YellowJacket.Core.NUnit.Models;
 using YellowJacket.Core.Utils;
+using InternalTraceLevel = NUnit.Engine.InternalTraceLevel;
+using TestFilter = NUnit.Engine.TestFilter;
+using TestSuite = YellowJacket.Core.NUnit.Models.TestSuite;
 
 namespace YellowJacket.Core.Engine
 {
@@ -14,6 +21,9 @@ namespace YellowJacket.Core.Engine
     public delegate void ExecutionCompletedHandler(object sender, ExecutionCompletedEventArgs eventArgs);
     public delegate void ExecutionProgressHandler(object sender, ExecutionProgressEventArgs eventArgs);
 
+    /// <summary>
+    /// YellowJacket engine.
+    /// </summary>
     public class Engine
     {
         #region Private Members
@@ -75,14 +85,34 @@ namespace YellowJacket.Core.Engine
 
                 //if (count > 1)
                 //    throw new Exception($"More than one feature have been found for the name {feature}");
+                //    throw new Exception($"More than one feature have been found for the name {feature}");
 
-                XmlNode testNode = testRunner.Explore(testFilter);
+                XmlSerializer serializer = new XmlSerializer(typeof(TestRun));
+
+                string value = testRunner.Explore(testFilter).OuterXml;
+
+                TestRun testRun;
+
+                using (TextReader reader = new StringReader(value))
+                {
+                    testRun = (TestRun)serializer.Deserialize(reader);
+                }
 
                 Console.WriteLine(count);
+                Console.WriteLine(testRun);
 
-                ITestEventListener testEventListener = new TestEventDispatcher();
+                CustomTestEventListener testEventListener = new CustomTestEventListener();
         
                 XmlNode run = testRunner.Run(testEventListener, testFilter);
+
+                using (TextReader reader = new StringReader(run.OuterXml))
+                {
+                    testRun = (TestRun)serializer.Deserialize(reader);
+                }
+
+                Console.Write(testRun);
+
+
             }
             catch (Exception ex)
             {
@@ -160,7 +190,11 @@ namespace YellowJacket.Core.Engine
 
         private void ParseTestNode(XmlNode testNode)
         {
-            
+        }
+
+        public void OnTestEvent(string report)
+        {
+            Console.WriteLine();
         }
 
         #endregion

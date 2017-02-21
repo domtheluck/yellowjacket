@@ -3,7 +3,7 @@
     /// <summary>
     /// Base step class.
     /// </summary>
-    public abstract class BaseStep: Framework.Base
+    public abstract class BaseStep: Base
     {
         #region Public Methods
 

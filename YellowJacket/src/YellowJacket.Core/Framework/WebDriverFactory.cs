@@ -5,8 +5,16 @@ using YellowJacket.Core.Enums;
 
 namespace YellowJacket.Core.Framework
 {
+    /// <summary>
+    /// Uses to create Web Driver.
+    /// </summary>
     public class WebDriverFactory
     {
+        /// <summary>
+        /// Gets a <see cref="IWebDriver"/> according to the specified browser.
+        /// </summary>
+        /// <param name="browser">The browser.</param>
+        /// <returns><see cref="IWebDriver"/>.</returns>
         public static IWebDriver Get(BrowserType browser)
         {
             IWebDriver webDriver = null;

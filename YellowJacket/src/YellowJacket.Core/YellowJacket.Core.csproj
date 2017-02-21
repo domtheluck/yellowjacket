@@ -95,6 +95,17 @@
     <Compile Include="ExecutionContext.cs" />
     <Compile Include="Enums\BrowserType.cs" />
     <Compile Include="Framework\WebDriverFactory.cs" />
+    <Compile Include="NUnit\CustomTestEventListener.cs" />
+    <Compile Include="NUnit\Models\Environment.cs" />
+    <Compile Include="NUnit\Models\Filter.cs" />
+    <Compile Include="NUnit\Models\Properties.cs" />
+    <Compile Include="NUnit\Models\Property.cs" />
+    <Compile Include="NUnit\Models\Setting.cs" />
+    <Compile Include="NUnit\Models\Settings.cs" />
+    <Compile Include="NUnit\Models\Test.cs" />
+    <Compile Include="NUnit\Models\TestRun.cs" />
+    <Compile Include="NUnit\Models\TestSuite.cs" />
+    <Compile Include="NUnit\Models\TestCase.cs" />
     <Compile Include="Utils\ClassActivator.cs" />
     <Compile Include="Hook\HookInstance.cs" />
     <Compile Include="Hook\HookPriorityAttribute.cs" />
