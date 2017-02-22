@@ -33,7 +33,7 @@ namespace YellowJacket.Core.NUnit.Models
         /// The os version.
         /// </value>
         [XmlAttribute(AttributeName = "os-version")]
-        public string OsVersion { get; set; }
+        public string OSVersion { get; set; }
 
         /// <summary>
         /// Gets or sets the platform.

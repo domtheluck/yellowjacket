@@ -3,9 +3,9 @@
 namespace YellowJacket.Core.Engine
 {
     /// <summary>
-    /// Represents the execution progess event arguments.
+    /// Contains the arguments for the Execution Progress event.
     /// </summary>
-    /// <seealso cref="System.EventArgs" />
+    /// <seealso cref="EventArgs" />
     public class ExecutionProgressEventArgs : EventArgs
     {
         #region Properties

@@ -5,14 +5,10 @@ using System.Reflection;
 using System.Xml;
 using System.Xml.Serialization;
 using NUnit.Engine;
-using NUnit.Framework.Internal;
+using YellowJacket.Core.Helpers;
 using YellowJacket.Core.Hook;
 using YellowJacket.Core.NUnit;
 using YellowJacket.Core.NUnit.Models;
-using YellowJacket.Core.Utils;
-using InternalTraceLevel = NUnit.Engine.InternalTraceLevel;
-using TestFilter = NUnit.Engine.TestFilter;
-using TestSuite = YellowJacket.Core.NUnit.Models.TestSuite;
 
 namespace YellowJacket.Core.Engine
 {
@@ -30,14 +26,20 @@ namespace YellowJacket.Core.Engine
 
         private ITestEngine _testEngine;
 
-        private readonly TypeLocator _typeLocator = new TypeLocator();
+        private readonly TypeLocatorHelper _typeLocatorHelper = new TypeLocatorHelper();
+
+        private Assembly _assembly;
 
         #endregion
 
-        protected event ExecutionStartHandler ExecutionStart;
-        protected event ExecutionStopHandler ExecutionStop;
-        protected event ExecutionCompletedHandler ExecutionCompleted;
-        protected event ExecutionProgressHandler ExecutionProgress;
+        #region Events
+
+        public event ExecutionStartHandler ExecutionStart;
+        public event ExecutionStopHandler ExecutionStop;
+        public event ExecutionCompletedHandler ExecutionCompleted;
+        public event ExecutionProgressHandler ExecutionProgress;
+
+        #endregion
 
         #region Constructors
 
@@ -62,9 +64,11 @@ namespace YellowJacket.Core.Engine
 
             try
             {
-                Assembly assembly = Assembly.LoadFile(assemblyPath);
+                LoadTestAssembly(assemblyPath);
 
-                RegisterHooks(assembly);
+                RegisterHooks();
+
+                // TEMP CODE FOR TESTING PURPOSE
 
                 TestPackage testPackage = new TestPackage(assemblyPath);
 
@@ -112,7 +116,7 @@ namespace YellowJacket.Core.Engine
 
                 Console.Write(testRun);
 
-
+                // TEMP CODE FOR TESTING PURPOSE
             }
             catch (Exception ex)
             {
@@ -122,21 +126,33 @@ namespace YellowJacket.Core.Engine
                 RaiseExecutionStopEvent();
             }
 
+            // if an exception is raised, we are raising a specific event to inform the caller.
             RaiseExecutionCompletedEvent();
         }
 
         #region Private Methods
 
         /// <summary>
-        /// Registers the hooks in the context.
+        /// Loads the test assembly.
         /// </summary>
-        /// <param name="assembly">The assembly.</param>
-        private void RegisterHooks(Assembly assembly)
+        /// <param name="assemblyPath">The assembly path.</param>
+        private void LoadTestAssembly(string assemblyPath)
         {
+            _assembly = Assembly.LoadFile(assemblyPath);
+        }
+
+        /// <summary>
+        /// Registers the hooks in the execution context.
+        /// </summary>
+        private void RegisterHooks()
+        {
+            // cleanup the existing hooks
             ExecutionContext.CurrentContext.CleanHook();
 
-            List<Type> hooks = _typeLocator.GetHookTypes(assembly);
+            // get the hook list from the test assembly
+            List<Type> hooks = _typeLocatorHelper.GetHookTypes(_assembly);
 
+            // instantiate each hook class and register it in the execution context
             foreach (Type type in hooks)
             {
                 int priority = 0;
@@ -161,40 +177,44 @@ namespace YellowJacket.Core.Engine
         /// </summary>
         private void Initialize()
         {
-            // initialize the nunit test engine
+            // initialize the NUnit test engine
             _testEngine = TestEngineActivator.CreateInstance();
 
             //_testEngine.WorkDirectory = ""; // TODO: check if we need to put the WorkDirectory elsewhere
             _testEngine.InternalTraceLevel = InternalTraceLevel.Off; // TODO: should be customizable
         }
 
+        /// <summary>
+        /// Raises the execution start event.
+        /// </summary>
         private void RaiseExecutionStartEvent()
         {
             ExecutionStart?.Invoke(this, new ExecutionStartEventArgs());
         }
 
+        /// <summary>
+        /// Raises the execution stop event.
+        /// </summary>
         private void RaiseExecutionStopEvent()
         {
             ExecutionStop?.Invoke(this, new ExecutionStopEventArgs());
         }
 
+        /// <summary>
+        /// Raises the execution completed event.
+        /// </summary>
         private void RaiseExecutionCompletedEvent()
         {
             ExecutionCompleted?.Invoke(this, new ExecutionCompletedEventArgs());
         }
 
+        /// <summary>
+        /// Raises the execution progress event.
+        /// </summary>
+        /// <param name="progress">The progress.</param>
         private void RaiseExecutionProgressEvent(double progress)
         {
             ExecutionProgress?.Invoke(this, new ExecutionProgressEventArgs(progress));
-        }
-
-        private void ParseTestNode(XmlNode testNode)
-        {
-        }
-
-        public void OnTestEvent(string report)
-        {
-            Console.WriteLine();
         }
 
         #endregion

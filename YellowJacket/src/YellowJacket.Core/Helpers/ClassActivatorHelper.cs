@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace YellowJacket.Core.Utils
+namespace YellowJacket.Core.Helpers
 {
     /// <summary>
     /// Uses to create instance of a specific type.

@@ -16,6 +16,6 @@ namespace YellowJacket.Core.NUnit.Models
         /// The property list.
         /// </value>
         [XmlElement(ElementName = "property")]
-        public List<Property> Property { get; set; }
+        public List<Property> PropertyList { get; set; }
     }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Xml.Serialization;
 
 namespace YellowJacket.Core.NUnit.Models
@@ -136,18 +135,48 @@ namespace YellowJacket.Core.NUnit.Models
         [XmlAttribute(AttributeName = "total")]
         public int Total { get; set; }
 
+        /// <summary>
+        /// Gets or sets the passed.
+        /// </summary>
+        /// <value>
+        /// The passed.
+        /// </value>
         [XmlAttribute(AttributeName = "passed")]
         public int Passed { get; set; }
 
+        /// <summary>
+        /// Gets or sets the failed.
+        /// </summary>
+        /// <value>
+        /// The failed.
+        /// </value>
         [XmlAttribute(AttributeName = "failed")]
         public int Failed { get; set; }
 
+        /// <summary>
+        /// Gets or sets the warnings.
+        /// </summary>
+        /// <value>
+        /// The warnings.
+        /// </value>
         [XmlAttribute(AttributeName = "warnings")]
         public int Warnings { get; set; }
 
+        /// <summary>
+        /// Gets or sets the inconclusive.
+        /// </summary>
+        /// <value>
+        /// The inconclusive.
+        /// </value>
         [XmlAttribute(AttributeName = "inconclusive")]
         public int Inconclusive { get; set; }
 
+        /// <summary>
+        /// Gets or sets the skipped.
+        /// </summary>
+        /// <value>
+        /// The skipped.
+        /// </value>
         [XmlAttribute(AttributeName = "skipped")]
         public int Skipped { get; set; }
 
