@@ -4,7 +4,7 @@ using YellowJacket.Core.Enums;
 namespace YellowJacket.Core.Framework
 {
     [Binding]
-    public class HookBase
+    internal class HookBase
     {
         #region Public Methods
 

@@ -92,12 +92,13 @@
     <Compile Include="Framework\Browser.cs" />
     <Compile Include="Framework\DriverContext.cs" />
     <Compile Include="Framework\HookBase.cs" />
-    <Compile Include="ExecutionContext.cs" />
+    <Compile Include="Framework\ExecutionContext.cs" />
     <Compile Include="Enums\BrowserType.cs" />
     <Compile Include="Framework\WebDriverFactory.cs" />
+    <Compile Include="Helpers\EnumHelper.cs" />
     <Compile Include="NUnit\CustomTestEventListener.cs" />
     <Compile Include="NUnit\NUnitEngineHelper.cs" />
-    <Compile Include="NUnit\TestEventArgs.cs" />
+    <Compile Include="NUnit\TestReportEventArgs.cs" />
     <Compile Include="NUnit\Models\Environment.cs" />
     <Compile Include="NUnit\Models\Filter.cs" />
     <Compile Include="NUnit\Models\Properties.cs" />

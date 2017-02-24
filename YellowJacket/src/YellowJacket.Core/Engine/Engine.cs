@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using System.Xml;
-using System.Xml.Serialization;
 using NUnit.Engine;
+using YellowJacket.Core.Framework;
 using YellowJacket.Core.Helpers;
 using YellowJacket.Core.Hook;
 using YellowJacket.Core.NUnit;
@@ -30,6 +29,8 @@ namespace YellowJacket.Core.Engine
 
         private Assembly _assembly;
 
+        private TestSuite _testSuite;
+
         #endregion
 
         #region Events
@@ -38,10 +39,6 @@ namespace YellowJacket.Core.Engine
         public event ExecutionStopHandler ExecutionStop;
         public event ExecutionCompletedHandler ExecutionCompleted;
         public event ExecutionProgressHandler ExecutionProgress;
-
-        #endregion
-
-        #region Event Handlers
 
         #endregion
 
@@ -64,8 +61,10 @@ namespace YellowJacket.Core.Engine
         /// </summary>
         /// <param name="assemblyPath">The assembly path.</param>
         /// <param name="feature">The feature.</param>
-        public void ExecuteFeature(string assemblyPath, string feature)
+        public void Execute(string assemblyPath, string feature)
         {
+            Cleanup();
+
             RaiseExecutionStartEvent();
 
             try
@@ -76,70 +75,32 @@ namespace YellowJacket.Core.Engine
 
                 RegisterHooks();
 
-
-
-                // TEMP CODE FOR TESTING PURPOSE
-
-                TestPackage testPackage = new TestPackage(assemblyPath);
-
-                ITestFilterBuilder filterBuilder = new TestFilterBuilder();
-
-                //filterBuilder.AddTest("YellowJacket.WebApp.Automation.Features.MyFeatureFeature");
-
-                filterBuilder.SelectWhere($"test =~ {feature}Feature");
-
-                TestFilter testFilter = filterBuilder.GetFilter();
-
-                ITestRunner testRunner = _testEngine.GetRunner(testPackage);
-
-                int count = testRunner.CountTestCases(testFilter);
-
-                //if (count == 0)
-                //    throw new Exception($"The feature {feature} doesn't exist in assembly {assemblyPath}");
-
-                //if (count > 1)
-                //    throw new Exception($"More than one feature have been found for the name {feature}");
-                //    throw new Exception($"More than one feature have been found for the name {feature}");
-
-                XmlSerializer serializer = new XmlSerializer(typeof(TestRun));
-
-                string value = testRunner.Explore(testFilter).OuterXml;
-
-                TestRun testRun;
-
-                using (TextReader reader = new StringReader(value))
-                {
-                    testRun = (TestRun)serializer.Deserialize(reader);
-                }
-
-                Console.WriteLine(count);
-                Console.WriteLine(testRun);
-
-                CustomTestEventListener testEventListener = new CustomTestEventListener();
-
-                XmlNode run = testRunner.Run(testEventListener, testFilter);
-
-                using (TextReader reader = new StringReader(run.OuterXml))
-                {
-                    testRun = (TestRun)serializer.Deserialize(reader);
-                }
-
-                Console.Write(testRun);
-
-                // TEMP CODE FOR TESTING PURPOSE
+                ExecuteFeature(assemblyPath, feature);
             }
             catch (Exception ex)
             {
+                // if an exception is raised, we are raising a specific event to inform the caller.
                 RaiseExecutionStopEvent(ex);
+
+                // TODO: for debugging purpose only. Don't forget to remove it.
+                throw;
             }
 
-            // if an exception is raised, we are raising a specific event to inform the caller.
             RaiseExecutionCompletedEvent();
         }
 
         #endregion
 
         #region Private Methods
+
+        /// <summary>
+        /// Cleanups the engine setup.
+        /// </summary>
+        private void Cleanup()
+        {
+            _assembly = null;
+            _testSuite = null;
+        }
 
         /// <summary>
         /// Loads the test assembly.
@@ -237,16 +198,37 @@ namespace YellowJacket.Core.Engine
         /// </summary>
         /// <param name="assemblyPath">The assembly path.</param>
         /// <param name="feature">The feature.</param>
-        private void Execute(string assemblyPath, string feature)
+        private void ExecuteFeature(string assemblyPath, string feature)
         {
             // get the test package
-            TestPackage testPackage = NUnitEngineHelper.CreateTestPackage(new List<string> {assemblyPath});
+            TestPackage testPackage = NUnitEngineHelper.CreateTestPackage(new List<string> { assemblyPath });
 
             TestFilter testFilter = NUnitEngineHelper.CreateTestFilter(feature);
 
             ITestRunner testRunner = _testEngine.GetRunner(testPackage);
 
-            TestRun testRun = NUnitEngineHelper.ParseTestRun(testRunner.Explore(testFilter));
+            _testSuite = NUnitEngineHelper.ParseTestRun(testRunner.Explore(testFilter)).TestSuite;
+
+            CustomTestEventListener testEventListener = new CustomTestEventListener();
+
+            testEventListener.TestReport += OnTestReport;
+
+            TestRun testRun = NUnitEngineHelper.ParseTestRun(testRunner.Run(testEventListener, testFilter));
+        }
+
+        #endregion
+
+        #region Event Handlers
+
+        /// <summary>
+        /// TestReport event handlers.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="eventArgs">The <see cref="TestReportEventArgs"/> instance containing the event data.</param>
+        private void OnTestReport(object sender, TestReportEventArgs eventArgs)
+        {
+            // TODO: need to analyse the test report structure to be able to report progress.
+            Console.WriteLine(eventArgs.Report);
         }
 
         #endregion

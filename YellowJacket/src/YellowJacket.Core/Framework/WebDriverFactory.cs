@@ -8,7 +8,7 @@ namespace YellowJacket.Core.Framework
     /// <summary>
     /// Uses to create Web Driver.
     /// </summary>
-    public class WebDriverFactory
+    internal class WebDriverFactory
     {
         /// <summary>
         /// Gets a <see cref="IWebDriver"/> according to the specified browser.
@@ -18,7 +18,7 @@ namespace YellowJacket.Core.Framework
         public static IWebDriver Get(BrowserType browser)
         {
             IWebDriver webDriver = null;
-            
+
             // TODO: Check if we need to modify the factory to support local as well as portable browser
             switch (browser)
             {

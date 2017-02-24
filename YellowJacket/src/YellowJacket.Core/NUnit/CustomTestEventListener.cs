@@ -2,7 +2,7 @@
 
 namespace YellowJacket.Core.NUnit
 {
-    public delegate void TestEventHandler(object sender, TestEventArgs eventArgs);
+    public delegate void TestReportHandler(object sender, TestReportEventArgs eventArgs);
 
     /// <summary>
     /// Used to handle the process progress reports and other events from the NUnit test.
@@ -11,7 +11,7 @@ namespace YellowJacket.Core.NUnit
     {
         #region Events
 
-        public event TestEventHandler OnTest;
+        public event TestReportHandler TestReport;
 
         #endregion
 
@@ -23,7 +23,7 @@ namespace YellowJacket.Core.NUnit
         /// <param name="report">The report.</param>
         public void OnTestEvent(string report)
         {
-            OnTest?.Invoke(this, new TestEventArgs(report));
+            TestReport?.Invoke(this, new TestReportEventArgs(report));
         }
 
         #endregion

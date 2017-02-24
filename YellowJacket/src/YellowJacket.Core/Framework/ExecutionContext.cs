@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using YellowJacket.Core.Hook;
 
-namespace YellowJacket.Core
+namespace YellowJacket.Core.Framework
 {
     /// <summary>
     /// Execution context.
@@ -15,7 +15,8 @@ namespace YellowJacket.Core
         private static readonly Lazy<ExecutionContext> _context =
             new Lazy<ExecutionContext>(() => new ExecutionContext());
 
-        private static readonly List<HookInstance> _hookInstances = new List<HookInstance>();
+        private static readonly List<HookInstance> _hookInstances =
+            new List<HookInstance>();
 
         #endregion
 
@@ -36,10 +37,7 @@ namespace YellowJacket.Core
         /// <summary>
         /// Prevents a default instance of the <see cref="ExecutionContext"/> class from being created.
         /// </summary>
-        private ExecutionContext()
-        {
-
-        }
+        private ExecutionContext() { }
 
         #endregion
 

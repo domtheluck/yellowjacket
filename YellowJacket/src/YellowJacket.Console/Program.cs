@@ -1,6 +1,4 @@
-﻿using System;
-using System.Runtime.Remoting.Channels;
-using YellowJacket.Core.Engine;
+﻿using YellowJacket.Core.Engine;
 
 namespace YellowJacket.Console
 {
@@ -20,8 +18,8 @@ namespace YellowJacket.Console
             engine.ExecutionCompleted += Engine_OnExecutionCompleted;
             engine.ExecutionStop += Engine_OnExecutionStop;
 
-            //engine.ExecuteFeature(@"C:\Projects\yellowjacket\YellowJacket\src\YellowJacket.Console\bin\Debug\YellowJacket.WebApp.Automation.dll", "MyFeature");
-            engine.ExecuteFeature(@"D:\Projects\DEV\yellowjacket\YellowJacket\src\YellowJacket.Console\bin\debug\YellowJacket.WebApp.Automation.dll", "MyFeature");
+            engine.Execute(@"C:\Projects\yellowjacket\YellowJacket\src\YellowJacket.Console\bin\Debug\YellowJacket.WebApp.Automation.dll", "MyFeature");
+            //engine.Execute(@"D:\Projects\DEV\yellowjacket\YellowJacket\src\YellowJacket.Console\bin\debug\YellowJacket.WebApp.Automation.dll", "MyFeature");
 
             System.Console.ReadLine();
         }
@@ -45,7 +43,7 @@ namespace YellowJacket.Console
 
         private static void Engine_OnExecutionStop(object sender, ExecutionStopEventArgs eventArgs)
         {
-            System.Console.WriteLine("Execution Stop...");
+            System.Console.WriteLine($"Execution Stop... {eventArgs.Exception}");
         }
 
         #endregion

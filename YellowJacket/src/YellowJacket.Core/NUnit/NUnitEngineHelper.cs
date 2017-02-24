@@ -39,7 +39,6 @@ namespace YellowJacket.Core.NUnit
             return filterBuilder.GetFilter();
         }
 
-
         /// <summary>
         /// Parses the test run.
         /// </summary>
@@ -51,12 +50,31 @@ namespace YellowJacket.Core.NUnit
 
             TestRun testRun;
 
-            using (TextReader reader = new StringReader(xmlFragment.InnerXml))
+            using (TextReader reader = new StringReader(xmlFragment.OuterXml))
             {
                 testRun = (TestRun)serializer.Deserialize(reader);
             }
 
             return testRun;
+        }
+
+        /// <summary>
+        /// Parses the test suite.
+        /// </summary>
+        /// <param name="xmlFragment">The XML fragment.</param>
+        /// <returns><see cref="TestSuite"/>.</returns>
+        public static TestSuite ParseTestSuite(XmlNode xmlFragment)
+        {
+            XmlSerializer serializer = new XmlSerializer(typeof(TestSuite));
+
+            TestSuite testSuite;
+
+            using (TextReader reader = new StringReader(xmlFragment.OuterXml))
+            {
+                testSuite = (TestSuite)serializer.Deserialize(reader);
+            }
+
+            return testSuite;
         }
 
         #endregion

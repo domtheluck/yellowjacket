@@ -6,7 +6,7 @@ namespace YellowJacket.Core.NUnit
     /// Contains the arguments for the test event.
     /// </summary>
     /// <seealso cref="EventArgs" />
-    public class TestEventArgs : EventArgs
+    public class TestReportEventArgs : EventArgs
     {
         #region Properties
 
@@ -23,10 +23,10 @@ namespace YellowJacket.Core.NUnit
         #region Constructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TestEventArgs"/> class.
+        /// Initializes a new instance of the <see cref="TestReportEventArgs"/> class.
         /// </summary>
         /// <param name="report">The report.</param>
-        public TestEventArgs(string report)
+        public TestReportEventArgs(string report)
         {
             Report = report;
         }
