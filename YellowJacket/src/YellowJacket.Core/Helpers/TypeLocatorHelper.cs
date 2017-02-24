@@ -46,7 +46,8 @@ namespace YellowJacket.Core.Helpers
             foreach (Type type in types)
             {
                 IList<CustomAttributeData> customAttributeData =
-                    type.GetCustomAttributesData().Where(x => x.AttributeType == typeof(DescriptionAttribute)).ToList();
+                    type.GetCustomAttributesData()
+                    .Where(x => x.AttributeType == typeof(DescriptionAttribute)).ToList();
 
                 if (customAttributeData
                     .SelectMany(item => item.ConstructorArguments)
