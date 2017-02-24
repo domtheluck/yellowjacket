@@ -1,8 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Xml;
 using System.Xml.Serialization;
 using NUnit.Engine;
+using YellowJacket.Core.Helpers;
 using YellowJacket.Core.NUnit.Models;
 
 namespace YellowJacket.Core.NUnit
@@ -27,14 +31,19 @@ namespace YellowJacket.Core.NUnit
         /// <summary>
         /// Creates the test filter.
         /// </summary>
+        /// <param name="assembly"></param>
         /// <param name="feature">The feature.</param>
         /// <returns><see cref="TestFilter"/>.</returns>
-        public static TestFilter CreateTestFilter(string feature)
+        public static TestFilter CreateTestFilter(Assembly assembly, string feature)
         {
             ITestFilterBuilder filterBuilder = new TestFilterBuilder();
 
-            // TODO: maybe not the best way to filter the tests. We might need to revisit this.
-            filterBuilder.SelectWhere($"test =~ {feature}Feature");
+            Type type = new TypeLocatorHelper().GetFeatureType(assembly, feature);
+
+            // TODO: maybe not the best way to filter the tests. We might need to revisit this. It is more used for individual test in a class.
+            //filterBuilder.SelectWhere($"test =~ {feature}Feature");
+
+            filterBuilder.SelectWhere($"class =~ {type.FullName}");
 
             return filterBuilder.GetFilter();
         }
