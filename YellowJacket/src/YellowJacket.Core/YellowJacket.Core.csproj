@@ -96,6 +96,7 @@
     <Compile Include="Enums\BrowserType.cs" />
     <Compile Include="Framework\WebDriverFactory.cs" />
     <Compile Include="NUnit\CustomTestEventListener.cs" />
+    <Compile Include="NUnit\NUnitEngineHelper.cs" />
     <Compile Include="NUnit\TestEventArgs.cs" />
     <Compile Include="NUnit\Models\Environment.cs" />
     <Compile Include="NUnit\Models\Filter.cs" />

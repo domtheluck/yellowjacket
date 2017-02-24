@@ -41,6 +41,10 @@ namespace YellowJacket.Core.Engine
 
         #endregion
 
+        #region Event Handlers
+
+        #endregion
+
         #region Constructors
 
         /// <summary>
@@ -53,6 +57,8 @@ namespace YellowJacket.Core.Engine
 
         #endregion
 
+        #region Public Methods
+
         /// <summary>
         /// Execute the specified Feature contains in the related assembly.
         /// </summary>
@@ -64,9 +70,13 @@ namespace YellowJacket.Core.Engine
 
             try
             {
+                ValidateParameters(assemblyPath);
+
                 LoadTestAssembly(assemblyPath);
 
                 RegisterHooks();
+
+
 
                 // TEMP CODE FOR TESTING PURPOSE
 
@@ -106,7 +116,7 @@ namespace YellowJacket.Core.Engine
                 Console.WriteLine(testRun);
 
                 CustomTestEventListener testEventListener = new CustomTestEventListener();
-        
+
                 XmlNode run = testRunner.Run(testEventListener, testFilter);
 
                 using (TextReader reader = new StringReader(run.OuterXml))
@@ -120,15 +130,14 @@ namespace YellowJacket.Core.Engine
             }
             catch (Exception ex)
             {
-                // TODO: we need to log the possible exception
-                Console.WriteLine(ex);
-
-                RaiseExecutionStopEvent();
+                RaiseExecutionStopEvent(ex);
             }
 
             // if an exception is raised, we are raising a specific event to inform the caller.
             RaiseExecutionCompletedEvent();
         }
+
+        #endregion
 
         #region Private Methods
 
@@ -171,7 +180,7 @@ namespace YellowJacket.Core.Engine
                     });
             }
         }
-        
+
         /// <summary>
         /// Initializes the engine.
         /// </summary>
@@ -195,9 +204,9 @@ namespace YellowJacket.Core.Engine
         /// <summary>
         /// Raises the execution stop event.
         /// </summary>
-        private void RaiseExecutionStopEvent()
+        private void RaiseExecutionStopEvent(Exception ex)
         {
-            ExecutionStop?.Invoke(this, new ExecutionStopEventArgs());
+            ExecutionStop?.Invoke(this, new ExecutionStopEventArgs(ex));
         }
 
         /// <summary>
@@ -215,6 +224,29 @@ namespace YellowJacket.Core.Engine
         private void RaiseExecutionProgressEvent(double progress)
         {
             ExecutionProgress?.Invoke(this, new ExecutionProgressEventArgs(progress));
+        }
+
+        private void ValidateParameters(string assemblyPath)
+        {
+            if (!File.Exists(assemblyPath))
+                throw new FileNotFoundException($"Cannot find the assembly {assemblyPath}");
+        }
+
+        /// <summary>
+        /// Executes the specified feature.
+        /// </summary>
+        /// <param name="assemblyPath">The assembly path.</param>
+        /// <param name="feature">The feature.</param>
+        private void Execute(string assemblyPath, string feature)
+        {
+            // get the test package
+            TestPackage testPackage = NUnitEngineHelper.CreateTestPackage(new List<string> {assemblyPath});
+
+            TestFilter testFilter = NUnitEngineHelper.CreateTestFilter(feature);
+
+            ITestRunner testRunner = _testEngine.GetRunner(testPackage);
+
+            TestRun testRun = NUnitEngineHelper.ParseTestRun(testRunner.Explore(testFilter));
         }
 
         #endregion
