@@ -41,7 +41,7 @@ namespace YellowJacket.Core.Helpers
                     .Where(t => t.GetCustomAttributes(typeof(DescriptionAttribute)).Any()).ToList();
 
             if (!types.Any())
-                throw new Exception($"Cannot find the feature {feature} in the assembly {assembly.FullName}");
+                throw new Exception($"Cannot find any runnable test in assembly {assembly.FullName}");
 
             foreach (Type type in types)
             {
@@ -57,7 +57,7 @@ namespace YellowJacket.Core.Helpers
                     return type;
             }
 
-            return null;
+            throw new Exception($"Cannot find the feature {feature} in the assembly {assembly.FullName}");
         }
     }
 }
