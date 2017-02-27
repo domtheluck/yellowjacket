@@ -86,6 +86,25 @@ namespace YellowJacket.Core.NUnit
             return testSuite;
         }
 
+        /// <summary>
+        /// Parses the test case.
+        /// </summary>
+        /// <param name="xmlFragment">The XML fragment.</param>
+        /// <returns><see cref="TestCase"/>.</returns>
+        public static TestCase ParseTestCase(string xmlFragment)
+        {
+            XmlSerializer serializer = new XmlSerializer(typeof(TestCase));
+
+            TestCase testCase;
+
+            using (TextReader reader = new StringReader(xmlFragment))
+            {
+                testCase = (TestCase)serializer.Deserialize(reader);
+            }
+
+            return testCase;
+        }
+
         #endregion
     }
 }

@@ -91,9 +91,12 @@
     <Compile Include="Framework\BaseStep.cs" />
     <Compile Include="Framework\Browser.cs" />
     <Compile Include="Framework\DriverContext.cs" />
-    <Compile Include="Framework\HookBase.cs" />
+    <Compile Include="Framework\BaseHook.cs" />
     <Compile Include="Framework\ExecutionContext.cs" />
     <Compile Include="Enums\BrowserType.cs" />
+    <Compile Include="Logging\ConsoleLogger.cs" />
+    <Compile Include="Logging\FileLogger.cs" />
+    <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Framework\WebDriverFactory.cs" />
     <Compile Include="Helpers\EnumHelper.cs" />
     <Compile Include="NUnit\CustomTestEventListener.cs" />

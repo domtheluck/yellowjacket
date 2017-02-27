@@ -16,7 +16,7 @@ namespace YellowJacket.Core.Engine
         /// <value>
         /// The progress.
         /// </value>
-        public double Progress { get; }
+        public decimal Progress { get; }
 
         #endregion
 
@@ -26,7 +26,7 @@ namespace YellowJacket.Core.Engine
         /// Initializes a new instance of the <see cref="ExecutionProgressEventArgs"/> class.
         /// </summary>
         /// <param name="progress">The progress.</param>
-        public ExecutionProgressEventArgs(double progress)
+        public ExecutionProgressEventArgs(decimal progress)
         {
             Progress = progress;
         }

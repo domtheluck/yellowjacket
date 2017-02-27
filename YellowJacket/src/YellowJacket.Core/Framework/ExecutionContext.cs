@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using YellowJacket.Core.Hook;
+using YellowJacket.Core.Logging;
 
 namespace YellowJacket.Core.Framework
 {
@@ -18,6 +19,9 @@ namespace YellowJacket.Core.Framework
         private static readonly List<HookInstance> _hookInstances =
             new List<HookInstance>();
 
+        private static readonly List<ILogger> _loggers =
+            new List<ILogger>();
+
         #endregion
 
         #region Properties
@@ -28,7 +32,7 @@ namespace YellowJacket.Core.Framework
         /// <value>
         /// The current context.
         /// </value>
-        public static ExecutionContext CurrentContext => _context.Value;
+        public static ExecutionContext Current => _context.Value;
 
         #endregion
 
@@ -44,27 +48,60 @@ namespace YellowJacket.Core.Framework
         #region Public Methods
 
         /// <summary>
+        /// Logs the specified value.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="isNewLine">if set to <c>true</c> log as a new line; otherwise, <c>false</c>.</param>
+        public static void Log(string value, bool isNewLine = true)
+        {
+            _loggers.ForEach(x =>
+            {
+                if (isNewLine)
+                    x.WriteLine(value);
+                else
+                    x.Write(value);
+            });
+        }
+
+        /// <summary>
         /// Registers the hook in the context.
         /// </summary>
         /// <param name="hook">The hook to register.</param>
-        public void RegisterHook(HookInstance hook)
+        internal void RegisterHook(HookInstance hook)
         {
             _hookInstances.Add(hook);
         }
 
         /// <summary>
-        /// Cleans the hook.
+        /// Clears the hook.
         /// </summary>
-        public void CleanHook()
+        internal void ClearHooks()
         {
             _hookInstances.Clear();
+        }
+
+        /// <summary>
+        /// Registers the logger.
+        /// </summary>
+        /// <param name="logger">The logger.</param>
+        internal void RegisterLogger(ILogger logger)
+        {
+            _loggers.Add(logger);
+        }
+
+        /// <summary>
+        /// Clears the loggers.
+        /// </summary>
+        internal void ClearLoggers()
+        {
+            _loggers.Clear();
         }
 
         /// <summary>
         /// Gets the hooks.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<HookInstance> GetHooks()
+        internal IEnumerable<HookInstance> GetHooks()
         {
             return _hookInstances.OrderBy(x => x.Priority).ToList();
         }

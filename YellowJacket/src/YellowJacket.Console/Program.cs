@@ -4,22 +4,17 @@ namespace YellowJacket.Console
 {
     class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
-            //Assembly assembly = Assembly.LoadFile();
-
-            //TypeLocator typeLocator = new TypeLocator();
-
-            //typeLocator.GetHookTypes(assembly);
-
             Engine engine = new Engine();
 
             engine.ExecutionStart += Engine_OnExecutionStart;
             engine.ExecutionCompleted += Engine_OnExecutionCompleted;
             engine.ExecutionStop += Engine_OnExecutionStop;
+            engine.ExecutionProgress += Engine_OnExecutionProgress;
 
-            engine.Execute(@"C:\Projects\yellowjacket\YellowJacket\src\YellowJacket.Console\bin\Debug\YellowJacket.WebApp.Automation.dll", "MyFeature");
-            //engine.Execute(@"D:\Projects\DEV\yellowjacket\YellowJacket\src\YellowJacket.Console\bin\debug\YellowJacket.WebApp.Automation.dll", "MyFeature");
+            //engine.Execute(@"C:\Projects\yellowjacket\YellowJacket\src\YellowJacket.Console\bin\Debug\YellowJacket.WebApp.Automation.dll", "MyFeature");
+            engine.Execute(@"D:\Projects\DEV\yellowjacket\YellowJacket\src\YellowJacket.Console\bin\debug\YellowJacket.WebApp.Automation.dll", "MyFeature");
 
             System.Console.ReadLine();
         }
@@ -44,6 +39,11 @@ namespace YellowJacket.Console
         private static void Engine_OnExecutionStop(object sender, ExecutionStopEventArgs eventArgs)
         {
             System.Console.WriteLine($"Execution Stop... {eventArgs.Exception}");
+        }
+
+        private static void Engine_OnExecutionProgress(object sender, ExecutionProgressEventArgs eventArgs)
+        {
+            System.Console.WriteLine($"Execution progress {eventArgs.Progress}");
         }
 
         #endregion

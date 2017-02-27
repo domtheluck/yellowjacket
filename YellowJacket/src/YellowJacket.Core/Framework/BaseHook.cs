@@ -1,17 +1,18 @@
-﻿using TechTalk.SpecFlow;
+﻿using System;
+using TechTalk.SpecFlow;
 using YellowJacket.Core.Enums;
 
 namespace YellowJacket.Core.Framework
 {
     [Binding]
-    internal class HookBase
+    public class BaseHook
     {
         #region Public Methods
 
         /// <summary>
         /// Hook used after executing a feature.
         /// </summary>
-        [AfterFeature()]
+        [AfterFeature]
         public static void AfterFeature()
         {
 
@@ -20,7 +21,7 @@ namespace YellowJacket.Core.Framework
         /// <summary>
         /// Hook used after executing a scenario.
         /// </summary>
-        [AfterScenario()]
+        [AfterScenario]
         public static void AfterScenario()
         {
 
@@ -29,7 +30,7 @@ namespace YellowJacket.Core.Framework
         /// <summary>
         /// Hook used after executing a step.
         /// </summary>
-        [AfterStep()]
+        [AfterStep]
         public static void AfterStep()
         {
 
@@ -38,7 +39,7 @@ namespace YellowJacket.Core.Framework
         /// <summary>
         /// Hook used before executing a feature.
         /// </summary>
-        [BeforeFeature()]
+        [BeforeFeature]
         public static void BeforeFeature()
         {
             Initialize();
@@ -47,16 +48,16 @@ namespace YellowJacket.Core.Framework
         /// <summary>
         /// Hook used before executing a scenario.
         /// </summary>
-        [BeforeScenario()]
+        [BeforeScenario]
         public static void BeforeScenario()
         {
-
+            Console.WriteLine("BeforeScenario");
         }
 
         /// <summary>
         /// Hook used before executing a step.
         /// </summary>
-        [BeforeStep()]
+        [BeforeStep]
         public static void BeforeStep()
         {
 
