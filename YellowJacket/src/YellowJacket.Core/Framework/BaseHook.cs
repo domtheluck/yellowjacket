@@ -15,7 +15,7 @@ namespace YellowJacket.Core.Framework
         [AfterFeature]
         public static void AfterFeature()
         {
-
+            Console.WriteLine("AfterFeature");
         }
 
         /// <summary>
@@ -24,7 +24,7 @@ namespace YellowJacket.Core.Framework
         [AfterScenario]
         public static void AfterScenario()
         {
-
+            Console.WriteLine("AfterScenario");
         }
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace YellowJacket.Core.Framework
         [AfterStep]
         public static void AfterStep()
         {
-
+            Console.WriteLine("AfterStep");
         }
 
         /// <summary>
@@ -42,6 +42,7 @@ namespace YellowJacket.Core.Framework
         [BeforeFeature]
         public static void BeforeFeature()
         {
+            Console.WriteLine("BeforeFeature");
             Initialize();
         }
 
@@ -60,7 +61,7 @@ namespace YellowJacket.Core.Framework
         [BeforeStep]
         public static void BeforeStep()
         {
-
+            Console.WriteLine("BeforeStep");
         }
 
         #endregion

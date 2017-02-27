@@ -43,7 +43,7 @@ namespace YellowJacket.Core.NUnit
             // TODO: maybe not the best way to filter the tests. We might need to revisit this. It is more used for individual test in a class.
             //filterBuilder.SelectWhere($"test =~ {feature}Feature");
 
-            filterBuilder.SelectWhere($"class =~ {type.FullName}");
+            filterBuilder.SelectWhere($"class == {type.FullName}");
 
             return filterBuilder.GetFilter();
         }

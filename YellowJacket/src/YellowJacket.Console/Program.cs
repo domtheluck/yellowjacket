@@ -13,8 +13,8 @@ namespace YellowJacket.Console
             engine.ExecutionStop += Engine_OnExecutionStop;
             engine.ExecutionProgress += Engine_OnExecutionProgress;
 
-            //engine.Execute(@"C:\Projects\yellowjacket\YellowJacket\src\YellowJacket.Console\bin\Debug\YellowJacket.WebApp.Automation.dll", "MyFeature");
-            engine.Execute(@"D:\Projects\DEV\yellowjacket\YellowJacket\src\YellowJacket.Console\bin\debug\YellowJacket.WebApp.Automation.dll", "MyFeature");
+            engine.Execute(@"C:\Projects\yellowjacket\YellowJacket\src\YellowJacket.Console\bin\Debug\YellowJacket.WebApp.Automation.dll", "MyFeature");
+            //engine.Execute(@"D:\Projects\DEV\yellowjacket\YellowJacket\src\YellowJacket.Console\bin\debug\YellowJacket.WebApp.Automation.dll", "MyFeature");
 
             System.Console.ReadLine();
         }

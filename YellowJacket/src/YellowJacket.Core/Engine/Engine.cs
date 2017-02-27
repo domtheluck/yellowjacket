@@ -106,20 +106,20 @@ namespace YellowJacket.Core.Engine
 
                 RegisterHooks();
 
-                RaiseExecutionStartEvent();
+                FireExecutionStartEvent();
 
                 ExecuteFeature(assemblyPath, feature);
             }
             catch (Exception ex)
             {
                 // if an exception is raised, we are raising a specific event to inform the caller.
-                RaiseExecutionStopEvent(ex);
+                FireExecutionStopEvent(ex);
 
                 // TODO: for debugging purpose only. Don't forget to remove it.
                 throw;
             }
 
-            RaiseExecutionCompletedEvent();
+            FireExecutionCompletedEvent();
         }
 
         #endregion
@@ -201,34 +201,34 @@ namespace YellowJacket.Core.Engine
         }
 
         /// <summary>
-        /// Raises the execution start event.
+        /// Fires the execution start event.
         /// </summary>
-        private void RaiseExecutionStartEvent()
+        private void FireExecutionStartEvent()
         {
             ExecutionStart?.Invoke(this, new ExecutionStartEventArgs());
         }
 
         /// <summary>
-        /// Raises the execution stop event.
+        /// Fires the execution stop event.
         /// </summary>
-        private void RaiseExecutionStopEvent(Exception ex)
+        private void FireExecutionStopEvent(Exception ex)
         {
             ExecutionStop?.Invoke(this, new ExecutionStopEventArgs(ex));
         }
 
         /// <summary>
-        /// Raises the execution completed event.
+        /// Fires the execution completed event.
         /// </summary>
-        private void RaiseExecutionCompletedEvent()
+        private void FireExecutionCompletedEvent()
         {
             ExecutionCompleted?.Invoke(this, new ExecutionCompletedEventArgs());
         }
 
         /// <summary>
-        /// Raises the execution progress event.
+        /// Fires the execution progress event.
         /// </summary>
         /// <param name="progress">The progress.</param>
-        private void RaiseExecutionProgressEvent(decimal progress)
+        private void FireExecutionProgressEvent(decimal progress)
         {
             ExecutionProgress?.Invoke(this, new ExecutionProgressEventArgs(progress));
         }
@@ -281,7 +281,7 @@ namespace YellowJacket.Core.Engine
 
             decimal progress = (passedTestCaseCount / (decimal)testCaseCount) * 100;
 
-            RaiseExecutionProgressEvent(Math.Round(progress, 2));
+            FireExecutionProgressEvent(Math.Round(progress, 2));
         }
 
         #endregion
