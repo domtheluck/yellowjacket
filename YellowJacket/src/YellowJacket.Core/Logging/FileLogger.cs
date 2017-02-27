@@ -1,9 +1,13 @@
-﻿namespace YellowJacket.Core.Logging
+﻿using System;
+using YellowJacket.Core.Infrastructure;
+
+namespace YellowJacket.Core.Logging
 {
     /// <summary>
     /// Used to write log to a file.
     /// </summary>
     /// <seealso cref="ILogger" />
+    [Serializable]
     internal class FileLogger: ILogger
     {
         /// <summary>

@@ -1,4 +1,4 @@
-﻿namespace YellowJacket.Core.Logging
+﻿namespace YellowJacket.Core.Infrastructure
 {
     /// <summary>
     /// Interface definition for logging.

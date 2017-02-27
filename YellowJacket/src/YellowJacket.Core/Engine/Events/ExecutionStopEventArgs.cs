@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace YellowJacket.Core.Engine
+namespace YellowJacket.Core.Engine.Events
 {
     /// <summary>
     /// Contains the arguments for the Execution Stop event.

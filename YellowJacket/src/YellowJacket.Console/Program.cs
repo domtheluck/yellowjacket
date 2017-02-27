@@ -1,4 +1,6 @@
 ﻿using YellowJacket.Core.Engine;
+using YellowJacket.Core.Engine.Events;
+using YellowJacket.Core.Infrastructure;
 
 namespace YellowJacket.Console
 {
@@ -6,15 +8,15 @@ namespace YellowJacket.Console
     {
         private static void Main(string[] args)
         {
-            Engine engine = new Engine();
+            IExecutionEngine executionEngine = ExecutionEngineManager.CreateEngine();
 
-            engine.ExecutionStart += Engine_OnExecutionStart;
-            engine.ExecutionCompleted += Engine_OnExecutionCompleted;
-            engine.ExecutionStop += Engine_OnExecutionStop;
-            engine.ExecutionProgress += Engine_OnExecutionProgress;
+            executionEngine.ExecutionStart += Engine_OnExecutionStart;
+            executionEngine.ExecutionCompleted += Engine_OnExecutionCompleted;
+            executionEngine.ExecutionStop += Engine_OnExecutionStop;
+            executionEngine.ExecutionProgress += Engine_OnExecutionProgress;
 
-            engine.Execute(@"C:\Projects\yellowjacket\YellowJacket\src\YellowJacket.Console\bin\Debug\YellowJacket.WebApp.Automation.dll", "MyFeature");
-            //engine.Execute(@"D:\Projects\DEV\yellowjacket\YellowJacket\src\YellowJacket.Console\bin\debug\YellowJacket.WebApp.Automation.dll", "MyFeature");
+            executionEngine.Execute(@"C:\Projects\yellowjacket\YellowJacket\src\YellowJacket.Console\bin\Debug\YellowJacket.WebApp.Automation.dll", "MyFeature");
+            //executionEngine.Execute(@"D:\Projects\DEV\yellowjacket\YellowJacket\src\YellowJacket.Console\bin\debug\YellowJacket.WebApp.Automation.dll", "MyFeature");
 
             System.Console.ReadLine();
         }

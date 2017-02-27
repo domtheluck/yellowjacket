@@ -1,4 +1,6 @@
-﻿namespace YellowJacket.Core.Hook
+﻿using System;
+
+namespace YellowJacket.Core.Hook
 {
     /// <summary>
     /// Interface use to handle hooks.

@@ -1,5 +1,8 @@
-﻿namespace YellowJacket.Core.Hook
+﻿using System;
+
+namespace YellowJacket.Core.Hook
 {
+    [Serializable]
     public class HookInstance
     {
         #region Properties

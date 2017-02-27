@@ -1,8 +1,10 @@
-﻿using YellowJacket.Core.Hook;
+﻿using System;
+using YellowJacket.Core.Hook;
 
 namespace YellowJacket.WebApp.Automation
 {
     [HookPriority(1)]
+    [Serializable]
     public class Hook : IHook
     {
         /// <summary>
@@ -51,7 +53,7 @@ namespace YellowJacket.WebApp.Automation
         /// </summary>
         public void BeforeFeature()
         {
-
+            Console.WriteLine("IHook - BeforeFeature");
         }
 
         /// <summary>

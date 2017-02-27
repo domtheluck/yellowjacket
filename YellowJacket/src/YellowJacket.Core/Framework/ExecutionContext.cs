@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using Newtonsoft.Json;
+using YellowJacket.Core.Helpers;
 using YellowJacket.Core.Hook;
-using YellowJacket.Core.Logging;
+using YellowJacket.Core.Infrastructure;
 
 namespace YellowJacket.Core.Framework
 {
@@ -101,9 +104,24 @@ namespace YellowJacket.Core.Framework
         /// Gets the hooks.
         /// </summary>
         /// <returns></returns>
-        internal IEnumerable<HookInstance> GetHooks()
+        internal List<HookInstance> GetHooks()
         {
             return _hookInstances.OrderBy(x => x.Priority).ToList();
+        }
+
+        /// <summary>
+        /// Exports the current configuration.
+        /// </summary>
+        /// <param name="path">The path.</param>
+        internal void ExportConfiguration(string path)
+        {
+            Settings settings = new Settings
+            {
+                Hooks = _hookInstances,
+                Loggers = _loggers
+            };
+
+            SerializationHelper.WriteToBinaryFile(path, settings);
         }
 
         #endregion

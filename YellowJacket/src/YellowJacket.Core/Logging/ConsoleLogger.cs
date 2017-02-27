@@ -1,4 +1,5 @@
 ﻿using System;
+using YellowJacket.Core.Infrastructure;
 
 namespace YellowJacket.Core.Logging
 {
@@ -6,6 +7,7 @@ namespace YellowJacket.Core.Logging
     /// Used to write log to the console.
     /// </summary>
     /// <seealso cref="ILogger" />
+    [Serializable]
     internal class ConsoleLogger: ILogger
     {
         #region Public Methods

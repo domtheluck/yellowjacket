@@ -4,24 +4,27 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using NUnit.Engine;
+using YellowJacket.Core.Engine.Events;
 using YellowJacket.Core.Framework;
 using YellowJacket.Core.Helpers;
 using YellowJacket.Core.Hook;
+using YellowJacket.Core.Infrastructure;
 using YellowJacket.Core.Logging;
 using YellowJacket.Core.NUnit;
 using YellowJacket.Core.NUnit.Models;
+using ILogger = YellowJacket.Core.Infrastructure.ILogger;
 
 namespace YellowJacket.Core.Engine
 {
-    public delegate void ExecutionStartHandler(object sender, ExecutionStartEventArgs eventArgs);
-    public delegate void ExecutionStopHandler(object sender, ExecutionStopEventArgs eventArgs);
-    public delegate void ExecutionCompletedHandler(object sender, ExecutionCompletedEventArgs eventArgs);
-    public delegate void ExecutionProgressHandler(object sender, ExecutionProgressEventArgs eventArgs);
+    //public delegate void ExecutionStartHandler(object sender, ExecutionStartEventArgs eventArgs);
+    //public delegate void ExecutionStopHandler(object sender, ExecutionStopEventArgs eventArgs);
+    //public delegate void ExecutionCompletedHandler(object sender, ExecutionCompletedEventArgs eventArgs);
+    //public delegate void ExecutionProgressHandler(object sender, ExecutionProgressEventArgs eventArgs);
 
     /// <summary>
     /// YellowJacket engine.
     /// </summary>
-    public class Engine
+    public class Engine: IExecutionEngine
     {
         #region Private Members
 
@@ -50,7 +53,7 @@ namespace YellowJacket.Core.Engine
         /// <summary>
         /// Initializes a new instance of the <see cref="Engine" /> class.
         /// </summary>
-        public Engine()
+        internal Engine()
         {
             Initialize();
         }
@@ -69,7 +72,7 @@ namespace YellowJacket.Core.Engine
             Execute(
                 assemblyPath,
                 feature,
-                new List<Logging.ILogger> { new ConsoleLogger() });
+                new List<ILogger> { new ConsoleLogger() });
         }
 
         /// <summary>
@@ -77,13 +80,13 @@ namespace YellowJacket.Core.Engine
         /// </summary>
         /// <param name="assemblyPath">The assembly path.</param>
         /// <param name="feature">The feature.</param>
-        /// <param name="logger"><see cref="Logging.ILogger"/>.</param>
-        public void Execute(string assemblyPath, string feature, Logging.ILogger logger)
+        /// <param name="logger"><see cref="ILogger"/>.</param>
+        public void Execute(string assemblyPath, string feature, ILogger logger)
         {
             Execute(
                 assemblyPath,
                 feature,
-                new List<Logging.ILogger> { logger });
+                new List<ILogger> { logger });
         }
 
         /// <summary>
@@ -92,7 +95,7 @@ namespace YellowJacket.Core.Engine
         /// <param name="assemblyPath">The assembly path.</param>
         /// <param name="feature">The feature.</param>
         /// <param name="loggers">The loggers.</param>
-        public void Execute(string assemblyPath, string feature, List<Logging.ILogger> loggers)
+        public void Execute(string assemblyPath, string feature, List<ILogger> loggers)
         {
             Cleanup();
 
@@ -149,7 +152,7 @@ namespace YellowJacket.Core.Engine
         /// Registers the loggers in the execution context.
         /// </summary>
         /// <param name="loggers">The loggers.</param>
-        private void RegisterLoggers(List<Logging.ILogger> loggers)
+        private void RegisterLoggers(List<ILogger> loggers)
         {
             // cleanup the existing loggers
             ExecutionContext.Current.ClearLoggers();
@@ -269,9 +272,14 @@ namespace YellowJacket.Core.Engine
 
             testEventListener.TestReport += OnTestReport;
 
+            ExecutionContext.Current.ExportConfiguration(@"c:\temp\settings.bin");
+
             TestRun testRun = NUnitEngineHelper.ParseTestRun(testRunner.Run(testEventListener, testFilter));
         }
 
+        /// <summary>
+        /// Updates the progress.
+        /// </summary>
         private void UpdateProgress()
         {
             // TODO: temp code. Need something more flexible. Also, we need to think about the result output.

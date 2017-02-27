@@ -1,6 +1,7 @@
 ﻿using System;
 using TechTalk.SpecFlow;
 using YellowJacket.Core.Enums;
+using YellowJacket.Core.Infrastructure;
 
 namespace YellowJacket.Core.Framework
 {
@@ -8,6 +9,12 @@ namespace YellowJacket.Core.Framework
     public class BaseHook
     {
         #region Public Methods
+
+        [BeforeTestRun]
+        public static void BeforeTestRun()
+        {
+            //TODO Re import the Execution Context somehow
+        }
 
         /// <summary>
         /// Hook used after executing a feature.
@@ -42,8 +49,9 @@ namespace YellowJacket.Core.Framework
         [BeforeFeature]
         public static void BeforeFeature()
         {
-            Console.WriteLine("BeforeFeature");
             Initialize();
+
+            HookProcessor.Process(HookType.BeforeFeature);
         }
 
         /// <summary>
