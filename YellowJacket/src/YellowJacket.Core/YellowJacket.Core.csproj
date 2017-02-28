@@ -89,7 +89,7 @@
     <Compile Include="Enums\HookType.cs" />
     <Compile Include="Helpers\SerializationHelper.cs" />
     <Compile Include="Infrastructure\HookProcessor.cs" />
-    <Compile Include="Infrastructure\IExecutionEngine.cs" />
+    <Compile Include="Interfaces\IExecutionEngine.cs" />
     <Compile Include="Framework\Base.cs" />
     <Compile Include="Framework\BasePage.cs" />
     <Compile Include="Framework\BaseStep.cs" />
@@ -102,8 +102,8 @@
     <Compile Include="Infrastructure\Settings.cs" />
     <Compile Include="Logging\ConsoleLogger.cs" />
     <Compile Include="Logging\FileLogger.cs" />
-    <Compile Include="Infrastructure\ILogger.cs" />
-    <Compile Include="Framework\WebDriverFactory.cs" />
+    <Compile Include="Interfaces\ILogger.cs" />
+    <Compile Include="Infrastructure\WebDriverFactory.cs" />
     <Compile Include="Helpers\EnumHelper.cs" />
     <Compile Include="NUnit\CustomTestEventListener.cs" />
     <Compile Include="NUnit\NUnitEngineHelper.cs" />

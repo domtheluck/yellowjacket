@@ -18,7 +18,7 @@ namespace YellowJacket.Core.Infrastructure
 
             hooks.ForEach(x =>
             {
-                x.Instance.GetType().GetMethod(hookType.ToString()).Invoke(x, null);
+                x.Instance.GetType().GetMethod(hookType.ToString()).Invoke(x.Instance, null);
             });
         }
     }

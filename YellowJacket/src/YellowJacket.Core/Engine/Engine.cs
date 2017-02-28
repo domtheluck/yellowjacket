@@ -8,19 +8,14 @@ using YellowJacket.Core.Engine.Events;
 using YellowJacket.Core.Framework;
 using YellowJacket.Core.Helpers;
 using YellowJacket.Core.Hook;
-using YellowJacket.Core.Infrastructure;
+using YellowJacket.Core.Interfaces;
 using YellowJacket.Core.Logging;
 using YellowJacket.Core.NUnit;
 using YellowJacket.Core.NUnit.Models;
-using ILogger = YellowJacket.Core.Infrastructure.ILogger;
+using ILogger = YellowJacket.Core.Interfaces.ILogger;
 
 namespace YellowJacket.Core.Engine
 {
-    //public delegate void ExecutionStartHandler(object sender, ExecutionStartEventArgs eventArgs);
-    //public delegate void ExecutionStopHandler(object sender, ExecutionStopEventArgs eventArgs);
-    //public delegate void ExecutionCompletedHandler(object sender, ExecutionCompletedEventArgs eventArgs);
-    //public delegate void ExecutionProgressHandler(object sender, ExecutionProgressEventArgs eventArgs);
-
     /// <summary>
     /// YellowJacket engine.
     /// </summary>
@@ -272,7 +267,7 @@ namespace YellowJacket.Core.Engine
 
             testEventListener.TestReport += OnTestReport;
 
-            ExecutionContext.Current.ExportConfiguration(@"c:\temp\settings.bin");
+            ExecutionContext.Current.ExportConfiguration(Path.Combine(Path.GetTempPath(), "yellowjacket-config.bin"));
 
             TestRun testRun = NUnitEngineHelper.ParseTestRun(testRunner.Run(testEventListener, testFilter));
         }

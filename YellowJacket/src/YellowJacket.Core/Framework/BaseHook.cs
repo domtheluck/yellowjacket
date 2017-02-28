@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using TechTalk.SpecFlow;
 using YellowJacket.Core.Enums;
 using YellowJacket.Core.Infrastructure;
@@ -13,7 +14,7 @@ namespace YellowJacket.Core.Framework
         [BeforeTestRun]
         public static void BeforeTestRun()
         {
-            //TODO Re import the Execution Context somehow
+            ExecutionContext.Current.ImportConfiguration(Path.Combine(Path.GetTempPath(), "yellowjacket-config.bin"));
         }
 
         /// <summary>

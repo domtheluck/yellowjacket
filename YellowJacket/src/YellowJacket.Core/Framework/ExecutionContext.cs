@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using Newtonsoft.Json;
 using YellowJacket.Core.Helpers;
 using YellowJacket.Core.Hook;
 using YellowJacket.Core.Infrastructure;
+using YellowJacket.Core.Interfaces;
 
 namespace YellowJacket.Core.Framework
 {
@@ -66,6 +65,10 @@ namespace YellowJacket.Core.Framework
             });
         }
 
+        #endregion
+
+        #region Internal Methods
+
         /// <summary>
         /// Registers the hook in the context.
         /// </summary>
@@ -122,6 +125,18 @@ namespace YellowJacket.Core.Framework
             };
 
             SerializationHelper.WriteToBinaryFile(path, settings);
+        }
+
+        /// <summary>
+        /// Imports the selected configuration.
+        /// </summary>
+        /// <param name="path">The path.</param>
+        internal void ImportConfiguration(string path)
+        {
+            Settings settings = SerializationHelper.ReadFromBinaryFile<Settings>(path);
+
+            _hookInstances.AddRange(settings.Hooks);
+            _loggers.AddRange(settings.Loggers);
         }
 
         #endregion

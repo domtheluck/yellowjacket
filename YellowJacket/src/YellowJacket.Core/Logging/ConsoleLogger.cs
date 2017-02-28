@@ -1,5 +1,5 @@
 ﻿using System;
-using YellowJacket.Core.Infrastructure;
+using YellowJacket.Core.Interfaces;
 
 namespace YellowJacket.Core.Logging
 {
