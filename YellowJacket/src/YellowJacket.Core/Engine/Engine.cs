@@ -12,15 +12,9 @@ using YellowJacket.Core.Infrastructure;
 using YellowJacket.Core.Logging;
 using YellowJacket.Core.NUnit;
 using YellowJacket.Core.NUnit.Models;
-using ILogger = YellowJacket.Core.Infrastructure.ILogger;
 
 namespace YellowJacket.Core.Engine
 {
-    //public delegate void ExecutionStartHandler(object sender, ExecutionStartEventArgs eventArgs);
-    //public delegate void ExecutionStopHandler(object sender, ExecutionStopEventArgs eventArgs);
-    //public delegate void ExecutionCompletedHandler(object sender, ExecutionCompletedEventArgs eventArgs);
-    //public delegate void ExecutionProgressHandler(object sender, ExecutionProgressEventArgs eventArgs);
-
     /// <summary>
     /// YellowJacket engine.
     /// </summary>
@@ -72,7 +66,7 @@ namespace YellowJacket.Core.Engine
             Execute(
                 assemblyPath,
                 feature,
-                new List<ILogger> { new ConsoleLogger() });
+                new List<Infrastructure.ILogger> { new ConsoleLogger() });
         }
 
         /// <summary>
@@ -81,12 +75,12 @@ namespace YellowJacket.Core.Engine
         /// <param name="assemblyPath">The assembly path.</param>
         /// <param name="feature">The feature.</param>
         /// <param name="logger"><see cref="ILogger"/>.</param>
-        public void Execute(string assemblyPath, string feature, ILogger logger)
+        public void Execute(string assemblyPath, string feature, Infrastructure.ILogger logger)
         {
             Execute(
                 assemblyPath,
                 feature,
-                new List<ILogger> { logger });
+                new List<Infrastructure.ILogger> { logger });
         }
 
         /// <summary>
@@ -95,7 +89,7 @@ namespace YellowJacket.Core.Engine
         /// <param name="assemblyPath">The assembly path.</param>
         /// <param name="feature">The feature.</param>
         /// <param name="loggers">The loggers.</param>
-        public void Execute(string assemblyPath, string feature, List<ILogger> loggers)
+        public void Execute(string assemblyPath, string feature, List<Infrastructure.ILogger> loggers)
         {
             Cleanup();
 
@@ -152,7 +146,7 @@ namespace YellowJacket.Core.Engine
         /// Registers the loggers in the execution context.
         /// </summary>
         /// <param name="loggers">The loggers.</param>
-        private void RegisterLoggers(List<ILogger> loggers)
+        private void RegisterLoggers(List<Infrastructure.ILogger> loggers)
         {
             // cleanup the existing loggers
             ExecutionContext.Current.ClearLoggers();
