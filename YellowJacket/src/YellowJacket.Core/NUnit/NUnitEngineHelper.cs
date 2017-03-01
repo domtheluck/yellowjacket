@@ -24,7 +24,13 @@ namespace YellowJacket.Core.NUnit
         /// <returns><see cref="TestPackage"/>.</returns>
         public static TestPackage CreateTestPackage(IList<string> assemblies)
         {
-            return new TestPackage(assemblies);
+            TestPackage testPackage = new TestPackage(assemblies);
+
+            // TODO Need to convert those hardcoded values to constants
+            testPackage.AddSetting("ProcessModel", "InProcess");
+            testPackage.AddSetting("DomainUsage", "None");
+
+            return testPackage;
         }
 
         /// <summary>
