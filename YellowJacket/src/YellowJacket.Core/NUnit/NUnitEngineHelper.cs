@@ -27,7 +27,7 @@ namespace YellowJacket.Core.NUnit
             TestPackage testPackage = new TestPackage(assemblies);
 
             // TODO Need to convert those hardcoded values to constants
-            testPackage.AddSetting("ProcessModel", "InProcess");
+            testPackage.AddSetting("ProcessModel", "Single");
             testPackage.AddSetting("DomainUsage", "None");
 
             return testPackage;

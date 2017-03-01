@@ -4,7 +4,7 @@ using YellowJacket.Core.Interfaces;
 
 namespace YellowJacket.Console
 {
-    class Program
+    internal class Program
     {
         private static void Main(string[] args)
         {

@@ -100,7 +100,6 @@
     <Compile Include="Enums\BrowserType.cs" />
     <Compile Include="Infrastructure\ExecutionEngineManager.cs" />
     <Compile Include="Infrastructure\Settings.cs" />
-    <Compile Include="Logging\ConsoleLogger.cs" />
     <Compile Include="Logging\FileLogger.cs" />
     <Compile Include="Interfaces\ILogger.cs" />
     <Compile Include="Infrastructure\WebDriverFactory.cs" />

@@ -5,7 +5,6 @@ using YellowJacket.Core.Interfaces;
 
 namespace YellowJacket.Core.Infrastructure
 {
-    [Serializable]
     internal class Settings
     {
         internal List<HookInstance> Hooks { get; set; }

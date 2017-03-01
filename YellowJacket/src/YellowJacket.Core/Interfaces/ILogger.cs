@@ -6,15 +6,15 @@
     public interface ILogger
     {
         /// <summary>
-        /// Writes the specified line to the log.
+        /// Writes the content to the log.
         /// </summary>
-        /// <param name="line">The line to write.</param>
-        void WriteLine(string line);
+        /// <param name="content">The content to write.</param>
+        void WriteLine(string content);
 
         /// <summary>
-        /// Writes the specified value to the log.
+        /// Writes the specified content to the log.
         /// </summary>
-        /// <param name="value">The value to write.</param>
-        void Write(string value);
+        /// <param name="content">The content to write.</param>
+        void Write(string content);
     }
 }

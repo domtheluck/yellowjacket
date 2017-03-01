@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -20,7 +19,7 @@ namespace YellowJacket.Core.Engine
     /// <summary>
     /// YellowJacket engine.
     /// </summary>
-    public class Engine: IExecutionEngine
+    public class Engine : IExecutionEngine
     {
         #region Private Members
 
@@ -68,7 +67,10 @@ namespace YellowJacket.Core.Engine
             Execute(
                 assemblyPath,
                 feature,
-                new List<ILogger> { new ConsoleLogger() });
+                new List<ILogger>
+                {
+                    new FileLogger($@"c:\temp\{Guid.NewGuid()}.txt")
+                });
         }
 
         /// <summary>
@@ -153,7 +155,12 @@ namespace YellowJacket.Core.Engine
             // cleanup the existing loggers
             ExecutionContext.Current.ClearLoggers();
 
-            loggers.ForEach(x => { ExecutionContext.Current.RegisterLogger(x); });
+
+            // register the loggers
+            loggers.ForEach(x =>
+            {
+                ExecutionContext.Current.RegisterLogger(x);
+            });
         }
 
         /// <summary>
@@ -268,7 +275,7 @@ namespace YellowJacket.Core.Engine
 
             testEventListener.TestReport += OnTestReport;
 
-            ExecutionContext.Current.ExportConfiguration(Path.Combine(Path.GetTempPath(), "yellowjacket-config.bin"));
+            //ExecutionContext.Current.ExportConfiguration(Path.Combine(Path.GetTempPath(), "yellowjacket-config.bin"));
 
             TestRun testRun = NUnitEngineHelper.ParseTestRun(testRunner.Run(testEventListener, testFilter));
         }

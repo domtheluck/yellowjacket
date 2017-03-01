@@ -1,21 +1,17 @@
 ﻿using System;
-using System.IO;
 using TechTalk.SpecFlow;
 using YellowJacket.Core.Enums;
 using YellowJacket.Core.Infrastructure;
 
 namespace YellowJacket.Core.Framework
 {
+    /// <summary>
+    /// Base class to handle SpecFlow binding hooks.
+    /// </summary>
     [Binding]
-    public class BaseHook
+    internal class BaseHook
     {
         #region Public Methods
-
-        [BeforeTestRun]
-        public static void BeforeTestRun()
-        {
-            ExecutionContext.Current.ImportConfiguration(Path.Combine(Path.GetTempPath(), "yellowjacket-config.bin"));
-        }
 
         /// <summary>
         /// Hook used after executing a feature.
@@ -23,7 +19,7 @@ namespace YellowJacket.Core.Framework
         [AfterFeature]
         public static void AfterFeature()
         {
-            Console.WriteLine("AfterFeature");
+            HookProcessor.Process(HookType.AfterFeature);
         }
 
         /// <summary>
@@ -32,7 +28,7 @@ namespace YellowJacket.Core.Framework
         [AfterScenario]
         public static void AfterScenario()
         {
-            Console.WriteLine("AfterScenario");
+            HookProcessor.Process(HookType.AfterScenario);
         }
 
         /// <summary>
@@ -41,7 +37,14 @@ namespace YellowJacket.Core.Framework
         [AfterStep]
         public static void AfterStep()
         {
-            Console.WriteLine("AfterStep");
+            HookProcessor.Process(HookType.AfterStep);
+        }
+
+        [AfterTestRun]
+        public static void AfterTestRun()
+        {
+            HookProcessor.Process(HookType.AfterExecution);
+
         }
 
         /// <summary>
@@ -50,7 +53,7 @@ namespace YellowJacket.Core.Framework
         [BeforeFeature]
         public static void BeforeFeature()
         {
-            Initialize();
+            ExecutionContext.Current.Log($"Feature: {FeatureContext.Current.FeatureInfo.Title}");
 
             HookProcessor.Process(HookType.BeforeFeature);
         }
@@ -61,7 +64,7 @@ namespace YellowJacket.Core.Framework
         [BeforeScenario]
         public static void BeforeScenario()
         {
-            Console.WriteLine("BeforeScenario");
+            HookProcessor.Process(HookType.BeforeScenario);
         }
 
         /// <summary>
@@ -70,9 +73,18 @@ namespace YellowJacket.Core.Framework
         [BeforeStep]
         public static void BeforeStep()
         {
-            Console.WriteLine("BeforeStep");
+            HookProcessor.Process(HookType.BeforeStep);
         }
 
+        [BeforeTestRun]
+        public static void BeforeTestRun()
+        {
+            Initialize();
+
+            ExecutionContext.Current.Log($"Execution start at {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
+
+            HookProcessor.Process(HookType.BeforeExecution);
+        }
         #endregion
 
         /// <summary>

@@ -47,14 +47,14 @@ namespace YellowJacket.Core.Framework
 
         #endregion
 
-        #region Public Methods
+        #region Public MethodsFile.AppendAllLines(_path, new List<string> {value});
 
         /// <summary>
         /// Logs the specified value.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <param name="isNewLine">if set to <c>true</c> log as a new line; otherwise, <c>false</c>.</param>
-        public static void Log(string value, bool isNewLine = true)
+        public void Log(string value, bool isNewLine = true)
         {
             _loggers.ForEach(x =>
             {
@@ -104,7 +104,7 @@ namespace YellowJacket.Core.Framework
         }
 
         /// <summary>
-        /// Gets the hooks.
+        /// Gets the hooks ordered by priority.
         /// </summary>
         /// <returns></returns>
         internal List<HookInstance> GetHooks()
