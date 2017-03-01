@@ -3,7 +3,7 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.IE;
 using YellowJacket.Core.Enums;
 
-namespace YellowJacket.Core.Framework
+namespace YellowJacket.Core.Infrastructure
 {
     /// <summary>
     /// Uses to create Web Driver.

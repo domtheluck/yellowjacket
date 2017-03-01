@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using YellowJacket.Core.Engine.Events;
 
-namespace YellowJacket.Core.Infrastructure
+namespace YellowJacket.Core.Interfaces
 {
     public delegate void ExecutionStartHandler(object sender, ExecutionStartEventArgs eventArgs);
     public delegate void ExecutionStopHandler(object sender, ExecutionStopEventArgs eventArgs);
