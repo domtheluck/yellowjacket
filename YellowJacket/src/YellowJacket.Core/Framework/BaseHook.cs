@@ -2,6 +2,7 @@
 using TechTalk.SpecFlow;
 using YellowJacket.Core.Enums;
 using YellowJacket.Core.Infrastructure;
+using YellowJacket.Core.Logging;
 
 namespace YellowJacket.Core.Framework
 {
@@ -28,6 +29,9 @@ namespace YellowJacket.Core.Framework
         [AfterScenario]
         public static void AfterScenario()
         {
+            // TODO: need to check if an error happened
+            LogManager.Log($"Scenario {ScenarioContext.Current.ScenarioInfo.Title} completed");
+
             HookProcessor.Process(HookType.AfterScenario);
         }
 
@@ -43,8 +47,9 @@ namespace YellowJacket.Core.Framework
         [AfterTestRun]
         public static void AfterTestRun()
         {
-            HookProcessor.Process(HookType.AfterExecution);
+            LogManager.Log($"Execution completed at {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
 
+            HookProcessor.Process(HookType.AfterExecution);
         }
 
         /// <summary>
@@ -53,7 +58,7 @@ namespace YellowJacket.Core.Framework
         [BeforeFeature]
         public static void BeforeFeature()
         {
-            ExecutionContext.Current.Log($"Feature: {FeatureContext.Current.FeatureInfo.Title}");
+            LogManager.Log($"Feature {FeatureContext.Current.FeatureInfo.Title}");
 
             HookProcessor.Process(HookType.BeforeFeature);
         }
@@ -64,6 +69,8 @@ namespace YellowJacket.Core.Framework
         [BeforeScenario]
         public static void BeforeScenario()
         {
+            LogManager.Log($"Starting scenario {ScenarioContext.Current.ScenarioInfo.Title}");
+
             HookProcessor.Process(HookType.BeforeScenario);
         }
 
@@ -81,7 +88,7 @@ namespace YellowJacket.Core.Framework
         {
             Initialize();
 
-            ExecutionContext.Current.Log($"Execution start at {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
+            LogManager.Log($"Execution start at {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
 
             HookProcessor.Process(HookType.BeforeExecution);
         }

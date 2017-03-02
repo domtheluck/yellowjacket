@@ -21,40 +21,51 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
-
-namespace YellowJacket.Core.Hook
+namespace YellowJacket.Core.Interfaces
 {
     /// <summary>
-    /// Uses for hook priority.
+    /// Interface definition for hook.
     /// </summary>
-    /// <seealso cref="System.Attribute" />
-    [AttributeUsage(AttributeTargets.Class)]
-    public class HookPriorityAttribute : Attribute
+    public interface IHook
     {
-        #region Properties
+        /// <summary>
+        /// Called mefore a feature execution.
+        /// </summary>
+        void BeforeFeature();
 
         /// <summary>
-        /// Gets the priority.
+        /// Called after a feature execution.
         /// </summary>
-        /// <value>
-        /// The priority.
-        /// </value>
-        public int Priority { get; }
-
-        #endregion
-
-        #region Constructors
+        void AfterFeature();
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="HookPriorityAttribute"/> class.
+        /// Called before a scenario execution.
         /// </summary>
-        /// <param name="priority">The priority.</param>
-        public HookPriorityAttribute(int priority)
-        {
-            Priority = priority;
-        }
+        void BeforeScenario();
 
-        #endregion
+        /// <summary>
+        /// Called after a scenario execution.
+        /// </summary>
+        void AfterScenario();
+
+        /// <summary>
+        /// Called before a step execution.
+        /// </summary>
+        void BeforeStep();
+
+        /// <summary>
+        /// Called after a step execution.
+        /// </summary>
+        void AfterStep();
+
+        /// <summary>
+        /// Called before the execution.
+        /// </summary>
+        void BeforeExecution();
+
+        /// <summary>
+        /// Called after the execution.
+        /// </summary>
+        void AfterExecution();
     }
 }

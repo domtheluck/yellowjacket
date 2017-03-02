@@ -21,40 +21,29 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
+using YellowJacket.Core.Framework;
 
-namespace YellowJacket.Core.Hook
+namespace YellowJacket.Core.Logging
 {
     /// <summary>
-    /// Uses for hook priority.
+    /// Used to log content to the different logger instances.
     /// </summary>
-    /// <seealso cref="System.Attribute" />
-    [AttributeUsage(AttributeTargets.Class)]
-    public class HookPriorityAttribute : Attribute
+    public class LogManager
     {
-        #region Properties
-
         /// <summary>
-        /// Gets the priority.
+        /// Logs the specified content.
         /// </summary>
-        /// <value>
-        /// The priority.
-        /// </value>
-        public int Priority { get; }
-
-        #endregion
-
-        #region Constructors
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="HookPriorityAttribute"/> class.
-        /// </summary>
-        /// <param name="priority">The priority.</param>
-        public HookPriorityAttribute(int priority)
+        /// <param name="content">The value.</param>
+        /// <param name="isNewLine">if set to <c>true</c> log the content as a new line; otherwise, <c>false</c>.</param>
+        public static void Log(string content, bool isNewLine = true)
         {
-            Priority = priority;
+            ExecutionContext.Current.GetLoggers().ForEach(x =>
+            {
+                if (isNewLine)
+                    x.WriteLine(content);
+                else
+                    x.Write(content);
+            });
         }
-
-        #endregion
     }
 }

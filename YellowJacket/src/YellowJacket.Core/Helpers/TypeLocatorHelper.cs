@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using NUnit.Framework;
 using YellowJacket.Core.Hook;
+using YellowJacket.Core.Interfaces;
 
 namespace YellowJacket.Core.Helpers
 {
