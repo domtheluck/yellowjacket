@@ -262,7 +262,6 @@ namespace YellowJacket.Core.Engine
         /// <param name="feature">The feature.</param>
         private void ExecuteFeature(string assemblyPath, string feature)
         {
-            // get the test package
             TestPackage testPackage = NUnitEngineHelper.CreateTestPackage(new List<string> { assemblyPath });
 
             TestFilter testFilter = NUnitEngineHelper.CreateTestFilter(_assembly, feature);
