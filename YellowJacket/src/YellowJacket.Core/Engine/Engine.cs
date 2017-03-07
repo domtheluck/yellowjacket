@@ -43,6 +43,18 @@ namespace YellowJacket.Core.Engine
 
         #endregion
 
+        #region Properties
+
+        /// <summary>
+        /// Determines if we want to use the local browser or not.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if we want to use the local browser; otherwise, <c>false</c>.
+        /// </value>
+        public bool UseLocalBrowser { get; set; }
+
+        #endregion
+
         #region Constructors
 
         /// <summary>
@@ -62,14 +74,16 @@ namespace YellowJacket.Core.Engine
         /// </summary>
         /// <param name="assemblyPath">The assembly path.</param>
         /// <param name="feature">The feature.</param>
-        public void Execute(string assemblyPath, string feature)
+        /// <param name="browser">The browser</param>
+        public void Execute(string assemblyPath, string feature, string browser)
         {
             Execute(
                 assemblyPath,
                 feature,
+                browser,
                 new List<ILogger>
                 {
-                    new FileLogger($@"c:\temp\{Guid.NewGuid()}.txt")
+                    new FileLogger($"{Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString())}.txt") // TODO: need to change it to a more dynamic way
                 });
         }
 
@@ -78,12 +92,14 @@ namespace YellowJacket.Core.Engine
         /// </summary>
         /// <param name="assemblyPath">The assembly path.</param>
         /// <param name="feature">The feature.</param>
+        /// <param name="browser">The browser</param>
         /// <param name="logger"><see cref="ILogger"/>.</param>
-        public void Execute(string assemblyPath, string feature, ILogger logger)
+        public void Execute(string assemblyPath, string feature, string browser, ILogger logger)
         {
             Execute(
                 assemblyPath,
                 feature,
+                browser,
                 new List<ILogger> { logger });
         }
 
@@ -92,8 +108,9 @@ namespace YellowJacket.Core.Engine
         /// </summary>
         /// <param name="assemblyPath">The assembly path.</param>
         /// <param name="feature">The feature.</param>
+        /// <param name="browser">The browser</param>
         /// <param name="loggers">The loggers.</param>
-        public void Execute(string assemblyPath, string feature, List<ILogger> loggers)
+        public void Execute(string assemblyPath, string feature, string browser, List<ILogger> loggers)
         {
             Cleanup();
 

@@ -7,19 +7,22 @@ namespace YellowJacket.Core.Enums
     /// </summary>
     public enum BrowserType
     {
+        [Description("None")]
+        None,
+
         [Description("InternetExplorer32")]
-        InternetExplorer32 = 0,
+        InternetExplorer32,
 
         [Description("InternetExplorer64")]
-        InternetExplorer64 = 1,
+        InternetExplorer64,
 
         [Description("Firefox")]
-        Firefox = 2,
+        Firefox,
 
         [Description("Chrome")]
-        Chrome = 3,
+        Chrome,
 
         [Description("Edge")]
-        Edge = 4
+        Edge
     }
 }
