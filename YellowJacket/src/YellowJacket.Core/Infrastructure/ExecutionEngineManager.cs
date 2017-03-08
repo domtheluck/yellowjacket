@@ -33,8 +33,8 @@ namespace YellowJacket.Core.Infrastructure
         /// <summary>
         /// Creates a new instance of IExecutionEngine.
         /// </summary>
-        /// <returns><see cref="IExecutionEngine"/>.</returns>
-        public static IExecutionEngine CreateEngine()
+        /// <returns><see cref="IEngine"/>.</returns>
+        public static IEngine CreateEngine()
         {
             return new Engine.Engine();
         }

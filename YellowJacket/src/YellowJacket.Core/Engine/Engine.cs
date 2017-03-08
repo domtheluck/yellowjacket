@@ -1,4 +1,27 @@
-﻿using System;
+﻿// ***********************************************************************
+// Copyright (c) 2017 Dominik Lachance
+//
+// Permission is hereby granted, free of charge, to any person obtaining
+// a copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to
+// permit persons to whom the Software is furnished to do so, subject to
+// the following conditions:
+//
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// ***********************************************************************
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -19,8 +42,14 @@ namespace YellowJacket.Core.Engine
     /// <summary>
     /// YellowJacket engine.
     /// </summary>
-    public class Engine : IExecutionEngine
+    public class Engine : IEngine
     {
+        #region Constants
+
+        private const string BrowserNone = "None";
+
+        #endregion
+
         #region Private Members
 
         private ITestEngine _testEngine;
@@ -45,14 +74,6 @@ namespace YellowJacket.Core.Engine
 
         #region Properties
 
-        /// <summary>
-        /// Determines if we want to use the local browser or not.
-        /// </summary>
-        /// <value>
-        /// <c>true</c> if we want to use the local browser; otherwise, <c>false</c>.
-        /// </value>
-        public bool UseLocalBrowser { get; set; }
-
         #endregion
 
         #region Constructors
@@ -74,13 +95,49 @@ namespace YellowJacket.Core.Engine
         /// </summary>
         /// <param name="assemblyPath">The assembly path.</param>
         /// <param name="feature">The feature.</param>
-        /// <param name="browser">The browser</param>
-        public void Execute(string assemblyPath, string feature, string browser)
+        public void Execute(string assemblyPath, string feature)
         {
             Execute(
                 assemblyPath,
                 feature,
-                browser,
+                "None",
+                false,
+                new List<ILogger>
+                {
+                    new FileLogger($"{Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString())}.txt") // TODO: need to change it to a more dynamic way
+                });
+        }
+
+        /// <summary>
+        /// Execute the specified Feature contains in the related assembly.
+        /// </summary>
+        /// <param name="assemblyPath">The assembly path.</param>
+        /// <param name="feature">The feature.</param>
+        /// <param name="loggers">The loggers.</param>
+        public void Execute(string assemblyPath, string feature, List<ILogger> loggers)
+        {
+            Execute(
+                assemblyPath,
+                feature,
+                BrowserNone,
+                false,
+                loggers);
+        }
+
+        /// <summary>
+        /// Execute the specified Feature contains in the related assembly.
+        /// </summary>
+        /// <param name="assemblyPath">The assembly path.</param>
+        /// <param name="feature">The feature.</param>
+        /// <param name="browser">The browser</param>
+        /// <param name="useLocalBrowser">Determines if we want to use the local browser or not.</param>
+        public void Execute(string assemblyPath, string feature, string browser, bool useLocalBrowser)
+        {
+            Execute(
+                assemblyPath,
+                feature,
+                BrowserNone,
+                useLocalBrowser,
                 new List<ILogger>
                 {
                     new FileLogger($"{Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString())}.txt") // TODO: need to change it to a more dynamic way
@@ -93,24 +150,9 @@ namespace YellowJacket.Core.Engine
         /// <param name="assemblyPath">The assembly path.</param>
         /// <param name="feature">The feature.</param>
         /// <param name="browser">The browser</param>
-        /// <param name="logger"><see cref="ILogger"/>.</param>
-        public void Execute(string assemblyPath, string feature, string browser, ILogger logger)
-        {
-            Execute(
-                assemblyPath,
-                feature,
-                browser,
-                new List<ILogger> { logger });
-        }
-
-        /// <summary>
-        /// Execute the specified Feature contains in the related assembly.
-        /// </summary>
-        /// <param name="assemblyPath">The assembly path.</param>
-        /// <param name="feature">The feature.</param>
-        /// <param name="browser">The browser</param>
+        /// <param name="useLocalBrowser">Determines if we want to use the local browser or not.</param>
         /// <param name="loggers">The loggers.</param>
-        public void Execute(string assemblyPath, string feature, string browser, List<ILogger> loggers)
+        public void Execute(string assemblyPath, string feature, string browser, bool useLocalBrowser, List<ILogger> loggers)
         {
             Cleanup();
 

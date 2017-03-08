@@ -11,6 +11,8 @@ namespace YellowJacket.Console
 {
     internal class Program
     {
+        #region Private Methods
+
         private static void Main(string[] args)
         {
             CommandLineApplication app = new CommandLineApplication { Name = "YellowJacket.Console" };
@@ -71,11 +73,16 @@ namespace YellowJacket.Console
                         return -1;
                     }
 
-                    // TODO: validate the browser option
-
-                    // TODO: validate the local browser option
-
-                    // TODO: validate the custom options to add to the execution context
+                    if (!string.IsNullOrEmpty(browserOption.Value()))
+                    {
+                        if (browsers.All(
+                                x => !string.Equals(x, browserOption.Value(), StringComparison.CurrentCultureIgnoreCase)))
+                        {
+                            System.Console.WriteLine($"The specified browser value {browserOption.Value()} is not valid.");
+                            command.ShowHelp();
+                            return -1;
+                        }
+                    }
 
                     string assemblyPath = assemblyPathArgument.Value;
                     string name = nameArgument.Value;
@@ -237,6 +244,8 @@ namespace YellowJacket.Console
             //System.Console.ReadLine();
         }
 
+        #endregion
+
         #region Event Handlers
 
         /// <summary>
@@ -265,7 +274,5 @@ namespace YellowJacket.Console
         }
 
         #endregion
-
-
     }
 }

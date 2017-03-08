@@ -15,13 +15,13 @@ namespace YellowJacket.Core.Helpers
         /// <param name="filePath">The file path.</param>
         /// <param name="objectToWrite">The object to write.</param>
         /// <param name="append">if set to <c>true</c> [append].</param>
-        public static void WriteToBinaryFile<T>(string filePath, T objectToWrite, bool append = false)
+        public static void WriteToBinaryFile<T>(string filePath, T objectToWrite)
         {
             // TODO: probably need to pass an additional parameters for that
             if (File.Exists(filePath))
                 File.Delete(filePath);
 
-            using (Stream stream = File.Open(filePath, append ? FileMode.Append : FileMode.CreateNew))
+            using (Stream stream = File.Open(filePath, FileMode.CreateNew))
             {
                 BinaryFormatter binaryFormatter = new BinaryFormatter();
 

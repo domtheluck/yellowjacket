@@ -34,7 +34,7 @@ namespace YellowJacket.Core.Interfaces
     /// <summary>
     /// Interface definition for the execution engine.
     /// </summary>
-    public interface IExecutionEngine
+    public interface IEngine
     {
         #region Events
 
@@ -48,18 +48,6 @@ namespace YellowJacket.Core.Interfaces
 
         #endregion
 
-        #region Properties
-
-        /// <summary>
-        /// Determines if we want to use the local browser or not.
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if we want to use the local browser; otherwise, <c>false</c>.
-        /// </value>
-        bool UseLocalBrowser { get; set; }
-
-        #endregion
-
         #region Methods
 
         /// <summary>
@@ -67,26 +55,35 @@ namespace YellowJacket.Core.Interfaces
         /// </summary>
         /// <param name="assemblyPath">The assembly path.</param>
         /// <param name="feature">The feature.</param>
-        /// <param name="browser">The browser.</param>
-        void Execute(string assemblyPath, string feature, string browser);
+        void Execute(string assemblyPath, string feature);
 
         /// <summary>
         /// Execute the specified Feature contains in the related assembly.
         /// </summary>
         /// <param name="assemblyPath">The assembly path.</param>
         /// <param name="feature">The feature.</param>
-        /// <param name="browser">The browser.</param>
-        /// <param name="logger"><see cref="ILogger"/>.</param>
-        void Execute(string assemblyPath, string feature, string browser, ILogger logger);
-
-        /// <summary>
-        /// Execute the specified Feature contains in the related assembly.
-        /// </summary>
-        /// <param name="assemblyPath">The assembly path.</param>
-        /// <param name="feature">The feature.</param>
-        /// <param name="browser">The browser.</param>
+        /// <param name="browser">The browser</param>
         /// <param name="loggers">The loggers.</param>
-        void Execute(string assemblyPath, string feature, string browser, List<ILogger> loggers);
+        void Execute(string assemblyPath, string feature, List<ILogger> loggers);
+
+        /// <summary>
+        /// Execute the specified Feature contains in the related assembly.
+        /// </summary>
+        /// <param name="assemblyPath">The assembly path.</param>
+        /// <param name="feature">The feature.</param>
+        /// <param name="browser">The browser</param>
+        /// <param name="useLocalBrowser">Determines if we want to use the local browser or not.</param>
+        void Execute(string assemblyPath, string feature, string browser, bool useLocalBrowser);
+
+        /// <summary>
+        /// Execute the specified Feature contains in the related assembly.
+        /// </summary>
+        /// <param name="assemblyPath">The assembly path.</param>
+        /// <param name="feature">The feature.</param>
+        /// <param name="browser">The browser</param>
+        /// <param name="useLocalBrowser">Determines if we want to use the local browser or not.</param>
+        /// <param name="loggers">The loggers.</param>
+        void Execute(string assemblyPath, string feature, string browser, bool useLocalBrowser, List<ILogger> loggers);
 
         #endregion
     }

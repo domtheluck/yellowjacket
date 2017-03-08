@@ -89,7 +89,7 @@
     <Compile Include="Enums\HookType.cs" />
     <Compile Include="Helpers\SerializationHelper.cs" />
     <Compile Include="Infrastructure\HookProcessor.cs" />
-    <Compile Include="Interfaces\IExecutionEngine.cs" />
+    <Compile Include="Interfaces\IEngine.cs" />
     <Compile Include="Framework\Base.cs" />
     <Compile Include="Framework\BasePage.cs" />
     <Compile Include="Framework\BaseStep.cs" />

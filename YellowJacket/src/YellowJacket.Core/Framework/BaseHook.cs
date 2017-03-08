@@ -92,6 +92,19 @@ namespace YellowJacket.Core.Framework
 
             HookProcessor.Process(HookType.BeforeExecution);
         }
+
+        [BeforeScenarioBlock]
+        public static void BeforeScenarioBlock()
+        {
+            
+        }
+
+        [AfterScenarioBlock]
+        public static void AfterScenarioBlock()
+        {
+
+        }
+
         #endregion
 
         /// <summary>
