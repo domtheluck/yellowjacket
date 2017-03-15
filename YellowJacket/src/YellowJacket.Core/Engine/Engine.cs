@@ -31,6 +31,7 @@ using YellowJacket.Core.Engine.Events;
 using YellowJacket.Core.Framework;
 using YellowJacket.Core.Helpers;
 using YellowJacket.Core.Hook;
+using YellowJacket.Core.Infrastructure;
 using YellowJacket.Core.Interfaces;
 using YellowJacket.Core.Logging;
 using YellowJacket.Core.NUnit;
@@ -104,7 +105,8 @@ namespace YellowJacket.Core.Engine
                 false,
                 new List<ILogger>
                 {
-                    new FileLogger($"{Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString())}.txt") // TODO: need to change it to a more dynamic way
+                    new FileLogger(
+                        $"{Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString())}.txt") // TODO: need to change it to a more dynamic way
                 });
         }
 
@@ -140,7 +142,8 @@ namespace YellowJacket.Core.Engine
                 useLocalBrowser,
                 new List<ILogger>
                 {
-                    new FileLogger($"{Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString())}.txt") // TODO: need to change it to a more dynamic way
+                    new FileLogger(
+                        $"{Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString())}.txt") // TODO: need to change it to a more dynamic way
                 });
         }
 

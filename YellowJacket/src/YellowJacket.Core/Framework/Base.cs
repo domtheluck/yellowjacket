@@ -1,4 +1,5 @@
-﻿using OpenQA.Selenium;
+﻿using System;
+using OpenQA.Selenium;
 using OpenQA.Selenium.Support.PageObjects;
 using TechTalk.SpecFlow;
 
@@ -89,7 +90,7 @@ namespace YellowJacket.Core.Framework
         /// </summary>
         public virtual void NavigateSite()
         {
-
+            // TODO: This method is obsolete. Need to cleanup.
         }
 
         #endregion

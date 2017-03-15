@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>YellowJacket.Core</RootNamespace>
     <AssemblyName>YellowJacket.Core</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -100,7 +101,7 @@
     <Compile Include="Enums\BrowserType.cs" />
     <Compile Include="Infrastructure\ExecutionEngineManager.cs" />
     <Compile Include="Infrastructure\Settings.cs" />
-    <Compile Include="Logging\FileLogger.cs" />
+    <Compile Include="Infrastructure\FileLogger.cs" />
     <Compile Include="Interfaces\ILogger.cs" />
     <Compile Include="Infrastructure\WebDriverFactory.cs" />
     <Compile Include="Helpers\EnumHelper.cs" />

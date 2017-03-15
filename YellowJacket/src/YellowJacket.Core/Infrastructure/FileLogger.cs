@@ -25,7 +25,7 @@ using System.Collections.Generic;
 using System.IO;
 using YellowJacket.Core.Interfaces;
 
-namespace YellowJacket.Core.Logging
+namespace YellowJacket.Core.Infrastructure
 {
     // TODO: Need to add some logic to this logger to support intelligent file/folder management since it will probably be the default one.
     

@@ -6,6 +6,8 @@ using Microsoft.Extensions.CommandLineUtils;
 using YellowJacket.Core.Engine.Events;
 using YellowJacket.Core.Enums;
 using YellowJacket.Core.Helpers;
+using YellowJacket.Core.Infrastructure;
+using YellowJacket.Core.Interfaces;
 
 namespace YellowJacket.Console
 {
@@ -85,7 +87,20 @@ namespace YellowJacket.Console
                     }
 
                     string assemblyPath = assemblyPathArgument.Value;
-                    string name = nameArgument.Value;
+                    string featureName = nameArgument.Value;
+                    string browser = browserOption.Value();
+
+                    IEngine executionEngine = ExecutionEngineManager.CreateEngine();
+
+                    executionEngine.ExecutionStart += Engine_OnExecutionStart;
+                    executionEngine.ExecutionCompleted += Engine_OnExecutionCompleted;
+                    executionEngine.ExecutionStop += Engine_OnExecutionStop;
+                    executionEngine.ExecutionProgress += Engine_OnExecutionProgress;
+
+                    //executionEngine.Execute(@"C:\Projects\yellowjacket\YellowJacket\src\YellowJacket.Console\bin\Debug\YellowJacket.WebApp.Automation.dll", "MyFeature");
+                    executionEngine.Execute(assemblyPath, featureName);
+
+                    //System.Console.ReadLine();
 
                     return 0;
                 });
@@ -95,9 +110,9 @@ namespace YellowJacket.Console
             {
                 app.Execute(args);
             }
-            catch
+            catch  (Exception ex)
             {
-                System.Console.WriteLine("Invalid command.");
+                System.Console.WriteLine(ex);
                 Environment.Exit(-1);
             }
 
