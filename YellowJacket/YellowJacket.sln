@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.4
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{AA56D832-3C1B-44C1-9F68-02428AE74F4A}"
 EndProject
@@ -12,6 +12,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YellowJacket.WebApp.Automation", "samples\YellowJacket.WebApp.Automation\YellowJacket.WebApp.Automation.csproj", "{F944458C-6CFD-4958-AC3B-65FCCBAC5DF0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YellowJacket.Console", "src\YellowJacket.Console\YellowJacket.Console.csproj", "{92928DE0-5154-4264-9525-10578A0F55F2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YellowJacket.Agent", "src\YellowJacket.Agent\YellowJacket.Agent.csproj", "{84B31181-A6D4-4C8C-A2FF-7E5CAFF3416E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,6 +33,10 @@ Global
 		{92928DE0-5154-4264-9525-10578A0F55F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{92928DE0-5154-4264-9525-10578A0F55F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{92928DE0-5154-4264-9525-10578A0F55F2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84B31181-A6D4-4C8C-A2FF-7E5CAFF3416E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84B31181-A6D4-4C8C-A2FF-7E5CAFF3416E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84B31181-A6D4-4C8C-A2FF-7E5CAFF3416E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84B31181-A6D4-4C8C-A2FF-7E5CAFF3416E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -39,5 +45,6 @@ Global
 		{4F02B61B-241A-48EF-A6D8-FDB94700202F} = {AA56D832-3C1B-44C1-9F68-02428AE74F4A}
 		{F944458C-6CFD-4958-AC3B-65FCCBAC5DF0} = {9B17E28E-6960-4C5F-B3D1-6C5301711854}
 		{92928DE0-5154-4264-9525-10578A0F55F2} = {AA56D832-3C1B-44C1-9F68-02428AE74F4A}
+		{84B31181-A6D4-4C8C-A2FF-7E5CAFF3416E} = {AA56D832-3C1B-44C1-9F68-02428AE74F4A}
 	EndGlobalSection
 EndGlobal
