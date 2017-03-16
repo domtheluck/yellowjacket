@@ -33,7 +33,6 @@ using YellowJacket.Core.Helpers;
 using YellowJacket.Core.Hook;
 using YellowJacket.Core.Infrastructure;
 using YellowJacket.Core.Interfaces;
-using YellowJacket.Core.Logging;
 using YellowJacket.Core.NUnit;
 using YellowJacket.Core.NUnit.Models;
 using ILogger = YellowJacket.Core.Interfaces.ILogger;
@@ -133,7 +132,7 @@ namespace YellowJacket.Core.Engine
         /// <param name="feature">The feature.</param>
         /// <param name="browser">The browser</param>
         /// <param name="useLocalBrowser">Determines if we want to use the local browser or not.</param>
-        public void Execute(string assemblyPath, string feature, string browser, bool useLocalBrowser)
+        public void Execute(string assemblyPath, string feature, string browser, bool useLocalBrowser = false)
         {
             Execute(
                 assemblyPath,
@@ -158,6 +157,8 @@ namespace YellowJacket.Core.Engine
         public void Execute(string assemblyPath, string feature, string browser, bool useLocalBrowser, List<ILogger> loggers)
         {
             Cleanup();
+
+            ValidateParameters(assemblyPath, feature, browser);
 
             RegisterLoggers(loggers);
 
@@ -342,7 +343,7 @@ namespace YellowJacket.Core.Engine
         }
 
         /// <summary>
-        /// Updates the progress.
+        /// Updates the execution progress.
         /// </summary>
         private void UpdateProgress()
         {
@@ -477,6 +478,21 @@ namespace YellowJacket.Core.Engine
             ]]></output></test-case></test-suite></test-suite></test-suite></test-suite></test-suite></test-suite></test-run>
 
             */
+        }
+
+        /// <summary>
+        /// Validates the engine input parameters.
+        /// </summary>
+        /// <param name="assemblyPath">The assembly path.</param>
+        /// <param name="feature">The feature.</param>
+        /// <param name="browser">The browser.</param>
+        private void ValidateParameters(string assemblyPath, string feature, string browser)
+        {
+            if (!string.IsNullOrEmpty(assemblyPath))
+                FireExecutionStopEvent(new ArgumentException("You must provide a value for the assembly path"));
+
+            if (!File.Exists(assemblyPath))
+                FireExecutionStopEvent(new IOException($"Cannot find the assembly located here: {assemblyPath}"));
         }
 
         #endregion

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using YellowJacket.Core.Enums;
 using YellowJacket.Core.Helpers;
 using YellowJacket.Core.Hook;
 using YellowJacket.Core.Infrastructure;
@@ -23,6 +24,8 @@ namespace YellowJacket.Core.Framework
 
         private static readonly List<ILogger> _loggers =
             new List<ILogger>();
+
+        private static Configuration _executionConfiguration = new Configuration();
 
         #endregion
 
@@ -101,31 +104,9 @@ namespace YellowJacket.Core.Framework
             return _loggers;
         }
 
-        /// <summary>
-        /// Exports the current configuration.
-        /// </summary>
-        /// <param name="path">The path.</param>
-        internal void ExportConfiguration(string path)
+        internal void ImportConfiguration(string assemblyPath, string feature, BrowserType browser, bool useLocalBrowser)
         {
-            Settings settings = new Settings
-            {
-                Hooks = _hookInstances,
-                Loggers = _loggers
-            };
-
-            SerializationHelper.WriteToBinaryFile(path, settings);
-        }
-
-        /// <summary>
-        /// Imports the selected configuration.
-        /// </summary>
-        /// <param name="path">The path.</param>
-        internal void ImportConfiguration(string path)
-        {
-            Settings settings = SerializationHelper.ReadFromBinaryFile<Settings>(path);
-
-            _hookInstances.AddRange(settings.Hooks);
-            _loggers.AddRange(settings.Loggers);
+            _executionConfiguration.Browser = browser;
         }
 
         #endregion
