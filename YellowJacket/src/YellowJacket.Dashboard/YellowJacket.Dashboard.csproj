@@ -9,9 +9,12 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <UserSecretsId>aspnet-YellowJacket.Dashboard-f78bbc0f-deb0-4478-8511-6b3bff26bf51</UserSecretsId>
-    <DockerComposeProjectPath>..\..\docker-compose.dcproj</DockerComposeProjectPath>
+    <UserSecretsId>aspnet-YellowJacket.Dashboard-cf626fd7-0c77-4ad9-a901-4dfe4539e593</UserSecretsId>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="wwwroot\js\file.tsx" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.0.0" />
     <PackageReference Include="Microsoft.AspNetCore" Version="1.1.1" />
