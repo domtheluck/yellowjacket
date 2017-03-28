@@ -15,8 +15,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YellowJacket.Console", "src
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YellowJacket.Agent", "src\YellowJacket.Agent\YellowJacket.Agent.csproj", "{84B31181-A6D4-4C8C-A2FF-7E5CAFF3416E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YellowJacket.Dashboard", "src\YellowJacket.Dashboard\YellowJacket.Dashboard.csproj", "{2B87D353-5779-4611-AAAE-50179594EC61}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,10 +37,6 @@ Global
 		{84B31181-A6D4-4C8C-A2FF-7E5CAFF3416E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{84B31181-A6D4-4C8C-A2FF-7E5CAFF3416E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{84B31181-A6D4-4C8C-A2FF-7E5CAFF3416E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2B87D353-5779-4611-AAAE-50179594EC61}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2B87D353-5779-4611-AAAE-50179594EC61}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2B87D353-5779-4611-AAAE-50179594EC61}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2B87D353-5779-4611-AAAE-50179594EC61}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -52,6 +46,5 @@ Global
 		{F944458C-6CFD-4958-AC3B-65FCCBAC5DF0} = {9B17E28E-6960-4C5F-B3D1-6C5301711854}
 		{92928DE0-5154-4264-9525-10578A0F55F2} = {AA56D832-3C1B-44C1-9F68-02428AE74F4A}
 		{84B31181-A6D4-4C8C-A2FF-7E5CAFF3416E} = {AA56D832-3C1B-44C1-9F68-02428AE74F4A}
-		{2B87D353-5779-4611-AAAE-50179594EC61} = {AA56D832-3C1B-44C1-9F68-02428AE74F4A}
 	EndGlobalSection
 EndGlobal
