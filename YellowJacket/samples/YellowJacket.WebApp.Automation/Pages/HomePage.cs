@@ -1,4 +1,4 @@
-﻿using YellowJacket.Core.Framework;
+﻿using YellowJacketCore.Framework;
 
 namespace YellowJacket.WebApp.Automation.Pages
 {

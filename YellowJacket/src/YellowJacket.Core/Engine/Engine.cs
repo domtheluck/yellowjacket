@@ -35,6 +35,8 @@ using YellowJacket.Core.Infrastructure;
 using YellowJacket.Core.Interfaces;
 using YellowJacket.Core.NUnit;
 using YellowJacket.Core.NUnit.Models;
+using YellowJacketCore.NUnit;
+using YellowJacketCore.NUnit.Models;
 using ILogger = YellowJacket.Core.Interfaces.ILogger;
 
 namespace YellowJacket.Core.Engine

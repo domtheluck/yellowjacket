@@ -30,6 +30,7 @@ using System.Xml.Serialization;
 using NUnit.Engine;
 using YellowJacket.Core.Helpers;
 using YellowJacket.Core.NUnit.Models;
+using YellowJacketCore.NUnit.Models;
 
 namespace YellowJacket.Core.NUnit
 {

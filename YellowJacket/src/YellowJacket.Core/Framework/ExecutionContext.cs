@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using YellowJacket.Core.Enums;
-using YellowJacket.Core.Helpers;
 using YellowJacket.Core.Hook;
-using YellowJacket.Core.Infrastructure;
 using YellowJacket.Core.Interfaces;
 
 namespace YellowJacket.Core.Framework
@@ -25,7 +23,7 @@ namespace YellowJacket.Core.Framework
         private static readonly List<ILogger> _loggers =
             new List<ILogger>();
 
-        private static Configuration _executionConfiguration = new Configuration();
+        private static readonly Configuration _executionConfiguration = new Configuration();
 
         #endregion
 

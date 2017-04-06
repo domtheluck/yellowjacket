@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System.Xml.Serialization;
+using YellowJacketCore.NUnit.Models;
 
 namespace YellowJacket.Core.NUnit.Models
 {

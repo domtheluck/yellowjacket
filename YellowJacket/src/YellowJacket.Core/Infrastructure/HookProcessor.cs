@@ -22,6 +22,8 @@
 // ***********************************************************************
 
 using System.Collections.Generic;
+using YellowJacket.Core.Enums;
+using YellowJacket.Core.Framework;
 using YellowJacket.Core.Hook;
 
 namespace YellowJacket.Core.Infrastructure
@@ -35,9 +37,9 @@ namespace YellowJacket.Core.Infrastructure
         /// Processes the hooks.
         /// </summary>
         /// <param name="hookType">Type of the hook.</param>
-        public static void Process(Enums.HookType hookType)
+        public static void Process(HookType hookType)
         {
-            List<HookInstance> hooks = Framework.ExecutionContext.Current.GetHooks();
+            List<HookInstance> hooks = ExecutionContext.Current.GetHooks();
 
             hooks.ForEach(x =>
             {

@@ -1,5 +1,4 @@
-﻿using System;
-using OpenQA.Selenium;
+﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Support.PageObjects;
 using TechTalk.SpecFlow;
 
@@ -20,14 +19,8 @@ namespace YellowJacket.Core.Framework
         /// </value>
         public BasePage CurrentPage
         {
-            get
-            {
-                return (BasePage)ScenarioContext.Current["currentPage"];
-            }
-            set
-            {
-                ScenarioContext.Current["currentPage"] = value;
-            }
+            get => (BasePage)ScenarioContext.Current["currentPage"];
+            set => ScenarioContext.Current["currentPage"] = value;
         }
 
         /// <summary>

@@ -1,6 +1,6 @@
 ﻿using System.Threading;
 using TechTalk.SpecFlow;
-using YellowJacket.Core.Framework;
+using YellowJacketCore.Framework;
 
 namespace YellowJacket.WebApp.Automation.Steps
 {

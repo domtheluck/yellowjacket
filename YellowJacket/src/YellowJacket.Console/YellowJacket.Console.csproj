@@ -81,12 +81,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\samples\YellowJacket.WebApp.Automation\YellowJacket.WebApp.Automation.csproj">
-      <Project>{f944458c-6cfd-4958-ac3b-65fccbac5df0}</Project>
-      <Name>YellowJacket.WebApp.Automation</Name>
-    </ProjectReference>
     <ProjectReference Include="..\YellowJacket.Core\YellowJacket.Core.csproj">
-      <Project>{4F02B61B-241A-48EF-A6D8-FDB94700202F}</Project>
+      <Project>{4f02b61b-241a-48ef-a6d8-fdb94700202f}</Project>
       <Name>YellowJacket.Core</Name>
     </ProjectReference>
   </ItemGroup>
