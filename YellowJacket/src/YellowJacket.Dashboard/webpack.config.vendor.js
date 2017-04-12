@@ -68,13 +68,13 @@ module.exports = (env) => {
             new webpack.DllPlugin({
                 path: path.join(__dirname, 'wwwroot', 'dist', '[name]-manifest.json'),
                 name: '[name]_[hash]'
-            })/*,
+            }),
             new webpack.ProvidePlugin({
-                'jQuery': 'jquery',
-                'window.jQuery': 'jquery',
-                'window.$': 'jquery',
-                "$": "jquery"
-            })*/
+                jQuery: "jquery",
+                //"window.jQuery": "jquery",
+                //"window.$": "jquery",
+                $: "jquery"
+            }) ,  // Maps these identifiers to the jQuery package (because Bootstrap expects it to be a global variable)
         ].concat(isDevBuild ? [] : [
             new webpack.optimize.UglifyJsPlugin()
         ])
