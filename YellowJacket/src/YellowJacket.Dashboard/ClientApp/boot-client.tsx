@@ -1,7 +1,6 @@
 require("font-awesome/css/font-awesome.css");
 
 import "./css/site.css";
-import "./css/inspinia.css";
 import "bootstrap";
 import "animate";
 

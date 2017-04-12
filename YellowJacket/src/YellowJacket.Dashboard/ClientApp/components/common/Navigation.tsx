@@ -2,7 +2,8 @@ import * as React from "react";
 import {Component} from "react";
 import * as $ from "jquery";
 import { Dropdown } from "react-bootstrap";
-import { Router, Route, hashHistory ,IndexRedirect, Link } from "react-router";
+import { Router, Route, hashHistory, IndexRedirect, Link } from "react-router";
+//import * as MetisMenu from "react-metismenu";
 
 export interface NavigationProps {
     body: React.ReactElement<any>;
@@ -14,7 +15,14 @@ export class Navigation extends React.Component<any, any> {
 
     componentDidMount() {
         const { menu } = this.refs;
-        $(menu).metisMenu();
+        //$(menu).metisMenu();
+        //
+        //ReactDOM.render(<MetisMenu />, document.getElementById(this.refs));
+        //<MetisMenu this.refs>
+
+        //$(document).ready(() => {
+        //    $("#side-menu").metisMenu();
+        //});
     }
 
     activeRoute(routeName) {
@@ -40,7 +48,7 @@ export class Navigation extends React.Component<any, any> {
                             </ul>
                         </div>
                         <div className="logo-element">
-                            IN+
+                            YJ+
                         </div>
                     </li>
                     <li className={this.activeRoute("/home")}>

@@ -1,7 +1,7 @@
-const path = require('path');
-const webpack = require('webpack');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const merge = require('webpack-merge');
+const path = require("path");
+const webpack = require("webpack");
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const merge = require("webpack-merge");
 
 module.exports = (env) => {
     const isDevBuild = !(env && env.prod);
@@ -19,6 +19,9 @@ module.exports = (env) => {
             vendor: [
                 'bootstrap',
                 'bootstrap/dist/css/bootstrap.css',
+                "inspinia",
+                "inspinia/dist/fonts.css",
+                "inspinia/dist/inspinia.css",
                 'domain-task',
                 'event-source-polyfill',
                 'react',
@@ -30,17 +33,23 @@ module.exports = (env) => {
                 'react-router-redux',
                 'jquery',
                 "animate",
-                "pace"
+                "metismenu/src/metisMenu.js",
+                "metismenu/src/metisMenu.css"
             ]
         },
         output: {
-            publicPath: '/dist/',
-            filename: '[name].js',
-            library: "[name]_[hash]",
+            publicPath: "/dist/",
+            filename: "[name].js",
+            library: "[name]_[hash]"
         },
         plugins: [
-            new webpack.ProvidePlugin({ $: 'jquery', jQuery: 'jquery' }), // Maps these identifiers to the jQuery package (because Bootstrap expects it to be a global variable)
-            new webpack.NormalModuleReplacementPlugin(/\/iconv-loader$/, require.resolve('node-noop')), // Workaround for https://github.com/andris9/encoding/issues/16
+            new webpack.ProvidePlugin({
+                jQuery: "jquery",
+                //"window.jQuery": "jquery",
+                //"window.$": "jquery",
+                $: "jquery"
+            }), // Maps these identifiers to the jQuery package (because Bootstrap expects it to be a global variable)
+            new webpack.NormalModuleReplacementPlugin(/\/iconv-loader$/, require.resolve("node-noop")), // Workaround for https://github.com/andris9/encoding/issues/16
             new webpack.DefinePlugin({
                 'process.env.NODE_ENV': isDevBuild ? '"development"' : '"production"'
             })
@@ -51,7 +60,7 @@ module.exports = (env) => {
         output: { path: path.join(__dirname, "wwwroot", "dist") },
         module: {
             rules: [
-                { test: /\.css(\?|$)/, use: extractCSS.extract({ use: 'css-loader' }) }
+                { test: /\.css(\?|$)/, use: extractCSS.extract({ use: "css-loader" }) }
             ]
         },
         plugins: [
@@ -59,7 +68,13 @@ module.exports = (env) => {
             new webpack.DllPlugin({
                 path: path.join(__dirname, 'wwwroot', 'dist', '[name]-manifest.json'),
                 name: '[name]_[hash]'
-            })
+            })/*,
+            new webpack.ProvidePlugin({
+                'jQuery': 'jquery',
+                'window.jQuery': 'jquery',
+                'window.$': 'jquery',
+                "$": "jquery"
+            })*/
         ].concat(isDevBuild ? [] : [
             new webpack.optimize.UglifyJsPlugin()
         ])
@@ -70,7 +85,7 @@ module.exports = (env) => {
         resolve: { mainFields: ['main'] },
         output: {
             path: path.join(__dirname, 'ClientApp', 'dist'),
-            libraryTarget: 'commonjs2',
+            libraryTarget: 'commonjs2'
         },
         module: {
             rules: [ { test: /\.css(\?|$)/, use: 'css-loader' } ]

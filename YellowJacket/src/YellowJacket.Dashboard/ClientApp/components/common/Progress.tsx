@@ -1,13 +1,13 @@
 import * as React from "react";
-import pace from "pace";
+//import Pace from "pace-progress";
 
 class Progress extends React.Component<any, any> {
     componentDidMount() {
-        pace.start();
+        //Pace.start();
     }
 
     render() {
-        return (null)
+        return (null);
     }
 }
 

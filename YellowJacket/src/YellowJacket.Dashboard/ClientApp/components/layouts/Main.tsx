@@ -1,6 +1,8 @@
 import * as React from "react";
 import * as $ from "jquery";
 
+import { Router, Route, hashHistory, IndexRedirect, Link } from "react-router";
+
 import Progress from "../common/Progress";
 import Navigation from "../common/Navigation";
 import Footer from "../common/Footer";
@@ -13,8 +15,8 @@ export interface MainProps {
 
 export class Main extends React.Component<MainProps, void> {
     render() {
-        //const wrapperClass = `gray-bg ${this.context.location.pathname}`;
-        const wrapperClass = "gray-bg" + "active";
+        //const wrapperClass = `gray-bg ${this.context.location}`;
+        const wrapperClass = "gray-bg md-skin";
         return (
             <div id="wrapper">
                 <Progress />

@@ -21,9 +21,6 @@
   <ItemGroup>
     <Content Remove="wwwroot/dist\1faaad354c7843acb688e5c2b14e67ba.jpg" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="wwwroot\dist\" />
-  </ItemGroup>
   <Target Name="RunWebpack" AfterTargets="ComputeFilesToPublish">
     <!-- As part of publishing, ensure the JS resources are freshly built in production mode -->
     <Exec Command="npm install" />

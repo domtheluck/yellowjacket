@@ -41,7 +41,7 @@ export function smoothlyMenu() {
         $("#side-menu").hide();
         // For smoothly turn on menu
         setTimeout(
-            function () {
+            () => {
                 $("#side-menu").fadeIn(400);
             }, 200);
     } else if ($("body").hasClass("fixed-sidebar")) {
