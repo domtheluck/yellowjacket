@@ -4,7 +4,7 @@ import * as $ from "jquery";
 
 import { smoothlyMenu } from "../layouts/Helpers"
 
-class TopHeader extends React.Component<any, any> {
+class TopHeader extends React.Component<void, any> {
 
     toggleNavigation(e) {
         alert("toggleNavigation");
@@ -16,9 +16,10 @@ class TopHeader extends React.Component<any, any> {
     render() {
         return (
             <div className="row border-bottom">
-                <nav className="navbar navbar-static-top white-bg" role="navigation" style={{marginBottom: 0}}>
+                <nav className="navbar navbar-static-top white-bg" role="navigation" style={{ marginBottom: 0 }}>
                     <div className="navbar-header">
-                        <a className="navbar-minimalize minimalize-styl-2 btn btn-primary " onClick={this.toggleNavigation} href="#"><i className="fa fa-bars"></i> </a>
+                        <a className="navbar-minimalize minimalize-styl-2 btn btn-primary " onClick={this
+                            .toggleNavigation} href="#"><i className="fa fa-bars"></i> </a>
                     </div>
                     <ul className="nav navbar-top-links navbar-right">
                         <li>
@@ -29,7 +30,7 @@ class TopHeader extends React.Component<any, any> {
                     </ul>
                 </nav>
             </div>
-        )
+        );
     }
 }
 

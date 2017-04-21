@@ -1,6 +1,6 @@
 import * as React from "react";
 
-class Footer extends React.Component<any, any> {
+class Footer extends React.Component<void, any> {
     render() {
         return (
             <div className="footer">
@@ -11,7 +11,7 @@ class Footer extends React.Component<any, any> {
                     <strong>Copyright</strong> Example Company &copy; 2015-2017
                 </div>
             </div>
-        )
+        );
     }
 }
 

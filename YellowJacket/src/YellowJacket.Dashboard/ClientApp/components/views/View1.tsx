@@ -1,12 +1,6 @@
 ﻿import * as React from "react";
 
-import "animate";
-
-export interface View1Props {
-    body: React.ReactElement<any>;
-}
-
-export class View1 extends React.Component<View1Props, void> {
+export class View1 extends React.Component<void, void> {
     render() {
         return (
             <div className="wrapper wrapper-content animated fadeInRight">

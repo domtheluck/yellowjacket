@@ -1,12 +1,6 @@
 ﻿import * as React from "react";
 
-import "animate";
-
-export interface HomeProps {
-    body: React.ReactElement<any>;
-}
-
-export class Home extends React.Component<HomeProps, void> {
+export class Home extends React.Component<void, void> {
     render() {
         return (
             <div className="wrapper wrapper-content animated fadeInRight">

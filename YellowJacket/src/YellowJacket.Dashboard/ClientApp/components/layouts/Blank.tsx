@@ -1,11 +1,11 @@
 import * as React from "react";
 import * as $ from "jquery";
 
-export default class Blank extends React.Component<void, void> {
+export default class Blank extends React.Component<any, void> {
     render() {
         return (
             <div>
-                {this.props.children}vfgfdgfdgfdgfdgfdg
+                {this.props.children}
             </div>
         );
     }

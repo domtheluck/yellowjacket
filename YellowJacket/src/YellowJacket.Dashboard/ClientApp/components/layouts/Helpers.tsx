@@ -29,9 +29,9 @@ export function correctHeight() {
 
 export function detectBody() {
     if ($(document).width() < 769) {
-        $("body").addClass("body-small")
+        $("body").addClass("body-small");
     } else {
-        $("body").removeClass("body-small")
+        $("body").removeClass("body-small");
     }
 }
 

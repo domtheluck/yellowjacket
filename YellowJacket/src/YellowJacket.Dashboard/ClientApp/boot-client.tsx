@@ -2,7 +2,6 @@ require("font-awesome/css/font-awesome.css");
 
 import "./css/site.css";
 import "bootstrap";
-import "animate";
 
 import * as React from "react";
 import * as ReactDOM from "react-dom";
@@ -13,10 +12,10 @@ import { Provider } from "react-redux";
 import { syncHistoryWithStore } from "react-router-redux";
 import routes from "./routes";
 import configureStore from "./configureStore";
-import { ApplicationState }  from "./store";
+import { IApplicationState }  from "./store";
 
 // Get the application-wide store instance, prepopulating with state from the server where available.
-const initialState = (window as any).initialReduxState as ApplicationState;
+const initialState = (window as any).initialReduxState as IApplicationState;
 const store = configureStore(initialState);
 const history = syncHistoryWithStore(browserHistory, store);
 

@@ -9,14 +9,10 @@ import Footer from "../common/Footer";
 import TopHeader from "../common/TopHeader";
 import { correctHeight, detectBody } from "./Helpers";
 
-export interface MainProps {
-    body: React.ReactElement<any>;
-}
-
-export class Main extends React.Component<MainProps, void> {
+export class Main extends React.Component<any, void> {
     render() {
         //const wrapperClass = `gray-bg ${this.context.location}`;
-        const wrapperClass = "gray-bg md-skin";
+        const wrapperClass = "gray-bg skin-3";
         return (
             <div id="wrapper">
                 <Progress />

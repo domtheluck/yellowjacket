@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
-import { ApplicationState }  from '../store';
+import { IApplicationState }  from '../store';
 import * as WeatherForecastsState from '../store/WeatherForecasts';
 
 // At runtime, Redux will merge together...
@@ -68,6 +68,6 @@ class FetchData extends React.Component<WeatherForecastProps, void> {
 }
 
 export default connect(
-    (state: ApplicationState) => state.weatherForecasts, // Selects which state properties are merged into the component's props
+    (state: IApplicationState) => state.weatherForecasts, // Selects which state properties are merged into the component's props
     WeatherForecastsState.actionCreators                 // Selects which action creators are merged into the component's props
 )(FetchData);

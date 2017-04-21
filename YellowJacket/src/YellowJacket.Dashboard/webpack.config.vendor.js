@@ -2,29 +2,28 @@ const path = require("path");
 const webpack = require("webpack");
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const merge = require("webpack-merge");
-
 module.exports = (env) => {
     const isDevBuild = !(env && env.prod);
-    const extractCSS = new ExtractTextPlugin('vendor.css');
+    const extractCss = new ExtractTextPlugin("vendor.css");
 
     const sharedConfig = {
         stats: { modules: false },
-        resolve: { extensions: [ '.js' ] },
+        resolve: { extensions: [ ".js" ] },
         module: {
             rules: [
-                { test: /\.(png|woff|woff2|eot|ttf|svg)(\?|$)/, use: 'url-loader?limit=100000' }
+                { test: /\.(png|woff|woff2|eot|ttf|svg)(\?|$)/, use: "url-loader?limit=100000" }
             ]
         },
         entry: {
             vendor: [
-                'bootstrap',
-                'bootstrap/dist/css/bootstrap.css',
+                "bootstrap",
+                "bootstrap/dist/css/bootstrap.css",
                 "inspinia",
                 "inspinia/dist/fonts.css",
                 "inspinia/dist/inspinia.css",
-                'domain-task',
+                "domain-task",
                 'event-source-polyfill',
-                'react',
+                "react",
                 'react-dom',
                 'react-router',
                 'react-redux',
@@ -32,9 +31,7 @@ module.exports = (env) => {
                 'redux-thunk',
                 'react-router-redux',
                 'jquery',
-                "animate",
-                "metismenu/src/metisMenu.js",
-                "metismenu/src/metisMenu.css"
+                "animate.css/animate.css"
             ]
         },
         output: {
@@ -45,8 +42,8 @@ module.exports = (env) => {
         plugins: [
             new webpack.ProvidePlugin({
                 jQuery: "jquery",
-                //"window.jQuery": "jquery",
-                //"window.$": "jquery",
+                "window.jQuery": "jquery",
+                "window.$": "jquery",
                 $: "jquery"
             }), // Maps these identifiers to the jQuery package (because Bootstrap expects it to be a global variable)
             new webpack.NormalModuleReplacementPlugin(/\/iconv-loader$/, require.resolve("node-noop")), // Workaround for https://github.com/andris9/encoding/issues/16
@@ -60,41 +57,35 @@ module.exports = (env) => {
         output: { path: path.join(__dirname, "wwwroot", "dist") },
         module: {
             rules: [
-                { test: /\.css(\?|$)/, use: extractCSS.extract({ use: "css-loader" }) }
+                { test: /\.css(\?|$)/, use: extractCss.extract({ use: "css-loader" }) }
             ]
         },
         plugins: [
-            extractCSS,
+            extractCss,
             new webpack.DllPlugin({
-                path: path.join(__dirname, 'wwwroot', 'dist', '[name]-manifest.json'),
+                path: path.join(__dirname, "wwwroot", "dist", "[name]-manifest.json"),
                 name: '[name]_[hash]'
-            }),
-            new webpack.ProvidePlugin({
-                jQuery: "jquery",
-                //"window.jQuery": "jquery",
-                //"window.$": "jquery",
-                $: "jquery"
-            }) ,  // Maps these identifiers to the jQuery package (because Bootstrap expects it to be a global variable)
+            })
         ].concat(isDevBuild ? [] : [
             new webpack.optimize.UglifyJsPlugin()
         ])
     });
 
     const serverBundleConfig = merge(sharedConfig, {
-        target: 'node',
+        target: "node",
         resolve: { mainFields: ['main'] },
         output: {
             path: path.join(__dirname, 'ClientApp', 'dist'),
             libraryTarget: 'commonjs2'
         },
         module: {
-            rules: [ { test: /\.css(\?|$)/, use: 'css-loader' } ]
+            rules: [ { test: /\.css(\?|$)/, use: "css-loader" } ]
         },
-        entry: { vendor: ['aspnet-prerendering', 'react-dom/server'] },
+        entry: { vendor: ["aspnet-prerendering", "react-dom/server"] },
         plugins: [
             new webpack.DllPlugin({
-                path: path.join(__dirname, 'ClientApp', 'dist', '[name]-manifest.json'),
-                name: '[name]_[hash]'
+                path: path.join(__dirname, "ClientApp", 'dist', '[name]-manifest.json'),
+                name: "[name]_[hash]"
             })
         ]
     });
