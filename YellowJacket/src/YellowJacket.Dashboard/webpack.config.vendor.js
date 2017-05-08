@@ -2,6 +2,7 @@ const path = require("path");
 const webpack = require("webpack");
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const merge = require("webpack-merge");
+
 module.exports = (env) => {
     const isDevBuild = !(env && env.prod);
     const extractCss = new ExtractTextPlugin("vendor.css");
@@ -22,15 +23,15 @@ module.exports = (env) => {
                 "inspinia/dist/fonts.css",
                 "inspinia/dist/inspinia.css",
                 "domain-task",
-                'event-source-polyfill',
+                "event-source-polyfill",
                 "react",
-                'react-dom',
-                'react-router',
-                'react-redux',
-                'redux',
-                'redux-thunk',
-                'react-router-redux',
-                'jquery',
+                "react-dom",
+                "react-router",
+                "react-redux",
+                "redux",
+                "redux-thunk",
+                "react-router-redux",
+                "jquery",
                 "animate.css/animate.css"
             ]
         },
@@ -73,10 +74,10 @@ module.exports = (env) => {
 
     const serverBundleConfig = merge(sharedConfig, {
         target: "node",
-        resolve: { mainFields: ['main'] },
+        resolve: { mainFields: ["main"] },
         output: {
-            path: path.join(__dirname, 'ClientApp', 'dist'),
-            libraryTarget: 'commonjs2'
+            path: path.join(__dirname, "ClientApp", "dist"),
+            libraryTarget: "commonjs2"
         },
         module: {
             rules: [ { test: /\.css(\?|$)/, use: "css-loader" } ]
@@ -84,7 +85,7 @@ module.exports = (env) => {
         entry: { vendor: ["aspnet-prerendering", "react-dom/server"] },
         plugins: [
             new webpack.DllPlugin({
-                path: path.join(__dirname, "ClientApp", 'dist', '[name]-manifest.json'),
+                path: path.join(__dirname, "ClientApp", "dist", "[name]-manifest.json"),
                 name: "[name]_[hash]"
             })
         ]

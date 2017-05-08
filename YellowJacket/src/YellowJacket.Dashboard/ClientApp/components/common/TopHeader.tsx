@@ -7,7 +7,6 @@ import { smoothlyMenu } from "../layouts/Helpers"
 class TopHeader extends React.Component<void, any> {
 
     toggleNavigation(e) {
-        alert("toggleNavigation");
         e.preventDefault();
         $("body").toggleClass("mini-navbar");
         smoothlyMenu();

@@ -1,19 +1,19 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace YellowJacket.Dashboard.Models.Agent
+﻿namespace YellowJacket.Models
 {
+    /// <summary>
+    /// Represents an Agent model.
+    /// </summary>
     public class AgentModel
     {
         #region Properties
 
         /// <summary>
-        /// Gets or sets the key.
+        /// Gets or sets the id.
         /// </summary>
         /// <value>
-        /// The key.
+        /// The id.
         /// </value>
-        [Key]
-        public int Key { get; set; }
+        public string Id { get; set; }
 
         /// <summary>
         /// Gets or sets the name.

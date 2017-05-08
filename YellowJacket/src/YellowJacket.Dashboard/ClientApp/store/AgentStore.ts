@@ -11,7 +11,7 @@ export interface IAgentState {
 }
 
 export interface IAgent {
-    key: string;
+    id: string;
     name: string;
     status: string;
 }

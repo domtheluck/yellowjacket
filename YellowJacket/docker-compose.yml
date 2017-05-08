@@ -1,0 +1,8 @@
+version: '2'
+
+services:
+  yellowjacket.dashboard:
+    image: yellowjacket.dashboard
+    build:
+      context: ./src/YellowJacket.Dashboard
+      dockerfile: Dockerfile

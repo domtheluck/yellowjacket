@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using YellowJacket.Dashboard.Models.Agent;
+using YellowJacket.Dashboard.Entities.Agent;
 
 namespace YellowJacket.Dashboard.Repositories
 {
@@ -8,24 +8,24 @@ namespace YellowJacket.Dashboard.Repositories
     {
         #region Public Methods
 
-        void Add(AgentModel entity);
+        void Add(AgentEntity entity);
 
         /// <summary>
         /// Gets all agents from the repository.
         /// </summary>
         /// <returns></returns>
-        Task<IEnumerable<AgentModel>> GetAll();
+        Task<IEnumerable<AgentEntity>> GetAll();
 
         /// <summary>
-        /// Finds an agent by its key.
+        /// Finds an agent by its id.
         /// </summary>
-        /// <param name="key">The key.</param>
-        /// <returns><see cref="AgentModel"/>.</returns>
-        AgentModel Find(long key);
+        /// <param name="id">The id.</param>
+        /// <returns><see cref="AgentEntity"/>.</returns>
+        AgentEntity Find(string id);
 
-        void Remove(long key);
+        void Remove(string id);
 
-        void Update(AgentModel item);
+        void Update(AgentEntity item);
 
         #endregion
     }

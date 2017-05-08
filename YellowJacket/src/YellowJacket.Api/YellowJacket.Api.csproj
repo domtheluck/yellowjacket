@@ -4,17 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{84B31181-A6D4-4C8C-A2FF-7E5CAFF3416E}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <RootNamespace>YellowJacket.Agent</RootNamespace>
-    <AssemblyName>YellowJacket.Agent</AssemblyName>
+    <ProjectGuid>{D0739B5D-2D5E-410B-8A44-0B5B4C5C1B87}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>YellowJacket.Api</RootNamespace>
+    <AssemblyName>YellowJacket.Api</AssemblyName>
     <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -24,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -38,39 +35,25 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Threading.Tasks" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="Topshelf, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b800c4cfcdeea87b, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Topshelf.4.0.3\lib\net452\Topshelf.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AgentService.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="ApiClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\YellowJacket.Api\YellowJacket.Api.csproj">
-      <Project>{d0739b5d-2d5e-410b-8a44-0b5b4c5c1b87}</Project>
-      <Name>YellowJacket.Api</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\YellowJacket.Core\YellowJacket.Core.csproj">
-      <Project>{4f02b61b-241a-48ef-a6d8-fdb94700202f}</Project>
-      <Name>YellowJacket.Core</Name>
-    </ProjectReference>
     <ProjectReference Include="..\YellowJacket.Models\YellowJacket.Models.csproj">
       <Project>{7811e115-4cc8-4d4d-afa2-6e029b1f2090}</Project>
       <Name>YellowJacket.Models</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

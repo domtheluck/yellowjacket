@@ -2,12 +2,12 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using YellowJacket.Dashboard.Models;
-using YellowJacket.Dashboard.Models.Agent;
+using YellowJacket.Dashboard.Entities;
+using YellowJacket.Dashboard.Entities.Agent;
 
 namespace YellowJacket.Dashboard.Repositories
 {
-    public class AgentRepository: IAgentRepository
+    public class AgentRepository : IAgentRepository
     {
         private readonly YellowJacketContext _context;
 
@@ -15,11 +15,27 @@ namespace YellowJacket.Dashboard.Repositories
         {
             _context = context;
 
-            if (!_context.Agents.Any())
-                Add(new AgentModel { Name = "Item1" });
+            if (_context.Agents.Any())
+                return;
+
+            Add(new AgentEntity { Id = "VM0001", Name = "Agent 1", Status = "Idle" });
+            Add(new AgentEntity { Id = "VM0002", Name = "Agent 2", Status = "Running" });
+            Add(new AgentEntity { Id = "VM0003", Name = "Agent 3", Status = "Idle" });
+            Add(new AgentEntity { Id = "VM0004", Name = "Agent 4", Status = "Running" });
+            Add(new AgentEntity { Id = "VM0005", Name = "Agent 5", Status = "Idle" });
+            Add(new AgentEntity { Id = "VM0006", Name = "Agent 6", Status = "Idle" });
+            Add(new AgentEntity { Id = "VM0007", Name = "Agent 7", Status = "Running" });
+            Add(new AgentEntity { Id = "VM0008", Name = "Agent 8", Status = "Idle" });
+            Add(new AgentEntity { Id = "VM0009", Name = "Agent 9", Status = "Running" });
+            Add(new AgentEntity { Id = "VM0010", Name = "Agent 10", Status = "Idle" });
+            Add(new AgentEntity { Id = "VM0011", Name = "Agent 11", Status = "Idle" });
+            Add(new AgentEntity { Id = "VM0012", Name = "Agent 12", Status = "Running" });
+            Add(new AgentEntity { Id = "VM0013", Name = "Agent 13", Status = "Idle" });
+            Add(new AgentEntity { Id = "VM0014", Name = "Agent 14", Status = "Running" });
+            Add(new AgentEntity { Id = "VM0015", Name = "Agent 15", Status = "Idle" });
         }
 
-        public void Add(AgentModel entity)
+        public void Add(AgentEntity entity)
         {
             _context.Agents.Add(entity);
             _context.SaveChanges();
@@ -29,27 +45,27 @@ namespace YellowJacket.Dashboard.Repositories
         /// Get a list of all entities.
         /// </summary>
         /// <returns></returns>
-        public async Task<IEnumerable<AgentModel>> GetAll()
+        public async Task<IEnumerable<AgentEntity>> GetAll()
         {
             return await _context.Agents.ToListAsync();
         }
 
-        public AgentModel Find(long key)
+        public AgentEntity Find(string id)
         {
-            return _context.Agents.FirstOrDefault(t => t.Key == key);
+            return _context.Agents.FirstOrDefault(t => t.Id == id);
         }
 
-        public void Remove(long key)
+        public void Remove(string id)
         {
-            AgentModel entity = _context.Agents.First(t => t.Key == key);
+            AgentEntity entity = _context.Agents.First(t => t.Id == id);
 
             _context.Agents.Remove(entity);
             _context.SaveChanges();
         }
 
-        public void Update(AgentModel item)
+        public void Update(AgentEntity entity)
         {
-            _context.Agents.Update(item);
+            _context.Agents.Update(entity);
             _context.SaveChanges();
         }
     }

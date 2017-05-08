@@ -3,3 +3,5 @@ set ASPNETCORE_ENVIRONMENT=Production
 
 webpack --config webpack.config.js
 webpack --config webpack.config.vendor.js
+
+dotnet run

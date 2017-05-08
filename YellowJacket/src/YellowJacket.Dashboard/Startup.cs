@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.Webpack;
@@ -5,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using YellowJacket.Dashboard.Models;
+using YellowJacket.Dashboard.Entities;
 using YellowJacket.Dashboard.Repositories;
 
 namespace YellowJacket.Dashboard
@@ -31,6 +32,7 @@ namespace YellowJacket.Dashboard
 
             // Add framework services.
             services.AddMvc();
+            services.AddAutoMapper();
 
             services.AddScoped<IAgentRepository, AgentRepository>();
             //services.AddSingleton<ITodoRepository, TodoRepository>();

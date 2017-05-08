@@ -1,11 +1,7 @@
-import * as WeatherForecasts from "./WeatherForecasts";
-import * as Counter from "./Counter";
 import * as AgentStore from "./AgentStore";
 
 // The top-level state object
 export interface IApplicationState {
-    counter: Counter.CounterState,
-    weatherForecasts: WeatherForecasts.WeatherForecastsState,
     agents: AgentStore.IAgentState;
 }
 
@@ -13,8 +9,6 @@ export interface IApplicationState {
 // the reducer with the matching name. It's important that the names match exactly, and that the reducer
 // acts on the corresponding ApplicationState property type.
 export const reducers = {
-    counter: Counter.reducer,
-    weatherForecasts: WeatherForecasts.reducer,
     agents: AgentStore.reducer
 };
 

@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using YellowJacket.Dashboard.Models.Agent;
+using YellowJacket.Dashboard.Entities.Agent;
 
-namespace YellowJacket.Dashboard.Models
+namespace YellowJacket.Dashboard.Entities
 {
     public class YellowJacketContext : DbContext
     {
@@ -10,7 +10,7 @@ namespace YellowJacket.Dashboard.Models
         {
         }
 
-        public DbSet<AgentModel> Agents { get; set; }
+        public DbSet<AgentEntity> Agents { get; set; }
 
     }
 }
