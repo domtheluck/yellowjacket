@@ -22,6 +22,7 @@ namespace YellowJacket.Agent
         private readonly CancellationToken _cancellationToken;
 
         private bool _isRegistered;
+        private ApiClient _apiClient;
 
         #endregion
 
@@ -32,6 +33,8 @@ namespace YellowJacket.Agent
             //    (sender, eventArgs) => Run(); //Console.WriteLine("It is {0} and all is well", DateTime.Now);
 
             _cancellationToken = _cancellationTokenSource.Token;
+
+            _apiClient = new ApiClient();
         }
 
         #region Public Methods
@@ -41,22 +44,22 @@ namespace YellowJacket.Agent
             //_cancellationTokenSource.CancelAfter(new TimeSpan(0, 0, 0, 60));
 
             //_timer.Start();
-            Task mainTask = Task.Run(async () =>
+            Task.Run(async () =>
             {
                 await UpdateHeartbeat(new TimeSpan(0, 0, 30), _cancellationToken);
             }, _cancellationToken);
 
-            ApiClient client = new ApiClient();
+            //ApiClient client = new ApiClient();
 
-            IEnumerable<AgentModel> agents = new List<AgentModel>();
+            //IEnumerable<AgentModel> agents = new List<AgentModel>();
 
-            Task test = Task.Run(async () =>
-            {
-                agents = await client.GetAgents();
+            //Task test = Task.Run(async () =>
+            //{
+            //    agents = await client.GetAgents();
 
-                Console.WriteLine();
+            //    Console.WriteLine();
 
-            }, _cancellationToken);
+            //}, _cancellationToken);
         }
 
         public void Stop()
@@ -81,7 +84,8 @@ namespace YellowJacket.Agent
 
         private async Task Register()
         {
-            
+
+            _isRegistered = true;
         }
 
         #endregion
