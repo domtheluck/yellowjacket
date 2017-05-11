@@ -32,6 +32,8 @@ using YellowJacket.Models;
 
 namespace YellowJacket.Dashboard.Controllers
 {
+    // TODO: check if we need to switch the default serializer for JSON.Net instead of Microsoft's one since we got better performance with it in the past.
+
     [Produces("application/json")]
     [Route("api/agent")]
     public class AgentController : BaseController
@@ -79,9 +81,19 @@ namespace YellowJacket.Dashboard.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody]AgentModel model)
         {
-            await _agentRepository.Add(_mapper.Map<AgentModel, AgentEntity>(model));
+            try
+            {
+                // TODO: change this call to return the added model in case of success.
+                await _agentRepository.Add(_mapper.Map<AgentModel, AgentEntity>(model));
 
-            return Ok();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+
+                return StatusCode(500);
+            }
         }
 
         #endregion

@@ -2,6 +2,8 @@
 
 namespace YellowJacket.Core.Enums
 {
+    // TODO: We should think about a Java agent to be able to support more browser and OS like OS X and Linux.
+    
     /// <summary>
     /// Contains the browser type.
     /// </summary>
