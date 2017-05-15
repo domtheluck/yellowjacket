@@ -40,7 +40,7 @@ type KnownAction = IRequestAgentsAction | IReceiveAgentsAction;
 export const actionCreators = {
     requestAgents: (): IAppThunkAction<KnownAction> => (dispatch, getState) => {
         // Only load data if it's something we don't already have (and are not already loading)
-            let fetchTask = fetch("/api/agent/")
+            let fetchTask = fetch("/api/v1/agent/")
                 .then(response => response.json() as Promise<IAgent[]>)
                 .then(data => {
                     dispatch((({ type: "RECEIVE_AGENTS", agents: data })) as any);

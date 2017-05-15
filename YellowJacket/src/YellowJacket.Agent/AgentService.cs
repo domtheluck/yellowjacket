@@ -1,12 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
+﻿// ***********************************************************************
+// Copyright (c) 2017 Dominik Lachance
+//
+// Permission is hereby granted, free of charge, to any person obtaining
+// a copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to
+// permit persons to whom the Software is furnished to do so, subject to
+// the following conditions:
+//
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// ***********************************************************************
+
+using System;
+using System.CodeDom;
+using System.Configuration;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Timers;
 using YellowJacket.Api;
 using YellowJacket.Models;
 
@@ -14,78 +33,127 @@ namespace YellowJacket.Agent
 {
     public class AgentService
     {
-        //readonly Timer _timer;
-
         #region Private Members
 
         private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
         private readonly CancellationToken _cancellationToken;
 
         private bool _isRegistered;
-        private ApiClient _apiClient;
+        private readonly ApiClient _apiClient;
+
+        private AgentModel _agent;
+
+        private string _apiBaseUrl;
 
         #endregion
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AgentService"/> class.
+        /// </summary>
         public AgentService()
         {
-            //_timer = new Timer(1000) { AutoReset = true };
-            //_timer.Elapsed +=
-            //    (sender, eventArgs) => Run(); //Console.WriteLine("It is {0} and all is well", DateTime.Now);
+            ReadConfiguration();
 
             _cancellationToken = _cancellationTokenSource.Token;
 
-            _apiClient = new ApiClient();
+            _apiClient = new ApiClient(_apiBaseUrl);
+
+            _agent = new AgentModel
+            {
+                Name = "TEST AAA",//ConfigurationManager.AppSettings["name"],
+                Id = Environment.MachineName,
+                Status = "Idle"
+            };
         }
 
         #region Public Methods
 
+        /// <summary>
+        /// Called when the service start.
+        /// </summary>
         public void Start()
         {
-            //_cancellationTokenSource.CancelAfter(new TimeSpan(0, 0, 0, 60));
+            while (!_isRegistered)
+                TryToRegister();
 
-            //_timer.Start();
+            Console.WriteLine("Agent registered");
+
             Task.Run(async () =>
             {
-                await UpdateHeartbeat(new TimeSpan(0, 0, 30), _cancellationToken);
+                await UpdateHeartbeat(new TimeSpan(0, 0, 15), _cancellationToken); // TODO: need to be dynamic
             }, _cancellationToken);
-
-            //ApiClient client = new ApiClient();
-
-            //IEnumerable<AgentModel> agents = new List<AgentModel>();
-
-            //Task test = Task.Run(async () =>
-            //{
-            //    agents = await client.GetAgents();
-
-            //    Console.WriteLine();
-
-            //}, _cancellationToken);
         }
 
+        /// <summary>
+        /// Call when the service stop.
+        /// </summary>
         public void Stop()
         {
-            //_timer.Stop(); 
-
             _cancellationTokenSource.Cancel();
+
+            _isRegistered = false;
         }
 
         #endregion
 
         #region Private Methods
 
+        /// <summary>
+        /// Updates the heartbeat.
+        /// </summary>
+        /// <param name="interval">The interval.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns></returns>
         public async Task UpdateHeartbeat(TimeSpan interval, CancellationToken cancellationToken)
         {
             while (true)
             {
-                if (!_isRegistered)
-                    await Register();
+                _agent.LastUpdateOn = DateTime.Now;
+
+                AgentModel model = await _apiClient.UpdateAgent(_agent);
+
+                if (model != null)
+                    _agent = model;
+
+                await Task.Delay(interval, cancellationToken);
+                if (_cancellationToken.IsCancellationRequested)
+                    break;
             }
         }
 
-        private async Task Register()
+        /// <summary>
+        /// Try to register the agent.
+        /// </summary>
+        private void TryToRegister()
         {
+            DateTime now = DateTime.Now;
 
+            _agent.RegisteredOn = now;
+            _agent.LastUpdateOn = now;
+
+            AgentModel model = new AgentModel();
+
+            Task registerTask = Task.Run(async () =>
+            {
+                model = await _apiClient.RegisterAgent(_agent);
+            }, _cancellationToken);
+
+            registerTask.Wait(_cancellationToken);
             _isRegistered = true;
+
+            _agent = model ?? throw new NullReferenceException();
+        }
+
+        /// <summary>
+        /// Reads the configuration.
+        /// </summary>
+        /// <exception cref="ConfigurationErrorsException">The apiBaseUri configuration key is required.</exception>
+        private void ReadConfiguration()
+        {
+            if (string.IsNullOrEmpty(ConfigurationManager.AppSettings["apiBaseUri"]))
+                throw new ConfigurationErrorsException("The apiBaseUri configuration key is required");
+
+            _apiBaseUrl = ConfigurationManager.AppSettings["apiBaseUri"];
         }
 
         #endregion

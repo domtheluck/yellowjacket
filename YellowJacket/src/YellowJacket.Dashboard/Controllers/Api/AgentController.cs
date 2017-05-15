@@ -30,12 +30,12 @@ using YellowJacket.Dashboard.Entities.Agent;
 using YellowJacket.Dashboard.Repositories;
 using YellowJacket.Models;
 
-namespace YellowJacket.Dashboard.Controllers
+namespace YellowJacket.Dashboard.Controllers.Api
 {
     // TODO: check if we need to switch the default serializer for JSON.Net instead of Microsoft's one since we got better performance with it in the past.
 
     [Produces("application/json")]
-    [Route("api/agent")]
+    [Route("api/v1/agent")]
     public class AgentController : BaseController
     {
         #region Private Members
@@ -78,15 +78,36 @@ namespace YellowJacket.Dashboard.Controllers
             }   
         }
 
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Put(string id, [FromBody] AgentModel model)
+        {
+            try
+            {
+                AgentEntity entity = await _agentRepository.Update(_mapper.Map<AgentModel, AgentEntity>(model));
+
+                return Ok(_mapper.Map<AgentEntity, AgentModel>(entity));
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+
+                return StatusCode(500);
+            }
+        }
+
         [HttpPost]
         public async Task<IActionResult> Post([FromBody]AgentModel model)
         {
             try
             {
-                // TODO: change this call to return the added model in case of success.
-                await _agentRepository.Add(_mapper.Map<AgentModel, AgentEntity>(model));
+                AgentEntity entity = await _agentRepository.Find(model.Id);
 
-                return Ok();
+                if (entity != null)
+                    await _agentRepository.Remove(entity.Id);
+
+                 entity = await _agentRepository.Add(_mapper.Map<AgentModel, AgentEntity>(model));
+
+                return Ok(_mapper.Map<AgentEntity, AgentModel>(entity));
             }
             catch (Exception ex)
             {

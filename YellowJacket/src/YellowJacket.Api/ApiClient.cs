@@ -1,13 +1,16 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using YellowJacket.Models;
+using System.Text;
 
 namespace YellowJacket.Api
 {
+    /// <summary>
+    /// Yellow Jacker API client.
+    /// </summary>
     public class ApiClient
     {
         #region Private Members
@@ -19,39 +22,112 @@ namespace YellowJacket.Api
         #region Constructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ApiClient"/> class.
+        /// Initializes a new instance of the <see cref="ApiClient" /> class.
         /// </summary>
-        public ApiClient()
+        /// <param name="baseUri">The base URI.</param>
+        public ApiClient(string baseUri)
         {
-            _httpClient = new HttpClient { BaseAddress = new Uri("http://localhost:85") }; // TODO: need to get it from the App.config
+            _httpClient = new HttpClient { BaseAddress = new Uri("baseUri") };
 
+            _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json; charset=utf-8");
         }
 
         #endregion
 
         #region Public Methods
 
-        public async Task RegisterAgent(AgentModel model)
+        /// <summary>
+        /// Updates the agent.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns><see cref="AgentModel"/>.</returns>
+        public async Task<AgentModel> UpdateAgent(AgentModel model)
         {
+            try
+            {
+                HttpRequestMessage httpRequestMessage =
+                    new HttpRequestMessage(HttpMethod.Put, $"/api/v1/agent/{model.Id}")
+                    {
+                        Content = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json")
+                    };
 
+                HttpResponseMessage response = await _httpClient.SendAsync(httpRequestMessage);
+
+                AgentModel result = JsonConvert.DeserializeObject<AgentModel>(await response.Content.ReadAsStringAsync());
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+            }
+
+            return null;
         }
 
+        /// <summary>
+        /// Registers the agent.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns><see cref="AgentModel"/>.</returns>
+        public async Task<AgentModel> RegisterAgent(AgentModel model)
+        {
+            try
+            {
+                HttpRequestMessage httpRequestMessage =
+                    new HttpRequestMessage(HttpMethod.Post, "/api/v1/agent")
+                    {
+                        Content = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json")
+                    };
+
+                HttpResponseMessage response = await _httpClient.SendAsync(httpRequestMessage);
+
+                AgentModel result = JsonConvert.DeserializeObject<AgentModel>(await response.Content.ReadAsStringAsync());
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Gets the agents.
+        /// </summary>
+        /// <returns><see cref="IEnumerable{AgentModel}"/>.</returns>
         public async Task<IEnumerable<AgentModel>> GetAgents()
         {
-            HttpRequestMessage httpRequestMessage =
-                new HttpRequestMessage(HttpMethod.Get, "/api/agent") { Method = HttpMethod.Get };
+            try
+            {
+                HttpRequestMessage httpRequestMessage =
+                    new HttpRequestMessage(HttpMethod.Get, "/api/v1/agent") { Method = HttpMethod.Get };
 
-            HttpResponseMessage response = await _httpClient.SendAsync(httpRequestMessage);
+                HttpResponseMessage response = await _httpClient.SendAsync(httpRequestMessage);
 
-            List<AgentModel> result =
-                JsonConvert.DeserializeObject<List<AgentModel>>(await response.Content.ReadAsStringAsync());
+                List<AgentModel> result =
+                    JsonConvert.DeserializeObject<List<AgentModel>>(await response.Content.ReadAsStringAsync());
 
-            return result;
+                return result;
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+            }
+
+            return null;
         }
 
         #endregion
 
         #region Private Methods
+
+        private void HandleError(Exception ex)
+        {
+
+        }
 
         #endregion
     }

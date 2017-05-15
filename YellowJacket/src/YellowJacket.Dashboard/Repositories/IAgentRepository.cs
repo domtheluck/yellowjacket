@@ -49,11 +49,26 @@ namespace YellowJacket.Dashboard.Repositories
         /// </summary>
         /// <param name="id">The id.</param>
         /// <returns><see cref="AgentEntity"/>.</returns>
-        AgentEntity Find(string id);
+        Task<AgentEntity> Find(string id);
 
-        void Remove(string id);
+        /// <summary>
+        /// Removes the specified entity.
+        /// </summary>
+        /// <param name="id">The id of the entity to remove.</param>
+        Task Remove(string id);
 
-        void Update(AgentEntity entity);
+        /// <summary>
+        /// Updates the specified entity.
+        /// </summary>
+        /// <param name="entity">The entity.</param>
+        Task<AgentEntity> Update(AgentEntity entity);
+
+        /// <summary>
+        /// Removes the invalid agents.
+        /// </summary>
+        /// <param name="currentAgentId">The current agent identifier.</param>
+        /// <returns></returns>
+        Task RemoveInvalidAgents(string currentAgentId);
 
         #endregion
     }

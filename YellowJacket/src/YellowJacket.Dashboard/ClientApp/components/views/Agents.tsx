@@ -1,5 +1,4 @@
 ﻿import * as React from "react";
-// ReSharper disable once UnusedLocalImport
 import { connect } from "react-redux";
 
 import { IApplicationState } from "../../store";
@@ -34,7 +33,7 @@ export class Agents extends React.Component<AgentsProps, void> {
     private renderAgentCardList() {
         return <div className="row">
             {this.props.agents.map(agent =>
-                <div className="col-lg-2 col-md-4 col-sm-6 col-xs-6">
+                <div className="col-lg-2 col-md-4 col-sm-6 col-xs-6" key={agent.id}>
                     <div className="widget-head-color-box navy-bg p-xs text-center">
                         <div>
                             <h2 className="font-bold no-margins">{agent.name}</h2>
