@@ -22,10 +22,10 @@
 // ***********************************************************************
 
 using System;
-using System.CodeDom;
 using System.Configuration;
 using System.Threading;
 using System.Threading.Tasks;
+using YellowJacket.Agent.Enums;
 using YellowJacket.Api;
 using YellowJacket.Models;
 
@@ -44,6 +44,7 @@ namespace YellowJacket.Agent
         private AgentModel _agent;
 
         private string _apiBaseUrl;
+        private string _name;
 
         #endregion
 
@@ -60,9 +61,9 @@ namespace YellowJacket.Agent
 
             _agent = new AgentModel
             {
-                Name = "TEST AAA",//ConfigurationManager.AppSettings["name"],
+                Name = _name,
                 Id = Environment.MachineName,
-                Status = "Idle"
+                Status = Status.Idle.ToString()
             };
         }
 
@@ -150,10 +151,15 @@ namespace YellowJacket.Agent
         /// <exception cref="ConfigurationErrorsException">The apiBaseUri configuration key is required.</exception>
         private void ReadConfiguration()
         {
-            if (string.IsNullOrEmpty(ConfigurationManager.AppSettings["apiBaseUri"]))
+            if (string.IsNullOrEmpty(ConfigurationManager.AppSettings["ApiBaseUri"]))
                 throw new ConfigurationErrorsException("The apiBaseUri configuration key is required");
 
-            _apiBaseUrl = ConfigurationManager.AppSettings["apiBaseUri"];
+            _apiBaseUrl = ConfigurationManager.AppSettings["ApiBaseUri"];
+
+            if (string.IsNullOrEmpty(ConfigurationManager.AppSettings["Name"]))
+                throw new ConfigurationErrorsException("The Name configuration key is required");
+
+            _name = ConfigurationManager.AppSettings["Name"];
         }
 
         #endregion

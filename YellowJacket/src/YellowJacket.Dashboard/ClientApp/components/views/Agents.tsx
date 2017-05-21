@@ -1,4 +1,27 @@
-﻿import * as React from "react";
+﻿// ***********************************************************************
+// Copyright (c) 2017 Dominik Lachance
+//
+// Permission is hereby granted, free of charge, to any person obtaining
+// a copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to
+// permit persons to whom the Software is furnished to do so, subject to
+// the following conditions:
+//
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// ***********************************************************************
+
+import * as React from "react";
 import { connect } from "react-redux";
 
 import { IApplicationState } from "../../store";
@@ -12,6 +35,12 @@ type AgentsProps =
     & typeof IAgentState.actionCreators;   // plus action creators we've requested
 
 export class Agents extends React.Component<AgentsProps, void> {
+    constructor(props) {
+        super(props);
+
+        this.handleRefreshButtonClick = this.handleRefreshButtonClick.bind(this);
+    }
+
     componentWillMount() {
         // This method runs when the component is first added to the page
         this.props.requestAgents();
@@ -21,13 +50,8 @@ export class Agents extends React.Component<AgentsProps, void> {
         // This method runs when incoming props (e.g., route params) change
     }
 
-    render() {
-        return (
-            <div className="wrapper wrapper-content animated fadeInRight">
-                {this.renderAgentCardList()}
-                <br />
-            </div>
-        );
+    private handleRefreshButtonClick() {
+        this.props.requestAgents();
     }
 
     private renderAgentCardList() {
@@ -61,6 +85,29 @@ export class Agents extends React.Component<AgentsProps, void> {
             )}
         </div>;
     }
+
+    render() {
+        return (
+            <div className="wrapper wrapper-content animated fadeInRight">
+                <div className="row">
+                    <div className="col-lg-12">
+                        <div className="ibox">
+                            <div className="ibox-title">
+                                <div className="form-group">
+                                    <a className="btn btn-primary" onClick={this.handleRefreshButtonClick}>
+                                        <i className="fa fa-refresh"></i>&nbsp;Refresh</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {this.renderAgentCardList()}
+                <br />
+            </div>
+        );
+    }
+
+
 }
 
 // ReSharper disable once TsResolvedFromInaccessibleModule

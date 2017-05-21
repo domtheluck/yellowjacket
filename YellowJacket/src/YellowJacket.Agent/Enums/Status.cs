@@ -1,4 +1,4 @@
-// ***********************************************************************
+﻿// ***********************************************************************
 // Copyright (c) 2017 Dominik Lachance
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -21,23 +21,12 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-import * as React from "react";
-import * as $ from "jquery";
-
-export default class Blank extends React.Component<any, void> {
-    render() {
-        return (
-            <div>
-                {this.props.children}
-            </div>
-        );
-    }
-
-    componentDidMount(){
-        $("body").addClass("gray-bg");
-    }
-
-    componentWillUnmount(){
-        $("body").removeClass("gray-bg");
+namespace YellowJacket.Agent.Enums
+{
+    public enum Status
+    {
+        Idle,
+        Updating,
+        Running  
     }
 }

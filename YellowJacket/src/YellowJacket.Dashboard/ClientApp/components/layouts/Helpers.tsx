@@ -1,44 +1,64 @@
+// ***********************************************************************
+// Copyright (c) 2017 Dominik Lachance
+//
+// Permission is hereby granted, free of charge, to any person obtaining
+// a copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to
+// permit persons to whom the Software is furnished to do so, subject to
+// the following conditions:
+//
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// ***********************************************************************
+
 import * as $ from "jquery";
 
 export function correctHeight() {
 
-    let pageWrapper = $("#page-wrapper");
-    let navbarHeight = $("nav.navbar-default").height();
-    let wrapperHeight = pageWrapper.height();
+    const pageWrapper = $("#page-wrapper");
+    const navbarHeight = $("nav.navbar-default").height();
+    const wrapperHeight = pageWrapper.height();
 
-    if (navbarHeight > wrapperHeight) {
+    if (navbarHeight > wrapperHeight)
         pageWrapper.css("min-height", navbarHeight + "px");
-    }
 
     if (navbarHeight < wrapperHeight) {
-        if (navbarHeight < $(window).height()) {
+        if (navbarHeight < $(window).height())
             pageWrapper.css("min-height", $(window).height() + "px");
-        } else {
+        else
             pageWrapper.css("min-height", navbarHeight + "px");
-        }
     }
 
     if ($("body").hasClass("fixed-nav")) {
-        if (navbarHeight > wrapperHeight) {
+        if (navbarHeight > wrapperHeight)
             pageWrapper.css("min-height", navbarHeight + "px");
-        } else {
+        else
             pageWrapper.css("min-height", $(window).height() - 60 + "px");
-        }
     }
 }
 
 export function detectBody() {
-    if ($(document).width() < 769) {
+    if ($(document).width() < 769)
         $("body").addClass("body-small");
-    } else {
+    else
         $("body").removeClass("body-small");
-    }
 }
 
 export function smoothlyMenu() {
     if (!$("body").hasClass("mini-navbar") || $("body").hasClass("body-small")) {
         // Hide menu in order to smoothly turn on when maximize menu
         $("#side-menu").hide();
+
         // For smoothly turn on menu
         setTimeout(
             () => {
@@ -46,6 +66,7 @@ export function smoothlyMenu() {
             }, 200);
     } else if ($("body").hasClass("fixed-sidebar")) {
         $("#side-menu").hide();
+
         setTimeout(
             () => {
                 $("#side-menu").fadeIn(400);

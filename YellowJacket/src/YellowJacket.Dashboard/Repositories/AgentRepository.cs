@@ -138,6 +138,8 @@ namespace YellowJacket.Dashboard.Repositories
              AgentEntity currentEntity = await Find(entity.Id);
 
             currentEntity.LastUpdateOn = entity.LastUpdateOn;
+            currentEntity.RegisteredOn = entity.RegisteredOn;
+            currentEntity.Name = entity.Name;
 
             _context.Agents.Update(currentEntity);
 

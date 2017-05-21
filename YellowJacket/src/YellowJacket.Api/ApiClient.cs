@@ -27,7 +27,7 @@ namespace YellowJacket.Api
         /// <param name="baseUri">The base URI.</param>
         public ApiClient(string baseUri)
         {
-            _httpClient = new HttpClient { BaseAddress = new Uri("baseUri") };
+            _httpClient = new HttpClient { BaseAddress = new Uri(baseUri) };
 
             _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json; charset=utf-8");
         }

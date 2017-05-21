@@ -9,6 +9,8 @@ import View2 from "./components/views/View2";
 import { Main } from "./components/layouts/Main";
 import Blank from "./components/layouts/Blank";
 
+import NotFound from "./components/common/NotFound";
+
 export default (
     <Router history={hashHistory}>
         <Route path="/" component={Main}>
@@ -17,6 +19,7 @@ export default (
             <Route path="agents" component={Agents}></Route>
             <Route path="view1" component={View1}></Route>
             <Route path="view2" component={View2}></Route>
+            <Route path="*" component={NotFound} />
         </Route>
     </Router>
 );
