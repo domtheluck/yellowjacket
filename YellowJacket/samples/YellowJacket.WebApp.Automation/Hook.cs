@@ -1,6 +1,6 @@
 ﻿using System;
-using YellowJacketCore.Hook;
-using YellowJacketCore.Interfaces;
+using YellowJacket.Core.Hook;
+using YellowJacket.Core.Interfaces;
 
 namespace YellowJacket.WebApp.Automation
 {

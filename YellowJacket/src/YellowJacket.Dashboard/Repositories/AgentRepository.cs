@@ -21,13 +21,13 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using YellowJacket.Dashboard.Entities;
 using YellowJacket.Dashboard.Entities.Agent;
+using YellowJacket.Dashboard.Repositories.Interfaces;
 
 namespace YellowJacket.Dashboard.Repositories
 {
@@ -80,31 +80,33 @@ namespace YellowJacket.Dashboard.Repositories
         #region Public Methods
 
         /// <summary>
-        /// Adds the specified entity to the repository.
+        /// Adds the specified agent to the repository.
         /// </summary>
-        /// <param name="entity">The entity.</param>
+        /// <param name="agent">The agent.</param>
         /// <returns>
         ///   <see cref="AgentEntity" />.
         /// </returns>
-        public async Task<AgentEntity> Add(AgentEntity entity)
+        public async Task<AgentEntity> Add(AgentEntity agent)
         {
-            await _context.Agents.AddAsync(entity);
-            await RemoveInvalidAgents(entity.Id);
+            await _context.Agents.AddAsync(agent);
+            await RemoveInvalidAgents(agent.Id);
 
             await _context.SaveChangesAsync();
 
-            return entity;
+            return agent;
         }
 
         /// <summary>
-        /// Get a list of all entities.
+        /// Gets all agents from the repository.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>
+        ///   <see cref="IEnumerable{AgentEntity}" />.
+        /// </returns>
         public async Task<IEnumerable<AgentEntity>> GetAll()
         {
             return await _context.Agents.ToListAsync();
         }
-
+        
         /// <summary>
         /// Finds an agent by its id.
         /// </summary>
@@ -118,9 +120,10 @@ namespace YellowJacket.Dashboard.Repositories
         }
 
         /// <summary>
-        /// Removes the specified entity.
+        /// Removes the specified agent from the repository.
         /// </summary>
-        /// <param name="id">The id of the entity to remove.</param>
+        /// <param name="id">The id of the agent to remove.</param>
+        /// <returns><see cref="Task"/>.</returns>
         public async Task Remove(string id)
         {
             AgentEntity entity = await _context.Agents.FirstAsync(t => t.Id == id);
@@ -130,23 +133,24 @@ namespace YellowJacket.Dashboard.Repositories
         }
 
         /// <summary>
-        /// Updates the specified entity.
+        /// Updates the specified agent.
         /// </summary>
-        /// <param name="entity">The entity.</param>
-        public async Task<AgentEntity> Update(AgentEntity entity)
+        /// <param name="agent">The agent.</param>
+        /// <returns><see cref="AgentEntity"/>.</returns>
+        public async Task<AgentEntity> Update(AgentEntity agent)
         {
-             AgentEntity currentEntity = await Find(entity.Id);
+             AgentEntity currentEntity = await Find(agent.Id);
 
-            currentEntity.LastUpdateOn = entity.LastUpdateOn;
-            currentEntity.RegisteredOn = entity.RegisteredOn;
-            currentEntity.Name = entity.Name;
+            currentEntity.LastUpdateOn = agent.LastUpdateOn;
+            currentEntity.RegisteredOn = agent.RegisteredOn;
+            currentEntity.Name = agent.Name;
 
             _context.Agents.Update(currentEntity);
 
             await RemoveInvalidAgents(currentEntity.Id);
             await _context.SaveChangesAsync();
 
-            return entity;
+            return agent;
         }
 
         #endregion
@@ -157,7 +161,7 @@ namespace YellowJacket.Dashboard.Repositories
         /// Removes the invalid agents.
         /// </summary>
         /// <param name="currentAgentId">The current agent identifier.</param>
-        /// <returns></returns>
+        /// <returns><see cref="Task"/>.</returns>
         public async Task RemoveInvalidAgents(string currentAgentId)
         {
             // TODO: the difference threshold need to be dynamic

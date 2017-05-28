@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using Swashbuckle.AspNetCore.Swagger;
 using YellowJacket.Dashboard.Entities;
 using YellowJacket.Dashboard.Repositories;
+using YellowJacket.Dashboard.Repositories.Interfaces;
 
 namespace YellowJacket.Dashboard
 {

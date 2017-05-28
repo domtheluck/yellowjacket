@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace YellowJacket.Models
+namespace YellowJacket.Models.Agent
 {
     /// <summary>
     /// Represents an Agent model.

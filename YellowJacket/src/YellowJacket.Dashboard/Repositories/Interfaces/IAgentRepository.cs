@@ -25,23 +25,23 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using YellowJacket.Dashboard.Entities.Agent;
 
-namespace YellowJacket.Dashboard.Repositories
+namespace YellowJacket.Dashboard.Repositories.Interfaces
 {
     public interface IAgentRepository
     {
         #region Public Methods
 
         /// <summary>
-        /// Adds the specified entity to the repository.
+        /// Adds the specified agent to the repository.
         /// </summary>
-        /// <param name="entity">The entity.</param>
+        /// <param name="agent">The agent.</param>
         /// <returns><see cref="AgentEntity"/>.</returns>
-        Task<AgentEntity> Add(AgentEntity entity);
+        Task<AgentEntity> Add(AgentEntity agent);
 
         /// <summary>
         /// Gets all agents from the repository.
         /// </summary>
-        /// <returns></returns>
+        /// <returns><see cref="IEnumerable{AgentEntity}"/>.</returns>
         Task<IEnumerable<AgentEntity>> GetAll();
 
         /// <summary>
@@ -52,22 +52,24 @@ namespace YellowJacket.Dashboard.Repositories
         Task<AgentEntity> Find(string id);
 
         /// <summary>
-        /// Removes the specified entity.
+        /// Removes the specified agent from the repository.
         /// </summary>
-        /// <param name="id">The id of the entity to remove.</param>
+        /// <param name="id">The id of the agent to remove.</param>
+        /// <returns><see cref="Task"/>.</returns>
         Task Remove(string id);
 
         /// <summary>
-        /// Updates the specified entity.
+        /// Updates the specified agent.
         /// </summary>
-        /// <param name="entity">The entity.</param>
-        Task<AgentEntity> Update(AgentEntity entity);
+        /// <param name="agent">The agent.</param>
+        /// <returns><see cref="AgentEntity"/>.</returns>
+        Task<AgentEntity> Update(AgentEntity agent);
 
         /// <summary>
         /// Removes the invalid agents.
         /// </summary>
         /// <param name="currentAgentId">The current agent identifier.</param>
-        /// <returns></returns>
+        /// <returns><see cref="Task"/>.</returns>
         Task RemoveInvalidAgents(string currentAgentId);
 
         #endregion

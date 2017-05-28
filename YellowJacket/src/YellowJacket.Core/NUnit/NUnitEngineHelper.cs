@@ -24,13 +24,13 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Xml;
 using System.Xml.Serialization;
 using NUnit.Engine;
 using YellowJacket.Core.Helpers;
 using YellowJacket.Core.NUnit.Models;
-using YellowJacketCore.NUnit.Models;
 
 namespace YellowJacket.Core.NUnit
 {
@@ -52,7 +52,7 @@ namespace YellowJacket.Core.NUnit
 
             // TODO Need to convert those hardcoded values to constants
             testPackage.AddSetting("ProcessModel", "Single");
-            testPackage.AddSetting("DomainUsage", "None");
+            //testPackage.AddSetting("DomainUsage", "None");
 
             return testPackage;
         }
@@ -61,18 +61,17 @@ namespace YellowJacket.Core.NUnit
         /// Creates the test filter.
         /// </summary>
         /// <param name="assembly"></param>
-        /// <param name="feature">The feature.</param>
+        /// <param name="features">The features.</param>
         /// <returns><see cref="TestFilter"/>.</returns>
-        public static TestFilter CreateTestFilter(Assembly assembly, string feature)
+        public static TestFilter CreateTestFilter(Assembly assembly, List<string> features)
         {
             ITestFilterBuilder filterBuilder = new TestFilterBuilder();
 
-            Type type = new TypeLocatorHelper().GetFeatureType(assembly, feature);
+            TypeLocatorHelper typeLocatorHelper = new TypeLocatorHelper();
 
-            // TODO: maybe not the best way to filter the tests. We might need to revisit this. It is more used for individual test in a class.
-            //filterBuilder.SelectWhere($"test =~ {feature}Feature");
+            List<string> filters = features.Select(feature => $"class = {typeLocatorHelper.GetFeatureType(assembly, feature)}").ToList();
 
-            filterBuilder.SelectWhere($"class == {type.FullName}");
+            filterBuilder.SelectWhere(string.Join(" || ", filters));
 
             return filterBuilder.GetFilter();
         }

@@ -28,7 +28,9 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using YellowJacket.Dashboard.Entities.Agent;
 using YellowJacket.Dashboard.Repositories;
+using YellowJacket.Dashboard.Repositories.Interfaces;
 using YellowJacket.Models;
+using YellowJacket.Models.Agent;
 
 namespace YellowJacket.Dashboard.Controllers.Api
 {

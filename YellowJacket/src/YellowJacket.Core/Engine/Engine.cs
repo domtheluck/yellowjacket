@@ -39,6 +39,8 @@ using ILogger = YellowJacket.Core.Interfaces.ILogger;
 
 namespace YellowJacket.Core.Engine
 {
+    // TODO: Need to support multiple features
+    
     /// <summary>
     /// YellowJacket engine.
     /// </summary>
@@ -60,6 +62,8 @@ namespace YellowJacket.Core.Engine
 
         private TestSuite _testSuite;
         private List<TestCase> _testCases = new List<TestCase>();
+
+        private int _testCaseCount;
 
         #endregion
 
@@ -91,15 +95,15 @@ namespace YellowJacket.Core.Engine
         #region Public Methods
 
         /// <summary>
-        /// Execute the specified Feature contains in the related assembly.
+        /// Execute the specified features contains in the related assembly.
         /// </summary>
         /// <param name="assemblyPath">The assembly path.</param>
-        /// <param name="feature">The feature.</param>
-        public void Execute(string assemblyPath, string feature)
+        /// <param name="features">The features.</param>
+        public void Execute(string assemblyPath, List<string> features)
         {
             Execute(
                 assemblyPath,
-                feature,
+                features,
                 "None",
                 false,
                 new List<ILogger>
@@ -110,33 +114,33 @@ namespace YellowJacket.Core.Engine
         }
 
         /// <summary>
-        /// Execute the specified Feature contains in the related assembly.
+        /// Execute the specified features contains in the related assembly.
         /// </summary>
         /// <param name="assemblyPath">The assembly path.</param>
-        /// <param name="feature">The feature.</param>
+        /// <param name="features">The features.</param>
         /// <param name="loggers">The loggers.</param>
-        public void Execute(string assemblyPath, string feature, List<ILogger> loggers)
+        public void Execute(string assemblyPath, List<string> features, List<ILogger> loggers)
         {
             Execute(
                 assemblyPath,
-                feature,
+                features,
                 BrowserNone,
                 false,
                 loggers);
         }
 
         /// <summary>
-        /// Execute the specified Feature contains in the related assembly.
+        /// Execute the specified features contains in the related assembly.
         /// </summary>
         /// <param name="assemblyPath">The assembly path.</param>
-        /// <param name="feature">The feature.</param>
+        /// <param name="features">The features.</param>
         /// <param name="browser">The browser</param>
         /// <param name="useLocalBrowser">Determines if we want to use the local browser or not.</param>
-        public void Execute(string assemblyPath, string feature, string browser, bool useLocalBrowser = false)
+        public void Execute(string assemblyPath, List<string> features, string browser, bool useLocalBrowser = false)
         {
             Execute(
                 assemblyPath,
-                feature,
+                features,
                 BrowserNone,
                 useLocalBrowser,
                 new List<ILogger>
@@ -147,24 +151,24 @@ namespace YellowJacket.Core.Engine
         }
 
         /// <summary>
-        /// Execute the specified Feature contains in the related assembly.
+        /// Execute the specified features contains in the related assembly.
         /// </summary>
         /// <param name="assemblyPath">The assembly path.</param>
-        /// <param name="feature">The feature.</param>
+        /// <param name="features">The features.</param>
         /// <param name="browser">The browser</param>
         /// <param name="useLocalBrowser">Determines if we want to use the local browser or not.</param>
         /// <param name="loggers">The loggers.</param>
-        public void Execute(string assemblyPath, string feature, string browser, bool useLocalBrowser, List<ILogger> loggers)
+        public void Execute(string assemblyPath, List<string> features, string browser, bool useLocalBrowser, List<ILogger> loggers)
         {
             Cleanup();
 
-            ValidateParameters(assemblyPath, feature, browser);
+            ValidateParameters(assemblyPath, features, browser);
 
             RegisterLoggers(loggers);
 
             try
             {
-                ValidateParameters(assemblyPath, feature);
+                ValidateParameters(assemblyPath, features);
 
                 LoadTestAssembly(assemblyPath);
 
@@ -172,7 +176,7 @@ namespace YellowJacket.Core.Engine
 
                 FireExecutionStartEvent();
 
-                ExecuteFeature(assemblyPath, feature);
+                ExecuteFeature(assemblyPath, features);
             }
             catch (Exception ex)
             {
@@ -206,7 +210,7 @@ namespace YellowJacket.Core.Engine
         /// <param name="assemblyPath">The assembly path.</param>
         private void LoadTestAssembly(string assemblyPath)
         {
-            _assembly = Assembly.LoadFile(assemblyPath);
+            _assembly = Assembly.LoadFrom(assemblyPath);
         }
 
         /// <summary>
@@ -262,6 +266,8 @@ namespace YellowJacket.Core.Engine
         /// </summary>
         private void Initialize()
         {
+            _testCaseCount = 0;
+
             // initialize the NUnit test engine
             _testEngine = TestEngineActivator.CreateInstance();
 
@@ -297,37 +303,35 @@ namespace YellowJacket.Core.Engine
         /// Fires the execution progress event.
         /// </summary>
         /// <param name="progress">The progress.</param>
-        private void FireExecutionProgressEvent(decimal progress)
+        /// <param name="currentState">The current state.</param>
+        private void FireExecutionProgressEvent(decimal progress, string currentState)
         {
-            ExecutionProgress?.Invoke(this, new ExecutionProgressEventArgs(progress));
+            ExecutionProgress?.Invoke(this, new ExecutionProgressEventArgs(progress, currentState));
         }
 
         /// <summary>
         /// Validates the parameters.
         /// </summary>
         /// <param name="assemblyPath">The assembly path.</param>
-        /// <param name="feature">The feature.</param>
+        /// <param name="features">The features.</param>
         /// <exception cref="FileNotFoundException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
-        private void ValidateParameters(string assemblyPath, string feature)
+        private void ValidateParameters(string assemblyPath, List<string> features)
         {
             if (!File.Exists(assemblyPath))
                 throw new FileNotFoundException($"Cannot find the assembly {assemblyPath}");
-
-            if (string.IsNullOrEmpty(feature))
-                throw new ArgumentNullException($"The feature {feature} is invalid");
         }
 
         /// <summary>
         /// Executes the specified feature.
         /// </summary>
         /// <param name="assemblyPath">The assembly path.</param>
-        /// <param name="feature">The feature.</param>
-        private void ExecuteFeature(string assemblyPath, string feature)
+        /// <param name="features">The features.</param>
+        private void ExecuteFeature(string assemblyPath, List<string> features)
         {
             TestPackage testPackage = NUnitEngineHelper.CreateTestPackage(new List<string> { assemblyPath });
 
-            TestFilter testFilter = NUnitEngineHelper.CreateTestFilter(_assembly, feature);
+            TestFilter testFilter = NUnitEngineHelper.CreateTestFilter(_assembly, features);
 
             ITestRunner testRunner = _testEngine.GetRunner(testPackage);
 
@@ -336,8 +340,6 @@ namespace YellowJacket.Core.Engine
             CustomTestEventListener testEventListener = new CustomTestEventListener();
 
             testEventListener.TestReport += OnTestReport;
-
-            //ExecutionContext.Current.ExportConfiguration(Path.Combine(Path.GetTempPath(), "yellowjacket-config.bin"));
 
             TestRun testRun = NUnitEngineHelper.ParseTestRun(testRunner.Run(testEventListener, testFilter));
         }
@@ -350,11 +352,13 @@ namespace YellowJacket.Core.Engine
             // TODO: temp code. Need something more flexible. Also, we need to think about the result output.
             int testCaseCount = _testSuite.TestCaseCount;
 
-            int passedTestCaseCount = _testCases.Count(tc => tc.Result == "Passed");
+            int finishedTestCaseCount = _testCases.Count;
 
-            decimal progress = (passedTestCaseCount / (decimal)testCaseCount) * 100;
+            decimal progress = finishedTestCaseCount / (decimal)testCaseCount * 100;
 
-            FireExecutionProgressEvent(Math.Round(progress, 2));
+            FireExecutionProgressEvent(
+                Math.Round(progress, 2), 
+                $"Execution of {_testCases.Last().ClassName.Split('.').Last().Substring(0, _testCases.Last().ClassName.Split('.').Last().Length - 7)} - {_testCases.Last().Name}: { _testCases.Last().Result}");
         }
 
         #endregion
@@ -484,11 +488,11 @@ namespace YellowJacket.Core.Engine
         /// Validates the engine input parameters.
         /// </summary>
         /// <param name="assemblyPath">The assembly path.</param>
-        /// <param name="feature">The feature.</param>
+        /// <param name="features">The features.</param>
         /// <param name="browser">The browser.</param>
-        private void ValidateParameters(string assemblyPath, string feature, string browser)
+        private void ValidateParameters(string assemblyPath, List<string> features, string browser)
         {
-            if (!string.IsNullOrEmpty(assemblyPath))
+            if (string.IsNullOrEmpty(assemblyPath))
                 FireExecutionStopEvent(new ArgumentException("You must provide a value for the assembly path"));
 
             if (!File.Exists(assemblyPath))

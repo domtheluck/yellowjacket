@@ -51,39 +51,38 @@ namespace YellowJacket.Core.Interfaces
         #region Methods
 
         /// <summary>
-        /// Execute the specified Feature contains in the related assembly.
+        /// Execute the specified features contains in the related assembly.
         /// </summary>
         /// <param name="assemblyPath">The assembly path.</param>
-        /// <param name="feature">The feature.</param>
-        void Execute(string assemblyPath, string feature);
+        /// <param name="features">The features.</param>
+        void Execute(string assemblyPath, List<string> features);
 
         /// <summary>
-        /// Execute the specified Feature contains in the related assembly.
+        /// Execute the specified features contains in the related assembly.
         /// </summary>
         /// <param name="assemblyPath">The assembly path.</param>
-        /// <param name="feature">The feature.</param>
-        /// <param name="browser">The browser</param>
+        /// <param name="features">The features.</param>
         /// <param name="loggers">The loggers.</param>
-        void Execute(string assemblyPath, string feature, List<ILogger> loggers);
+        void Execute(string assemblyPath, List<string> features, List<ILogger> loggers);
 
         /// <summary>
-        /// Execute the specified Feature contains in the related assembly.
+        /// Execute the specified features contains in the related assembly.
         /// </summary>
         /// <param name="assemblyPath">The assembly path.</param>
-        /// <param name="feature">The feature.</param>
+        /// <param name="features">The features.</param>
         /// <param name="browser">The browser</param>
         /// <param name="useLocalBrowser">Determines if we want to use the local browser or not.</param>
-        void Execute(string assemblyPath, string feature, string browser, bool useLocalBrowser);
+        void Execute(string assemblyPath, List<string> features, string browser, bool useLocalBrowser);
 
         /// <summary>
-        /// Execute the specified Feature contains in the related assembly.
+        /// Execute the specified features contains in the related assembly.
         /// </summary>
         /// <param name="assemblyPath">The assembly path.</param>
-        /// <param name="feature">The feature.</param>
+        /// <param name="features">The features.</param>
         /// <param name="browser">The browser</param>
         /// <param name="useLocalBrowser">Determines if we want to use the local browser or not.</param>
         /// <param name="loggers">The loggers.</param>
-        void Execute(string assemblyPath, string feature, string browser, bool useLocalBrowser, List<ILogger> loggers);
+        void Execute(string assemblyPath, List<string> features, string browser, bool useLocalBrowser, List<ILogger> loggers);
 
         #endregion
     }

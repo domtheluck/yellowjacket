@@ -21,22 +21,48 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using Microsoft.EntityFrameworkCore;
-using YellowJacket.Dashboard.Entities.Agent;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using YellowJacket.Dashboard.Entities.Job;
 
-namespace YellowJacket.Dashboard.Entities
+namespace YellowJacket.Dashboard.Repositories.Interfaces
 {
-    public class YellowJacketContext : DbContext
+    public interface IJobRepository
     {
-        public YellowJacketContext(DbContextOptions<YellowJacketContext> options)
-            : base(options)
-        {
-        }
+        #region Public Methods
 
-        public DbSet<AgentEntity> Agents { get; set; }
+        /// <summary>
+        /// Adds the specified job to the repository.
+        /// </summary>
+        /// <param name="entity">The entity.</param>
+        /// <returns><see cref="JobEntity"/>.</returns>
+        Task<JobEntity> Add(JobEntity entity);
 
-        public DbSet<JobEntity> Jobs { get; set; }
+        /// <summary>
+        /// Gets all jobs from the repository.
+        /// </summary>
+        /// <returns></returns>
+        Task<IEnumerable<JobEntity>> GetAll();
 
+        /// <summary>
+        /// Finds an job by its id.
+        /// </summary>
+        /// <param name="id">The id.</param>
+        /// <returns><see cref="JobEntity"/>.</returns>
+        Task<JobEntity> Find(string id);
+
+        /// <summary>
+        /// Removes the specified job from the repository.
+        /// </summary>
+        /// <param name="id">The id of the job to remove.</param>
+        Task Remove(string id);
+
+        /// <summary>
+        /// Updates the specified job.
+        /// </summary>
+        /// <param name="entity">The entity.</param>
+        Task<JobEntity> Update(JobEntity entity);
+
+        #endregion
     }
 }

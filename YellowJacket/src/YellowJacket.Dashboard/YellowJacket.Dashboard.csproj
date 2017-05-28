@@ -51,7 +51,6 @@
        </None>
      </ItemGroup>
      <ItemGroup>
-       <Folder Include="Entities\Job\" />
        <Folder Include="Entities\JobInstance\" />
        <Folder Include="Entities\JobInstanceResult\" />
      </ItemGroup>

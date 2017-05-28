@@ -29,11 +29,14 @@ namespace YellowJacket.Console
 
             app.Command("execute", (command) =>
             {
-                command.Description = "Execute a feature.";
+                command.Description = "Execute one or multiple feature.";
                 command.HelpOption("-?|-h|--help");
 
                 CommandArgument assemblyPathArgument = command.Argument("[assemblyPath]", "The assembly path.");
-                CommandArgument nameArgument = command.Argument("[name]", "The feature name.");
+
+                CommandArgument featuresArgument = command.Argument("[feature1] [feature2] ...", "The features.");
+
+                featuresArgument.MultipleValues = true;
 
                 StringBuilder browserOptionDescription = new StringBuilder();
 
@@ -56,7 +59,7 @@ namespace YellowJacket.Console
                 CommandOption browserOption =
                 command.Option(
                     "-b|--browser <browser>",
-                    browserOptionDescription.ToString(), 
+                    browserOptionDescription.ToString(),
                     CommandOptionType.SingleValue);
 
                 command.OnExecute(() =>
@@ -68,9 +71,9 @@ namespace YellowJacket.Console
                         return -1;
                     }
 
-                    if (string.IsNullOrEmpty(nameArgument.Value))
+                    if (!(featuresArgument.Values.Any()))
                     {
-                        System.Console.WriteLine($"The argument [name] is required.");
+                        System.Console.WriteLine("The argument [feature] is required.");
                         command.ShowHelp();
                         return -1;
                     }
@@ -87,7 +90,7 @@ namespace YellowJacket.Console
                     }
 
                     string assemblyPath = assemblyPathArgument.Value;
-                    string featureName = nameArgument.Value;
+                    List<String> features = featuresArgument.Values;
                     string browser = browserOption.HasValue() ? browserOption.Value() : "None";
 
                     IEngine executionEngine = ExecutionEngineManager.CreateEngine();
@@ -97,7 +100,7 @@ namespace YellowJacket.Console
                     executionEngine.ExecutionStop += Engine_OnExecutionStop;
                     executionEngine.ExecutionProgress += Engine_OnExecutionProgress;
 
-                    executionEngine.Execute(assemblyPath, featureName, browser, false);
+                    executionEngine.Execute(assemblyPath, features, browser, false);
 
                     System.Console.ReadLine();
 
@@ -109,7 +112,7 @@ namespace YellowJacket.Console
             {
                 app.Execute(args);
             }
-            catch  (Exception ex)
+            catch (Exception ex)
             {
                 System.Console.WriteLine(ex);
                 Environment.Exit(-1);
@@ -142,7 +145,7 @@ namespace YellowJacket.Console
 
         private static void Engine_OnExecutionProgress(object sender, ExecutionProgressEventArgs eventArgs)
         {
-            System.Console.WriteLine($"Execution progress {eventArgs.Progress}");
+            System.Console.WriteLine($"Execution progress {eventArgs.Progress / 100:P}: {eventArgs.CurrentState}");
         }
 
         #endregion

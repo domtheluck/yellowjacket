@@ -1,6 +1,6 @@
 ﻿using System.Threading;
 using TechTalk.SpecFlow;
-using YellowJacketCore.Framework;
+using YellowJacket.Core.Framework;
 
 namespace YellowJacket.WebApp.Automation.Steps
 {
@@ -10,19 +10,19 @@ namespace YellowJacket.WebApp.Automation.Steps
         [Given(@"I have entered (.*) into the calculator")]
         public void GivenIHaveEnteredIntoTheCalculator(int p0)
         {
-            Thread.Sleep(1000);
+            Thread.Sleep(1);
         }
 
         [When(@"I press add")]
         public void WhenIPressAdd()
         {
-            Thread.Sleep(1000);
+            Thread.Sleep(1);
         }
 
         [Then(@"the result should be (.*) on the screen")]
         public void ThenTheResultShouldBeOnTheScreen(int p0)
         {
-            Thread.Sleep(1000);
+            Thread.Sleep(1);
         }
     }
 }

@@ -24,6 +24,7 @@
 using AutoMapper;
 using YellowJacket.Dashboard.Entities.Agent;
 using YellowJacket.Models;
+using YellowJacket.Models.Agent;
 
 namespace YellowJacket.Dashboard.Mapping
 {

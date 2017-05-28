@@ -37,6 +37,7 @@ namespace YellowJacket.Dashboard.Entities.Agent
         /// The id.
         /// </value>
         [Key]
+        [Required]
         public string Id { get; set; }
 
         /// <summary>
@@ -45,6 +46,7 @@ namespace YellowJacket.Dashboard.Entities.Agent
         /// <value>
         /// The name.
         /// </value>
+        [Required]
         public string Name { get; set; }
 
         /// <summary>
@@ -53,6 +55,7 @@ namespace YellowJacket.Dashboard.Entities.Agent
         /// <value>
         /// The status.
         /// </value>
+        [Required]
         public string Status { get; set; }
 
         /// <summary>
@@ -61,6 +64,7 @@ namespace YellowJacket.Dashboard.Entities.Agent
         /// <value>
         /// The last update date time.
         /// </value>
+        [Required]
         public DateTime LastUpdateOn { get; set; }
 
         /// <summary>
@@ -69,6 +73,7 @@ namespace YellowJacket.Dashboard.Entities.Agent
         /// <value>
         /// The registration date time.
         /// </value>
+        [Required]
         public DateTime RegisteredOn { get; set; }
 
         #endregion
