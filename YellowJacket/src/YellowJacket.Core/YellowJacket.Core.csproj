@@ -81,6 +81,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Contexts\ExecutionContext.cs" />
     <Compile Include="Engine\Engine.cs" />
     <Compile Include="Engine\Events\ExecutionProgressEventArgs.cs" />
     <Compile Include="Engine\Events\ExecutionStopEventArgs.cs" />
@@ -89,7 +90,7 @@
     <Compile Include="Enums\HookType.cs" />
     <Compile Include="Framework\Configuration.cs" />
     <Compile Include="Helpers\SerializationHelper.cs" />
-    <Compile Include="Infrastructure\HookProcessor.cs" />
+    <Compile Include="Hook\HookProcessor.cs" />
     <Compile Include="Interfaces\IEngine.cs" />
     <Compile Include="Framework\Base.cs" />
     <Compile Include="Framework\BasePage.cs" />
@@ -99,11 +100,10 @@
     <Compile Include="Framework\BaseHook.cs" />
     <Compile Include="Framework\ExecutionContext.cs" />
     <Compile Include="Enums\BrowserType.cs" />
-    <Compile Include="Infrastructure\ExecutionEngineManager.cs" />
-    <Compile Include="Infrastructure\Settings.cs" />
-    <Compile Include="Infrastructure\FileLogger.cs" />
+    <Compile Include="Builders\ExecutionEngineBuilder.cs" />
+    <Compile Include="Logging\FileLogger.cs" />
     <Compile Include="Interfaces\ILogger.cs" />
-    <Compile Include="Infrastructure\WebDriverFactory.cs" />
+    <Compile Include="Factories\WebDriverFactory.cs" />
     <Compile Include="Helpers\EnumHelper.cs" />
     <Compile Include="Logging\LogManager.cs" />
     <Compile Include="NUnit\CustomTestEventListener.cs" />

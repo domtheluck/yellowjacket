@@ -1,5 +1,4 @@
-﻿using System;
-using YellowJacket.Core.Hook;
+﻿using YellowJacket.Core.Hook;
 using YellowJacket.Core.Interfaces;
 
 namespace YellowJacket.WebApp.Automation
@@ -18,7 +17,6 @@ namespace YellowJacket.WebApp.Automation
         /// <summary>
         /// Called after a scenario execution.
         /// </summary>
-
         public void AfterScenario()
         {
 

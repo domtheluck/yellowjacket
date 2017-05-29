@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Extensions.CommandLineUtils;
+using YellowJacket.Core.Builders;
 using YellowJacket.Core.Engine.Events;
 using YellowJacket.Core.Enums;
 using YellowJacket.Core.Helpers;
-using YellowJacket.Core.Infrastructure;
 using YellowJacket.Core.Interfaces;
 
 namespace YellowJacket.Console

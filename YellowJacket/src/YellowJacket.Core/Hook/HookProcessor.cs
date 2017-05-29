@@ -22,36 +22,29 @@
 // ***********************************************************************
 
 using System.Collections.Generic;
-using YellowJacket.Core.Hook;
-using YellowJacket.Core.Interfaces;
+using YellowJacket.Core.Enums;
+using YellowJacket.Core.Framework;
 
-namespace YellowJacket.Core.Infrastructure
+namespace YellowJacket.Core.Hook
 {
-    // TODO: Need to validate if we need to keep this class or not.
-    
     /// <summary>
-    /// Contains all the settings.
+    /// Uses to process the hooks.
     /// </summary>
-    internal class Settings
+    internal class HookProcessor
     {
-        #region Properties
-
         /// <summary>
-        /// Gets or sets the hooks.
+        /// Processes the hooks.
         /// </summary>
-        /// <value>
-        /// The hooks.
-        /// </value>
-        internal List<HookInstance> Hooks { get; set; }
+        /// <param name="hookType">Type of the hook.</param>
+        public static void Process(HookType hookType)
+        {
+            List<HookInstance> hooks = ExecutionContext.Current.GetHooks();
 
-        /// <summary>
-        /// Gets or sets the loggers.
-        /// </summary>
-        /// <value>
-        /// The loggers.
-        /// </value>
-        internal List<ILogger> Loggers { get; set; }
-
-        #endregion
+            hooks.ForEach(x =>
+            {
+                x.Instance.GetType().GetMethod(hookType.ToString()).Invoke(x.Instance, null);
+            });
+        }
     }
 }
+

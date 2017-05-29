@@ -1,7 +1,8 @@
 ﻿using System;
 using TechTalk.SpecFlow;
 using YellowJacket.Core.Enums;
-using YellowJacket.Core.Infrastructure;
+using YellowJacket.Core.Factories;
+using YellowJacket.Core.Hook;
 using YellowJacket.Core.Logging;
 
 namespace YellowJacket.Core.Framework

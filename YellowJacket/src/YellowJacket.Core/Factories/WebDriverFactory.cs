@@ -26,7 +26,7 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.IE;
 using YellowJacket.Core.Enums;
 
-namespace YellowJacket.Core.Infrastructure
+namespace YellowJacket.Core.Factories
 {
     /// <summary>
     /// Used to create Web Driver.
