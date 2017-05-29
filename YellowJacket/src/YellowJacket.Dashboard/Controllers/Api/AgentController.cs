@@ -68,7 +68,12 @@ namespace YellowJacket.Dashboard.Controllers.Api
         {
             try
             {
-                return Ok(_mapper.Map<AgentEntity, AgentModel>(await _agentRepository.Find(id)));
+                AgentEntity entity = await _agentRepository.Find(id);
+
+                if (entity == null)
+                    return StatusCode(404);
+
+                return Ok(_mapper.Map<AgentEntity, AgentModel>(entity));
             }
             catch (Exception ex)
             {
@@ -122,7 +127,10 @@ namespace YellowJacket.Dashboard.Controllers.Api
 
                  entity = await _agentRepository.Add(_mapper.Map<AgentModel, AgentEntity>(model));
 
-                return CreatedAtRoute("Get", new {id = entity.Id }, _mapper.Map<AgentEntity, AgentModel>(entity));
+                return CreatedAtRoute(
+                    "Get", 
+                    new {id = entity.Id }, 
+                    _mapper.Map<AgentEntity, AgentModel>(entity));
             }
             catch (Exception ex)
             {

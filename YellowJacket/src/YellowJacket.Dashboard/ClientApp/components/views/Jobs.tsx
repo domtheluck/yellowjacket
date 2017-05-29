@@ -1,6 +1,6 @@
 ﻿import * as React from "react";
 
-export class View1 extends React.Component<void, void> {
+export class Jobs extends React.Component<void, void> {
     render() {
         return (
             <div className="wrapper wrapper-content animated fadeInRight">
@@ -8,7 +8,7 @@ export class View1 extends React.Component<void, void> {
                     <div className="col-lg-12">
                         <div className="text-center m-t-lg">
                             <h1>
-                                View1
+                                Jobs
                             </h1>
                             <small>
                                 It is an application skeleton for a typical web app. You can use it to quickly bootstrap your webapp projects.
@@ -21,4 +21,4 @@ export class View1 extends React.Component<void, void> {
     }
 }
 
-export default View1
+export default Jobs
