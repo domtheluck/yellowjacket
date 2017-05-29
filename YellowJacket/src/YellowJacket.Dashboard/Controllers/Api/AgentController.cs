@@ -27,9 +27,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using YellowJacket.Dashboard.Entities.Agent;
-using YellowJacket.Dashboard.Repositories;
 using YellowJacket.Dashboard.Repositories.Interfaces;
-using YellowJacket.Models;
 using YellowJacket.Models.Agent;
 
 namespace YellowJacket.Dashboard.Controllers.Api
@@ -65,6 +63,21 @@ namespace YellowJacket.Dashboard.Controllers.Api
 
         #region Public Methods
 
+        [HttpGet("{id}", Name ="Get")]
+        public async Task<IActionResult> Get(string id)
+        {
+            try
+            {
+                return Ok(_mapper.Map<AgentEntity, AgentModel>(await _agentRepository.Find(id)));
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+
+                return StatusCode(500, id);
+            }
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -93,7 +106,7 @@ namespace YellowJacket.Dashboard.Controllers.Api
             {
                 HandleError(ex);
 
-                return StatusCode(500);
+                return StatusCode(500, model);
             }
         }
 
@@ -109,13 +122,13 @@ namespace YellowJacket.Dashboard.Controllers.Api
 
                  entity = await _agentRepository.Add(_mapper.Map<AgentModel, AgentEntity>(model));
 
-                return Ok(_mapper.Map<AgentEntity, AgentModel>(entity));
+                return CreatedAtRoute("Get", new {id = entity.Id }, _mapper.Map<AgentEntity, AgentModel>(entity));
             }
             catch (Exception ex)
             {
                 HandleError(ex);
 
-                return StatusCode(500);
+                return StatusCode(500, model);
             }
         }
 
