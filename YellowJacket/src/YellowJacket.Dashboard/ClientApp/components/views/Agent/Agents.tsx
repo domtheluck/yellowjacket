@@ -24,10 +24,10 @@
 import * as React from "react";
 import { connect } from "react-redux";
 
-import { IApplicationState } from "../../store";
-import * as IAgentState from "../../store/AgentStore";
+import { IApplicationState } from "../../../store";
+import * as IAgentState from "../../../store/AgentStore";
 
-import IboxTools from "../common/IboxTools";
+import IboxTools from "../../common/IboxTools";
 
 // at runtime, Redux will merge together
 type AgentsProps =

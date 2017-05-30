@@ -67,11 +67,11 @@ export class Navigation extends React.Component<any, any> {
                     <li className={this.activeRoute("/agents")}>
                         <Link to="/agents"><i className="fa fa-th-large"></i> <span className="nav-label">Agents</span></Link>
                     </li>
-                    <li className={this.activeRoute("/view1")}>
-                        <Link to="/view1"><i className="fa fa-th-large"></i> <span className="nav-label">view1</span></Link>
+                    <li className={this.activeRoute("/jobs")}>
+                        <Link to="/jobs"><i className="fa fa-th-large"></i> <span className="nav-label">Jobs</span></Link>
                     </li>
-                    <li className={this.activeRoute("/view2")}>
-                        <Link to="/view2"><i className="fa fa-th-large"></i> <span className="nav-label">view2</span>
+                    <li className={this.activeRoute("/jobForm")}>
+                        <Link to="/jobForm"><i className="fa fa-th-large"></i> <span className="nav-label">JobForm</span>
                         </Link>
                     </li>
                 </ul>
