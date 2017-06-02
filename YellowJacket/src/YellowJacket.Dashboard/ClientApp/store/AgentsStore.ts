@@ -1,19 +1,14 @@
 ﻿import { fetch, addTask } from "domain-task";
 import { Action, Reducer, ActionCreator } from "redux";
 import { IAppThunkAction } from "./";
+import { IAgent } from "ClientApp/models/Models";
 
 // -----------------
 // STATE - This defines the type of data maintained in the Redux store.
 
-export interface IAgentState {
+export interface IAgentsState {
     isLoading: boolean;
     agents: IAgent[];
-}
-
-export interface IAgent {
-    id: string;
-    name: string;
-    status: string;
 }
 
 // -----------------
@@ -54,9 +49,9 @@ export const actionCreators = {
 // ----------------
 // REDUCER - For a given state and action, returns the new state. To support time travel, this must not mutate the old state.
 
-const unloadedState: IAgentState = { agents: [], isLoading: false };
+const unloadedState: IAgentsState = { agents: [], isLoading: false };
 
-export const reducer: Reducer<IAgentState> = (state: IAgentState, action: KnownAction) => {
+export const reducer: Reducer<IAgentsState> = (state: IAgentsState, action: KnownAction) => {
     switch (action.type) {
         case "REQUEST_AGENTS":
         return {

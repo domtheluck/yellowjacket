@@ -4,6 +4,9 @@ import { connect } from "react-redux"
 import { Field, reduxForm, FormProps, FormErrors } from "redux-form";
 import * as classNames from "classnames";
 
+import { IApplicationState } from "../../../store";
+import * as IJobState from "../../../store/JobStore";
+
 export interface IJobFormData {
     firstName?: string;
     lastName?: string;
@@ -75,10 +78,17 @@ const validate = (values: Readonly<IJobFormData>): FormErrors<IJobFormData> => {
 };
 
 //export default reduxForm({
-export default reduxForm<Readonly<IJobFormData>, IJobFormProps, {}>({
-    form: "JobForm",
-    validate: validate,
-    onSubmit: (values, dispatch, props) => {
-        console.log('submit is being handled...');
-    }
+export connect(
+    (state: IApplicationState) => state.job, // selects which state properties are merged into the component's props
+    IJobState.actionCreators                 // selects which action creators are merged into the component's props
+)(JobForm);
+
+export default 
+    reduxForm<Readonly<IJobFormData>, IJobFormProps, {}>({
+        form: "JobForm",
+        validate: validate,
+        onSubmit: (values, dispatch, props) => {
+
+            console.log('submit is being handled...');
+        }
 })(JobForm);
