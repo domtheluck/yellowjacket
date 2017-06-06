@@ -22,11 +22,9 @@
 // ***********************************************************************
 
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using YellowJacket.Dashboard.Entities;
-using YellowJacket.Dashboard.Entities.Agent;
 using YellowJacket.Dashboard.Entities.Job;
 using YellowJacket.Dashboard.Repositories.Interfaces;
 

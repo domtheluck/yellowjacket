@@ -1,5 +1,27 @@
+// ***********************************************************************
+// Copyright (c) 2017 Dominik Lachance
+//
+// Permission is hereby granted, free of charge, to any person obtaining
+// a copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to
+// permit persons to whom the Software is furnished to do so, subject to
+// the following conditions:
+//
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// ***********************************************************************
+
 import * as AgentsStore from "./AgentsStore";
-import * as JobStore from "./JobStore";
 
 import { createStore, combineReducers } from "redux";
 import { reducer as formReducer } from "redux-form";
@@ -7,7 +29,6 @@ import { reducer as formReducer } from "redux-form";
 // The top-level state object
 export interface IApplicationState {
     agents: AgentsStore.IAgentsState;
-    job: JobStore.IJobState;
 }
 
 // Whenever an action is dispatched, Redux will update each top-level application state property using
@@ -15,7 +36,6 @@ export interface IApplicationState {
 // acts on the corresponding ApplicationState property type.
 export const reducers = {
     agents: AgentsStore.reducer,
-    job: JobStore.reducer,
     form: formReducer
 };
 

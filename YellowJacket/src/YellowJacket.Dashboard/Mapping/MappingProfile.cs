@@ -23,7 +23,6 @@
 
 using AutoMapper;
 using YellowJacket.Dashboard.Entities.Agent;
-using YellowJacket.Models;
 using YellowJacket.Models.Agent;
 
 namespace YellowJacket.Dashboard.Mapping
@@ -32,6 +31,9 @@ namespace YellowJacket.Dashboard.Mapping
     {
         #region Constructors
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MappingProfile"/> class.
+        /// </summary>
         public MappingProfile()
         {
             CreateMap<AgentModel, AgentEntity>();

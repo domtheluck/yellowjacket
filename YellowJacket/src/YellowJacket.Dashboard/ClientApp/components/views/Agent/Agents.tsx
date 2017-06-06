@@ -110,7 +110,6 @@ export class Agents extends React.Component<AgentsProps, void> {
 
 }
 
-// ReSharper disable once TsResolvedFromInaccessibleModule
 export default connect(
     (state: IApplicationState) => state.agents, // selects which state properties are merged into the component's props
     IAgentsState.actionCreators                 // selects which action creators are merged into the component's props
