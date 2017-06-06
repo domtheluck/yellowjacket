@@ -93,7 +93,7 @@ namespace YellowJacket.Console
                     List<String> features = featuresArgument.Values;
                     string browser = browserOption.HasValue() ? browserOption.Value() : "None";
 
-                    IEngine executionEngine = ExecutionEngineManager.CreateEngine();
+                    IEngine executionEngine = ExecutionEngineBuilder.CreateEngine();
 
                     executionEngine.ExecutionStart += Engine_OnExecutionStart;
                     executionEngine.ExecutionCompleted += Engine_OnExecutionCompleted;
