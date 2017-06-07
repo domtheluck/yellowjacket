@@ -25,14 +25,14 @@ import * as React from "react";
 import { connect } from "react-redux";
 
 import { IApplicationState } from "../../../store";
-import * as IAgentsState from "../../../store/AgentsStore";
+import * as IAgentState from "../../../store/AgentStore";
 
 import IboxTools from "../../common/IboxTools";
 
 // at runtime, Redux will merge together
 type AgentsProps =
-    IAgentsState.IAgentsState // state we've requested from the Redux store
-    & typeof IAgentsState.actionCreators;   // plus action creators we've requested
+    IAgentState.IAgentState // state we've requested from the Redux store
+    & typeof IAgentState.actionCreators;   // plus action creators we've requested
 
 export class Agents extends React.Component<AgentsProps, void> {
     constructor(props) {
@@ -56,7 +56,7 @@ export class Agents extends React.Component<AgentsProps, void> {
 
     private renderAgentCardList() {
         return <div className="row">
-            {this.props.agents.map(agent =>
+            {this.props.payload.map(agent =>
                 <div className="col-lg-2 col-md-4 col-sm-6 col-xs-6" key={agent.id}>
                     <div className="widget-head-color-box navy-bg p-xs text-center">
                         <div>
@@ -112,5 +112,5 @@ export class Agents extends React.Component<AgentsProps, void> {
 
 export default connect(
     (state: IApplicationState) => state.agents, // selects which state properties are merged into the component's props
-    IAgentsState.actionCreators                 // selects which action creators are merged into the component's props
+    IAgentState.actionCreators                 // selects which action creators are merged into the component's props
 )(Agents);

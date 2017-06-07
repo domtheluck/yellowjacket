@@ -21,21 +21,21 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-import * as AgentsStore from "./AgentsStore";
+import * as AgentStore from "./AgentStore";
 
 import { createStore, combineReducers } from "redux";
 import { reducer as formReducer } from "redux-form";
 
 // The top-level state object
 export interface IApplicationState {
-    agents: AgentsStore.IAgentsState;
+    agents: AgentStore.IAgentState;
 }
 
 // Whenever an action is dispatched, Redux will update each top-level application state property using
 // the reducer with the matching name. It's important that the names match exactly, and that the reducer
 // acts on the corresponding ApplicationState property type.
 export const reducers = {
-    agents: AgentsStore.reducer,
+    agents: AgentStore.reducer,
     form: formReducer
 };
 

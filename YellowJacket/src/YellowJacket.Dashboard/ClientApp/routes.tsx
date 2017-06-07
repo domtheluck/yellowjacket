@@ -25,7 +25,7 @@ import * as React from "react";
 import { Router, Route, hashHistory , IndexRedirect } from "react-router";
 
 import Home from "./components/views/Home";
-import Agents from "./components/views/Agent/Agents"
+import Agents from "./components/views/Agent/AgentsView"
 
 import View2 from "./components/views/View2";
 
