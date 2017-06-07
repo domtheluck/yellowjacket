@@ -24,14 +24,14 @@
 import * as React from "react";
 import { connect } from "react-redux";
 
-import { IApplicationState } from "../../../store";
-import * as IAgentsState from "../../../store/AgentsStore";
+import { IApplicationState } from "../../../stores";
+import * as IAgentsState from "../../../stores/AgentStore";
 
 import IboxTools from "../../common/IboxTools";
 
 // at runtime, Redux will merge together
 type AgentsProps =
-    IAgentsState.IAgentsState // state we've requested from the Redux store
+    IAgentsState.IAgentState // state we've requested from the Redux store
     & typeof IAgentsState.actionCreators;   // plus action creators we've requested
 
 export class Agents extends React.Component<AgentsProps, void> {
@@ -56,7 +56,7 @@ export class Agents extends React.Component<AgentsProps, void> {
 
     private renderAgentCardList() {
         return <div className="row">
-            {this.props.agents.map(agent =>
+            {this.props.payload.map(agent =>
                 <div className="col-lg-2 col-md-4 col-sm-6 col-xs-6" key={agent.id}>
                     <div className="widget-head-color-box navy-bg p-xs text-center">
                         <div>
