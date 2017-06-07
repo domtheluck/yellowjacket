@@ -23,7 +23,7 @@ class CreateJobView extends React.PureComponent<P, {}> {
         return <form onSubmit={this.props.handleSubmit!(this.props.handleSave)}>
             <legend>Job</legend>
             <div className="btn-toolbar">
-                <button type="submit" className="btn btn-primary" disabled={this.props.submitting || this.props.pristine}>
+                <button type="submit" className="btn btn-primary" /*disabled={this.props.submitting || this.props.pristine}*/>
                     Process
                 </button>
             </div>

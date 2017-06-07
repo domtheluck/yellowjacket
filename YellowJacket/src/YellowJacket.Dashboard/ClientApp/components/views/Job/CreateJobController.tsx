@@ -2,6 +2,7 @@
 import { connect } from "react-redux"
 import { AppState, Job, DispatchProps } from "./jobTypes"
 import CreateJobView from "./CreateJobView"
+import * as IJobState from "../../../store/JobStore";
 
 // whatever props you may need from owner
 interface OwnProps {
@@ -12,13 +13,17 @@ interface StateProps {
     job?: Job
 }
 
-interface P extends OwnProps, StateProps, DispatchProps { }
+// at runtime, Redux will merge together
+type JobProps =
+    IJobState.IJobState // state we've requested from the Redux store
+    & typeof IJobState.actionCreators;   // plus action creators we've requested
+
+interface P extends OwnProps, StateProps, DispatchProps, JobProps { }
 
 class CreateJobController extends React.PureComponent<P, {}> {
     handleSave = (job: Job) => {
         console.log("handleSave called", job);
-        this.props.dispatch(/.../) // trigger things in your state
-        
+        this.props.dispatch(this.props.createJob) // trigger things in your state    
     }
 
     render() {

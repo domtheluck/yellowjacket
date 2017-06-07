@@ -111,6 +111,6 @@ export class Agents extends React.Component<AgentsProps, void> {
 }
 
 export default connect(
-    (state: IApplicationState) => state.agents, // selects which state properties are merged into the component's props
+    (state: IApplicationState) => state.agent, // selects which state properties are merged into the component's props
     IAgentState.actionCreators                 // selects which action creators are merged into the component's props
 )(Agents);
