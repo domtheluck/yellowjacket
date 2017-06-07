@@ -24,14 +24,14 @@
 import { fetch, addTask } from "domain-task";
 import { Action, Reducer, ActionCreator } from "redux";
 import { IAppThunkAction } from "./";
-import { IAgent } from "ClientApp/models/Models";
+import { IAgent } from "../models/Models";
 
 // -----------------
 // STATE - This defines the type of data maintained in the Redux store.
 
-export interface IAgentsState {
+export interface IAgentState {
     isLoading: boolean;
-    agents: IAgent[];
+    payload: any;
 }
 
 // -----------------
@@ -44,7 +44,7 @@ interface IRequestAgentsAction {
 
 interface IReceiveAgentsAction {
     type: "RECEIVE_AGENTS",
-    agents: IAgent[];
+    payload: any;
 }
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
@@ -72,20 +72,20 @@ export const actionCreators = {
 // ----------------
 // REDUCER - For a given state and action, returns the new state. To support time travel, this must not mutate the old state.
 
-const unloadedState: IAgentsState = { agents: [], isLoading: false };
+const unloadedState: IAgentState = { payload: [], isLoading: false };
 
-export const reducer: Reducer<IAgentsState> = (state: IAgentsState, action: KnownAction) => {
+export const reducer: Reducer<IAgentState> = (state: IAgentState, action: KnownAction) => {
     switch (action.type) {
         case "REQUEST_AGENTS":
         return {
-            agents: state.agents,
+            payload: state.payload,
             isLoading: true
         };
         case "RECEIVE_AGENTS":
         // Only accept the incoming data if it matches the most recent request. This ensures we correctly
         // handle out-of-order responses.
             return {
-                agents: action.agents,
+                payload: action.payload,
                 isLoading: false
             };
         default:
