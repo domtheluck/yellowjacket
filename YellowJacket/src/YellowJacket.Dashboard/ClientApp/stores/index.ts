@@ -22,20 +22,24 @@
 // ***********************************************************************
 
 import * as AgentStore from "./AgentStore";
+import * as JobStore from "./JobStore";
 
 import { createStore, combineReducers } from "redux";
 import { reducer as formReducer } from "redux-form";
 
 // The top-level state object
 export interface IApplicationState {
-    agents: AgentStore.IAgentsState;
+    agent: AgentStore.IAgentState;
+    job: JobStore.IJobState;
+
 }
 
 // Whenever an action is dispatched, Redux will update each top-level application state property using
 // the reducer with the matching name. It's important that the names match exactly, and that the reducer
 // acts on the corresponding ApplicationState property type.
 export const reducers = {
-    agents: AgentStore.reducer,
+    agent: AgentStore.reducer,
+    job: JobStore.reducer,
     form: formReducer
 };
 

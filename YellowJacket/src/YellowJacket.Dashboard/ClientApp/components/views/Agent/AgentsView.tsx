@@ -24,15 +24,15 @@
 import * as React from "react";
 import { connect } from "react-redux";
 
-import { IApplicationState } from "../../../stores";
-import * as IAgentsState from "../../../stores/AgentStore";
+import { IApplicationState } from "../../../store";
+import * as IAgentState from "../../../store/AgentStore";
 
 import IboxTools from "../../common/IboxTools";
 
 // at runtime, Redux will merge together
 type AgentsProps =
-    IAgentsState.IAgentState // state we've requested from the Redux store
-    & typeof IAgentsState.actionCreators;   // plus action creators we've requested
+    IAgentState.IAgentState // state we've requested from the Redux store
+    & typeof IAgentState.actionCreators;   // plus action creators we've requested
 
 export class Agents extends React.Component<AgentsProps, void> {
     constructor(props) {
@@ -111,6 +111,6 @@ export class Agents extends React.Component<AgentsProps, void> {
 }
 
 export default connect(
-    (state: IApplicationState) => state.agents, // selects which state properties are merged into the component's props
-    IAgentsState.actionCreators                 // selects which action creators are merged into the component's props
+    (state: IApplicationState) => state.agent, // selects which state properties are merged into the component's props
+    IAgentState.actionCreators                 // selects which action creators are merged into the component's props
 )(Agents);

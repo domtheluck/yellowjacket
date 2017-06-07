@@ -28,17 +28,14 @@
   <ItemGroup>
     <!-- Files not to show in IDE -->
     <None Remove="yarn.lock" />
-    <Compile Remove="ClientApp\components\views\Job\**" />
     <Compile Remove="ClientApp\containers\**" />
     <Compile Remove="wwwroot\dist\vendor-custom\**" />
 
     <!-- Files not to publish (note that the 'dist' subfolders are re-added below) -->
     <Content Remove="ClientApp\**" />
     <Content Remove="wwwroot\dist\vendor-custom\**" />
-    <EmbeddedResource Remove="ClientApp\components\views\Job\**" />
     <EmbeddedResource Remove="ClientApp\containers\**" />
     <EmbeddedResource Remove="wwwroot\dist\vendor-custom\**" />
-    <None Remove="ClientApp\components\views\Job\**" />
     <None Remove="ClientApp\containers\**" />
     <None Remove="wwwroot\dist\vendor-custom\**" />
   </ItemGroup>

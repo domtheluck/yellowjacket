@@ -25,7 +25,8 @@ import * as React from "react";
 import { Router, Route, hashHistory , IndexRedirect } from "react-router";
 
 import Home from "./components/views/Home";
-import Agents from "./components/views/Agent/Agents"
+import AgentsView from "./components/views/Agent/AgentsView"
+import CreateJobController from "./components/views/Job/CreateJobController"
 
 import View2 from "./components/views/View2";
 
@@ -39,7 +40,8 @@ export default (
         <Route path="/" component={Main}>
             //<IndexRedirect to="/home" />
             <Route path="home" component={Home}></Route>
-            <Route path="agents" component={Agents}></Route>
+            <Route path="agents" component={AgentsView}></Route>
+            <Route path="job" component={CreateJobController}></Route>
             <Route path="*" component={NotFound} />
         </Route>
     </Router>
