@@ -24,68 +24,69 @@
 import { fetch, addTask } from "domain-task";
 import { Action, Reducer, ActionCreator } from "redux";
 import { IAppThunkAction } from "./";
-import { IAgent } from "../models/Models";
+import { IJob, IAgent } from "../models/Models";
 
 // -----------------
 // STATE - This defines the type of data maintained in the Redux store.
 
-export interface IAgentsState {
+export interface IJobState {
     isLoading: boolean;
-    agents: IAgent[];
+    payload: any;
 }
 
 // -----------------
 // ACTIONS - These are serializable (hence replayable) descriptions of state transitions.
 // They do not themselves have any side-effects; they just describe something that is going to happen.
 
-interface IRequestAgentsAction {
-    type: "REQUEST_AGENTS",
+interface ICreateJobAction {
+    type: "CREATE_JOB",
 }
 
-interface IReceiveAgentsAction {
-    type: "RECEIVE_AGENTS",
-    agents: IAgent[];
+interface ICreateJobSuccessAction {
+    type: "CREATE_JOB_SUCCESS",
+    payload: any;
 }
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
-type KnownAction = IRequestAgentsAction | IReceiveAgentsAction;
+type KnownAction = ICreateJobAction | ICreateJobSuccessAction;
 
 // ----------------
 // ACTION CREATORS - These are functions exposed to UI components that will trigger a state transition.
 // They don't directly mutate state, but they can have external side-effects (such as loading data).
 
 export const actionCreators = {
-    requestAgents: (): IAppThunkAction<KnownAction> => (dispatch, getState) => {
+    createJob: (job): IAppThunkAction<KnownAction> => (dispatch, getState) => {
         // Only load data if it's something we don't already have (and are not already loading)
-            let fetchTask = fetch("/api/v1/agent/")
-                .then(response => response.json() as Promise<IAgent[]>)
-                .then(data => {
-                    dispatch((({ type: "RECEIVE_AGENTS", agents: data })) as any);
-                });
+        console.log(job);
+        let fetchTask = fetch("/api/v1/agent/")
+            .then(response => response.json() as Promise<IAgent[]>)
+            .then(data => {
+                dispatch((({ type: "CREATE_JOB_SUCCESS", payload: data })) as any);
+            });
 
             addTask(fetchTask); // Ensure server-side prerendering waits for this to complete
-            dispatch({ type: "REQUEST_AGENTS" });
+            dispatch({ type: "CREATE_JOB" });
     }
 };
 
 // ----------------
 // REDUCER - For a given state and action, returns the new state. To support time travel, this must not mutate the old state.
 
-const unloadedState: IAgentsState = { agents: [], isLoading: false };
+const unloadedState: IJobState = { payload: {}, isLoading: false };
 
-export const reducer: Reducer<IAgentsState> = (state: IAgentsState, action: KnownAction) => {
+export const reducer: Reducer<IJobState> = (state: IJobState, action: KnownAction) => {
     switch (action.type) {
-        case "REQUEST_AGENTS":
+        case "CREATE_JOB":
         return {
-            agents: state.agents,
+            payload: state.payload,
             isLoading: true
         };
-        case "RECEIVE_AGENTS":
+        case "CREATE_JOB_SUCCESS":
         // Only accept the incoming data if it matches the most recent request. This ensures we correctly
         // handle out-of-order responses.
             return {
-                agents: action.agents,
+                payload: action.payload,
                 isLoading: false
             };
         default:

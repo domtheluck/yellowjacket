@@ -2,14 +2,14 @@
 
 export type Job = {
     id: string,
-    name: string
+    name: string;
 }
 
 export type AppState = {
     form: FormStateMap,
-    job?: Job,
+    job?: Job;
 }
 
 export type DispatchProps = {
-    dispatch: Function,
+    dispatch: Function;
 }

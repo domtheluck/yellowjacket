@@ -24,8 +24,8 @@
 import * as React from "react";
 import { connect } from "react-redux";
 
-import { IApplicationState } from "../../../store";
-import * as IAgentState from "../../../store/AgentStore";
+import { IApplicationState } from "../../../stores";
+import * as IAgentState from "../../../stores/AgentStore";
 
 import IboxTools from "../../common/IboxTools";
 

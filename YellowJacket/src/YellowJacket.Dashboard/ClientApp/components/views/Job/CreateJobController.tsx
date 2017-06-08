@@ -2,14 +2,14 @@
 import { connect } from "react-redux"
 import { AppState, Job, DispatchProps } from "./jobTypes"
 import CreateJobView from "./CreateJobView"
-import * as IJobState from "../../../store/JobStore";
+import * as IJobState from "../../../stores/JobStore";
 
 // whatever props you may need from owner
-interface OwnProps {
+interface IOwnProps {
 }
 
 // whatever props you may need from state
-interface StateProps {
+interface IStateProps {
     job?: Job
 }
 
@@ -18,21 +18,20 @@ type JobProps =
     IJobState.IJobState // state we've requested from the Redux store
     & typeof IJobState.actionCreators;   // plus action creators we've requested
 
-interface P extends OwnProps, StateProps, DispatchProps, JobProps { }
+interface ICommonProps extends IOwnProps, IStateProps, JobProps { }
 
-class CreateJobController extends React.PureComponent<P, {}> {
+class CreateJobController extends React.PureComponent<ICommonProps, {}> {
     handleSave = (job: Job) => {
         console.log("handleSave called", job);
-        this.props.dispatch(this.props.createJob) // trigger things in your state    
-    }
+        this.props.createJob(job); // trigger things in your state    
+    };
 
     render() {
-        return <CreateJobView form="createJob" handleSave={this.handleSave} />
+        return <CreateJobView form="createJob" handleSave={this.handleSave} />;
     }
 }
 
-const mapStateToProps = (state: AppState): StateProps => ({
-    job: state.job,
-})
-
-export default connect<OwnProps, StateProps, DispatchProps>(mapStateToProps)(CreateJobController)
+const mapStateToProps = (state: AppState): IStateProps => ({
+    job: state.job
+});
+export default connect<IOwnProps, IStateProps, DispatchProps>(mapStateToProps)(CreateJobController)
