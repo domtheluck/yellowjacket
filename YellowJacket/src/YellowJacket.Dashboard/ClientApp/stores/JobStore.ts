@@ -58,7 +58,9 @@ type KnownAction = ICreateJobAction | ICreateJobSuccessAction;
 export const actionCreators = {
     createJob: (job): IAppThunkAction<KnownAction> => (dispatch, getState) => {
         // Only load data if it's something we don't already have (and are not already loading)
-        console.log(job);
+        alert("createJob " + JSON.stringify(job));
+
+        // TODO: add the actual POST using axios. Don't forget to use promises here to avoid prerendering issues.
         let fetchTask = fetch("/api/v1/agent/")
             .then(response => response.json() as Promise<IAgent[]>)
             .then(data => {
