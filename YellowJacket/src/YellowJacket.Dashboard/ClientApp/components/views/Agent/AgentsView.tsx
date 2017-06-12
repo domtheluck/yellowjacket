@@ -106,8 +106,6 @@ export class Agents extends React.Component<AgentsProps, void> {
             </div>
         );
     }
-
-
 }
 
 export default connect(

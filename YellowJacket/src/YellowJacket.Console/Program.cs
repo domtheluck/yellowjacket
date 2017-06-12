@@ -1,4 +1,27 @@
-﻿using System;
+﻿// ***********************************************************************
+// Copyright (c) 2017 Dominik Lachance
+//
+// Permission is hereby granted, free of charge, to any person obtaining
+// a copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to
+// permit persons to whom the Software is furnished to do so, subject to
+// the following conditions:
+//
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// ***********************************************************************
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,13 +36,32 @@ namespace YellowJacket.Console
 {
     internal class Program
     {
+        #region Constants
+
+        private const string ApplicationName = "YellowJacket.Console";
+
+
+        private const string HelpOption = "-?|-h|--help";
+
+        private const string Execute = "execute";
+
+        private const string CreatePackage = "create-package";
+        
+        private const string DeploymentFolderLocationArgumentName = "[deploymentFolderLocation]";
+        private const string TestAssemblyNameArgumentName = "[testAssemblyName]";
+        private const string PackageLocationArgumentName = "[packageLocation]";
+
+        private const string OverwriteOption = "-o|--overwrite";
+
+        #endregion
+
         #region Private Methods
 
         private static void Main(string[] args)
         {
-            CommandLineApplication app = new CommandLineApplication { Name = "YellowJacket.Console" };
+            CommandLineApplication app = new CommandLineApplication { Name = ApplicationName };
 
-            app.HelpOption("-?|-h|--help");
+            app.HelpOption(HelpOption);
 
             app.OnExecute(() =>
             {
@@ -27,14 +69,109 @@ namespace YellowJacket.Console
                 return -1;
             });
 
-            app.Command("execute", (command) =>
+            InitializeExecuteCommand(app);
+
+            InitializeCreatePackageCommand(app);
+
+            try
             {
-                command.Description = "Execute one or multiple feature.";
-                command.HelpOption("-?|-h|--help");
+                app.Execute(args);
+            }
+            catch (Exception ex)
+            {
+                System.Console.WriteLine(ex);
+                Environment.Exit(-1);
+            }
+        }
 
-                CommandArgument assemblyPathArgument = command.Argument("[assemblyPath]", "The assembly path.");
+        private static void InitializeCreatePackageCommand(CommandLineApplication app)
+        {
+            app.Command(CreatePackage, (command) =>
+            {
+                command.Description = "Create a test package from a deployment folder.";
+                command.HelpOption(HelpOption);
 
-                CommandArgument featuresArgument = command.Argument("[feature1] [feature2] ...", "The features.");
+                CommandArgument deploymentFolderLocationArgument = command.Argument(
+                    DeploymentFolderLocationArgumentName, 
+                    "The location of the deployment folder.");
+
+                CommandArgument testAssemblyNameArgument = command.Argument(
+                    TestAssemblyNameArgumentName, 
+                    "The test assembly name.");
+
+                CommandArgument packageLocationArgument = command.Argument(
+                    PackageLocationArgumentName, 
+                    "The location where the package will be created.");
+
+                CommandOption overwriteOption =
+                    command.Option(
+                        OverwriteOption,
+                        "<true> if we want to overwrite the existing package configuration. If set to <false>, the package version will be incremented.",
+                        CommandOptionType.SingleValue);
+
+                command.OnExecute(() =>
+                {
+                    if (string.IsNullOrEmpty(deploymentFolderLocationArgument.Value))
+                    {
+                        System.Console.WriteLine($"The argument {DeploymentFolderLocationArgumentName} is required.");
+                        command.ShowHelp();
+
+                        return -1;
+                    }
+
+                    if (string.IsNullOrEmpty(testAssemblyNameArgument.Value))
+                    {
+                        System.Console.WriteLine($"The argument {TestAssemblyNameArgumentName} is required.");
+                        command.ShowHelp();
+
+                        return -1;
+                    }
+
+                    if (string.IsNullOrEmpty(packageLocationArgument.Value))
+                    {
+                        System.Console.WriteLine($"The argument {PackageLocationArgumentName} is required.");
+                        command.ShowHelp();
+
+                        return -1;
+                    }
+
+                    if (!string.IsNullOrEmpty(overwriteOption.Value()))
+                    {
+                        try
+                        {
+                            bool value = bool.Parse(overwriteOption.Value());
+                        }
+                        catch
+                        {
+                            System.Console.WriteLine($"The specified overwrite value {overwriteOption.Value()} is not valid.");
+                            command.ShowHelp();
+
+                            return -1;
+                        }
+                    }
+
+                    //string assemblyPath = assemblyPathArgument.Value;
+                    //List<string> features = featuresArgument.Values;
+                    //string browser = browserOption.HasValue() ? browserOption.Value() : "None";
+
+                    IPackageManager packageManager = new PackageManager();
+
+                    return 0;
+                });
+            });
+        }
+
+        private static void InitializeExecuteCommand(CommandLineApplication app)
+        {
+            app.Command(Execute, (command) =>
+            {
+                command.Description = "Execute one or multiple features.";
+                command.HelpOption(HelpOption);
+
+                // TODO: we will need to modify it eventually to support the package
+                CommandArgument testAssemblyPathArgument = command.Argument("[testAssemblyPath]", "The test assembly path.");
+
+                CommandArgument featuresArgument = command.Argument("[feature1] [feature2] ...", "The feature(s) to execute.");
 
                 featuresArgument.MultipleValues = true;
 
@@ -57,16 +194,16 @@ namespace YellowJacket.Console
                     $"Possible values are: {string.Join(", ", browsers)}.");
 
                 CommandOption browserOption =
-                command.Option(
-                    "-b|--browser <browser>",
-                    browserOptionDescription.ToString(),
-                    CommandOptionType.SingleValue);
+                    command.Option(
+                        "-b|--browser <browser>",
+                        browserOptionDescription.ToString(),
+                        CommandOptionType.SingleValue);
 
                 command.OnExecute(() =>
                 {
-                    if (string.IsNullOrEmpty(assemblyPathArgument.Value))
+                    if (string.IsNullOrEmpty(testAssemblyPathArgument.Value))
                     {
-                        System.Console.WriteLine($"The argument [assemblyPath] is required.");
+                        System.Console.WriteLine($"The argument [testAssemblyPath] is required.");
                         command.ShowHelp();
                         return -1;
                     }
@@ -81,7 +218,7 @@ namespace YellowJacket.Console
                     if (!string.IsNullOrEmpty(browserOption.Value()))
                     {
                         if (browsers.All(
-                                x => !string.Equals(x, browserOption.Value(), StringComparison.CurrentCultureIgnoreCase)))
+                            x => !string.Equals(x, browserOption.Value(), StringComparison.CurrentCultureIgnoreCase)))
                         {
                             System.Console.WriteLine($"The specified browser value {browserOption.Value()} is not valid.");
                             command.ShowHelp();
@@ -89,7 +226,7 @@ namespace YellowJacket.Console
                         }
                     }
 
-                    string assemblyPath = assemblyPathArgument.Value;
+                    string assemblyPath = testAssemblyPathArgument.Value;
                     List<string> features = featuresArgument.Values;
                     string browser = browserOption.HasValue() ? browserOption.Value() : "None";
 
@@ -107,16 +244,6 @@ namespace YellowJacket.Console
                     return 0;
                 });
             });
-
-            try
-            {
-                app.Execute(args);
-            }
-            catch (Exception ex)
-            {
-                System.Console.WriteLine(ex);
-                Environment.Exit(-1);
-            }
         }
 
         #endregion

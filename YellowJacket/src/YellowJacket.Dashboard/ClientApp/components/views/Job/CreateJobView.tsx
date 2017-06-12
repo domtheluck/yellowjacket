@@ -23,10 +23,11 @@
 
 import * as React from "react";
 import { connect } from "react-redux";
+import { form, from, DisabledFormSubmit, FeedbackFormSubmit, ResetFormButton } from "react-inform";
 
 import { IApplicationState } from "../../../stores";
 import * as IJobState from "../../../stores/JobStore";
-import { form, from, DisabledFormSubmit, FeedbackFormSubmit, ResetFormButton } from "react-inform";
+import { FieldValidator } from "../../validation/FieldValidator";
 
 // at runtime, Redux will merge together
 type JobProps =
@@ -36,16 +37,18 @@ type JobProps =
 interface IMyProps extends JobProps {
     fields: any,
     form: any;
-    
 }
 
 const fields = ["name"];
 
 const isRequired = value => value;
 
+let fieldValidator = new FieldValidator();
+
 const rulesMap = {
     name: {
-        "Name is required": isRequired
+        "Name is required": isRequired,
+        "Name must be between 1 and 50 characters": (value, values) => fieldValidator.isLengthValid(value, 1, 50)
     }
 };
 
@@ -63,7 +66,6 @@ export class CreateJobView extends React.Component<IMyProps, void> {
         if (!this.props.form.isValid())
             return;
 
-        // TODO: create the object to send with the action
         const newJob = {
             name: this.props.fields.name.value
         };
@@ -74,7 +76,6 @@ export class CreateJobView extends React.Component<IMyProps, void> {
     render() {
         const { name } = this.props.fields;
         console.info(name.error);
-        // TODO: add missing fields and styles.
         return (
             <div className="wrapper wrapper-content animated fadeInRight">
                 <div className="row">
@@ -82,10 +83,9 @@ export class CreateJobView extends React.Component<IMyProps, void> {
                         <div className="ibox">
                             <div className="ibox-title">
                                 <form onSubmit={e => this.handleSubmit(e)}>
-                                    <div className={`form-group has-feedback ${name.error ? "has-error" : ""}`}>
+                                    <div className={`form-group ${name.error ? "has-error" : ""}`}>
                                         <label htmlFor="name" className="control-label">Name</label>
                                         <input type="text" className="form-control" id="name" placeholder="Enter name..." {...name.props} />
-                                        <span className="fa fa-times form-control-feedback" aria-hidden="true" style={{display: name.error ? "block" : "none" }}></span>
                                         <small className="form-text text-muted">{name.error}</small>
                                     </div>
                                     <div className="form-group">

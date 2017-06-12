@@ -24,27 +24,15 @@
 import { fetch, addTask } from "domain-task";
 import { Action, Reducer, ActionCreator } from "redux";
 import { IAppThunkAction } from "./";
-import { IJob, IAgent } from "../models/Models";
+import { IJob } from "../models/Models";
+import { ICreateJobAction, ICreateJobSuccessAction } from "../actions/jobActions";
 
 // -----------------
 // STATE - This defines the type of data maintained in the Redux store.
 
 export interface IJobState {
     isLoading: boolean;
-    payload: any;
-}
-
-// -----------------
-// ACTIONS - These are serializable (hence replayable) descriptions of state transitions.
-// They do not themselves have any side-effects; they just describe something that is going to happen.
-
-interface ICreateJobAction {
-    type: "CREATE_JOB",
-}
-
-interface ICreateJobSuccessAction {
-    type: "CREATE_JOB_SUCCESS",
-    payload: any;
+    payload: IJob;
 }
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
@@ -58,11 +46,10 @@ type KnownAction = ICreateJobAction | ICreateJobSuccessAction;
 export const actionCreators = {
     createJob: (job): IAppThunkAction<KnownAction> => (dispatch, getState) => {
         // Only load data if it's something we don't already have (and are not already loading)
-        alert("createJob " + JSON.stringify(job));
 
         // TODO: add the actual POST using axios. Don't forget to use promises here to avoid prerendering issues.
         let fetchTask = fetch("/api/v1/agent/")
-            .then(response => response.json() as Promise<IAgent[]>)
+            .then(response => response.json() as Promise<IJob>)
             .then(data => {
                 dispatch((({ type: "CREATE_JOB_SUCCESS", payload: data })) as any);
             });
@@ -75,7 +62,7 @@ export const actionCreators = {
 // ----------------
 // REDUCER - For a given state and action, returns the new state. To support time travel, this must not mutate the old state.
 
-const unloadedState: IJobState = { payload: {}, isLoading: false };
+const unloadedState: IJobState = { payload: {id: "", name: ""}, isLoading: false };
 
 export const reducer: Reducer<IJobState> = (state: IJobState, action: KnownAction) => {
     switch (action.type) {

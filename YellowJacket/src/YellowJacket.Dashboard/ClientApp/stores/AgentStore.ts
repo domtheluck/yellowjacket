@@ -25,25 +25,13 @@ import { fetch, addTask } from "domain-task";
 import { Action, Reducer, ActionCreator } from "redux";
 import { IAppThunkAction } from "./";
 import { IAgent } from "../models/Models";
+import { IRequestAgentsAction, IReceiveAgentsAction } from "../actions/agentActions";
 
 // -----------------
 // STATE - This defines the type of data maintained in the Redux store.
 
 export interface IAgentState {
     isLoading: boolean;
-    payload: any;
-}
-
-// -----------------
-// ACTIONS - These are serializable (hence replayable) descriptions of state transitions.
-// They do not themselves have any side-effects; they just describe something that is going to happen.
-
-interface IRequestAgentsAction {
-    type: "REQUEST_AGENTS",
-}
-
-interface IReceiveAgentsAction {
-    type: "RECEIVE_AGENTS",
     payload: any;
 }
 
