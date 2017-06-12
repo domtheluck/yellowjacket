@@ -34,7 +34,9 @@ type JobProps =
     & typeof IJobState.actionCreators;   // plus action creators we've requested
 
 interface IMyProps extends JobProps {
-    fields: any;
+    fields: any,
+    form: any;
+    
 }
 
 const fields = ["name"];
@@ -45,6 +47,33 @@ const rulesMap = {
     name: {
         "Name is required": isRequired
     }
+};
+
+function FormGroup({type, id, text, placeHolder, error, props}){
+    let control = {};
+    if (type === "text")
+        control = (
+            <input type="text" className="form-control" id={id} placeholder={placeHolder} {...props}/>
+        );
+
+    if (error) {
+        return (
+            <div className="form-group has-error has-feedback">
+                <label htmlFor={id} className="control-label">{text}</label>
+                { control }
+                <span className="glyphicon glyphicon-xbt form-control-feedback" aria-hidden="true"></span>
+                <small className="form-text text-muted">{error}</small>
+            </div>
+        );
+    } else {
+        return (
+            <div className="form-group has-feedback">
+                <label htmlFor={id} className="control-label">{text}</label>
+                { control }
+                <small className="form-text text-muted">{error}</small>
+            </div>    
+        );    
+    }     
 };
 
 function LabeledInput({ text, error, id, props }) {
@@ -66,7 +95,10 @@ export class CreateJobView extends React.Component<IMyProps, void> {
     handleSubmit(e) {
         e.preventDefault();
 
-        alert("form.isValid() :" + form.isValid());
+        this.props.form.forceValidate();
+
+        if (!this.props.form.isValid())
+            return;
 
         // TODO: create the object to send with the action
         const newJob = {
@@ -87,10 +119,9 @@ export class CreateJobView extends React.Component<IMyProps, void> {
                         <div className="ibox">
                             <div className="ibox-title">
                                 <form onSubmit={e => this.handleSubmit(e)}>
-                                    <div className="form-group has-success has-feedback">
+                                    <div className="form-group">
                                         <label htmlFor="name" className="control-label">Name</label>
-                                        <input type="text" className="form-control" id="name" placeholder="Enter name" {...name.props} />
-                                        <span className="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
+                                        <input type="text" className="form-control" id="name" placeholder="Enter name..." {...name.props} />
                                         <small className="form-text text-muted">{name.error}</small>
                                     </div>
                                     <div className="form-group">

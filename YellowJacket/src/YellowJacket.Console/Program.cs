@@ -90,7 +90,7 @@ namespace YellowJacket.Console
                     }
 
                     string assemblyPath = assemblyPathArgument.Value;
-                    List<String> features = featuresArgument.Values;
+                    List<string> features = featuresArgument.Values;
                     string browser = browserOption.HasValue() ? browserOption.Value() : "None";
 
                     IEngine executionEngine = ExecutionEngineBuilder.CreateEngine();

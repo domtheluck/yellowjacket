@@ -25,7 +25,6 @@ import * as AgentStore from "./AgentStore";
 import * as JobStore from "./JobStore";
 
 import { createStore, combineReducers } from "redux";
-import { reducer as formReducer } from "redux-form";
 
 // The top-level state object
 export interface IApplicationState {
@@ -39,8 +38,7 @@ export interface IApplicationState {
 // acts on the corresponding ApplicationState property type.
 export const reducers = {
     agent: AgentStore.reducer,
-    job: JobStore.reducer,
-    form: formReducer
+    job: JobStore.reducer
 };
 
 // This type can be used as a hint on action creators so that its 'dispatch' and 'getState' params are

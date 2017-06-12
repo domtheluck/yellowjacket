@@ -61,7 +61,7 @@ export const actionCreators = {
             let fetchTask = fetch("/api/v1/agent/")
                 .then(response => response.json() as Promise<IAgent[]>)
                 .then(data => {
-                    dispatch((({ type: "RECEIVE_AGENTS", agents: data })) as any);
+                    dispatch((({ type: "RECEIVE_AGENTS", payload: data })) as any);
                 });
 
             addTask(fetchTask); // Ensure server-side prerendering waits for this to complete

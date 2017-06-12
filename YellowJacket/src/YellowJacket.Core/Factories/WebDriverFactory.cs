@@ -68,6 +68,8 @@ namespace YellowJacket.Core.Factories
                 case BrowserType.Edge:
                     break;
 
+                case BrowserType.None:
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(browser), browser, null);
             }
