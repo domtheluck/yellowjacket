@@ -49,43 +49,6 @@ const rulesMap = {
     }
 };
 
-function FormGroup({type, id, text, placeHolder, error, props}){
-    let control = {};
-    if (type === "text")
-        control = (
-            <input type="text" className="form-control" id={id} placeholder={placeHolder} {...props}/>
-        );
-
-    if (error) {
-        return (
-            <div className="form-group has-error has-feedback">
-                <label htmlFor={id} className="control-label">{text}</label>
-                { control }
-                <span className="glyphicon glyphicon-xbt form-control-feedback" aria-hidden="true"></span>
-                <small className="form-text text-muted">{error}</small>
-            </div>
-        );
-    } else {
-        return (
-            <div className="form-group has-feedback">
-                <label htmlFor={id} className="control-label">{text}</label>
-                { control }
-                <small className="form-text text-muted">{error}</small>
-            </div>    
-        );    
-    }     
-};
-
-function LabeledInput({ text, error, id, props }) {
-    return (
-        <div>
-            <label htmlFor={id}>{text}</label>
-            <input id={id} placeholder={text} type="text" {...props} />
-            <small className="form-text text-muted">{error}</small>
-        </div>
-    );
-}
-
 @form(from(rulesMap))
 export class CreateJobView extends React.Component<IMyProps, void> {
     constructor(props) {
@@ -110,7 +73,7 @@ export class CreateJobView extends React.Component<IMyProps, void> {
 
     render() {
         const { name } = this.props.fields;
-
+        console.info(name.error);
         // TODO: add missing fields and styles.
         return (
             <div className="wrapper wrapper-content animated fadeInRight">
@@ -119,9 +82,10 @@ export class CreateJobView extends React.Component<IMyProps, void> {
                         <div className="ibox">
                             <div className="ibox-title">
                                 <form onSubmit={e => this.handleSubmit(e)}>
-                                    <div className="form-group">
+                                    <div className={`form-group has-feedback ${name.error ? "has-error" : ""}`}>
                                         <label htmlFor="name" className="control-label">Name</label>
                                         <input type="text" className="form-control" id="name" placeholder="Enter name..." {...name.props} />
+                                        <span className="fa fa-times form-control-feedback" aria-hidden="true" style={{display: name.error ? "block" : "none" }}></span>
                                         <small className="form-text text-muted">{name.error}</small>
                                     </div>
                                     <div className="form-group">
