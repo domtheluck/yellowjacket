@@ -26,6 +26,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Extensions.CommandLineUtils;
+using YellowJacket.Console.Interfaces;
+using YellowJacket.Console.Packaging;
 using YellowJacket.Core.Builders;
 using YellowJacket.Core.Engine.Events;
 using YellowJacket.Core.Enums;
@@ -39,11 +41,15 @@ namespace YellowJacket.Console
         #region Constants
 
         private const string ApplicationName = "YellowJacket.Console";
-
-
+        
         private const string HelpOption = "-?|-h|--help";
 
         private const string Execute = "execute";
+
+        private const string TestAssemblyPathArgumentName = "[testAssemblyPath]";
+        private const string FeaturesArgumentName = "[feature(s)]";
+
+        private const string BrowserOption = "-b|--browser <browser>";
 
         private const string CreatePackage = "create-package";
         
@@ -150,11 +156,19 @@ namespace YellowJacket.Console
                         }
                     }
 
-                    //string assemblyPath = assemblyPathArgument.Value;
-                    //List<string> features = featuresArgument.Values;
-                    //string browser = browserOption.HasValue() ? browserOption.Value() : "None";
+                    string deploymentFolderLocation = deploymentFolderLocationArgument.Value;
+                    string testAssemblyName = testAssemblyNameArgument.Value;
+                    string packageLocation = packageLocationArgument.Value;
+                    bool overwriteConfiguration = bool.Parse(overwriteOption.Value());
 
                     IPackageManager packageManager = new PackageManager();
+
+                    if (packageManager.CreatePackage(
+                        deploymentFolderLocation, 
+                        testAssemblyName, 
+                        packageLocation,
+                        overwriteConfiguration))
+                        return -1;
 
                     return 0;
                 });
@@ -169,9 +183,9 @@ namespace YellowJacket.Console
                 command.HelpOption(HelpOption);
 
                 // TODO: we will need to modify it eventually to support the package
-                CommandArgument testAssemblyPathArgument = command.Argument("[testAssemblyPath]", "The test assembly path.");
+                CommandArgument testAssemblyPathArgument = command.Argument(TestAssemblyPathArgumentName, "The test assembly path.");
 
-                CommandArgument featuresArgument = command.Argument("[feature1] [feature2] ...", "The feature(s) to execute.");
+                CommandArgument featuresArgument = command.Argument(FeaturesArgumentName, "The feature(s) to execute.");
 
                 featuresArgument.MultipleValues = true;
 
@@ -195,7 +209,7 @@ namespace YellowJacket.Console
 
                 CommandOption browserOption =
                     command.Option(
-                        "-b|--browser <browser>",
+                        BrowserOption,
                         browserOptionDescription.ToString(),
                         CommandOptionType.SingleValue);
 
@@ -203,15 +217,17 @@ namespace YellowJacket.Console
                 {
                     if (string.IsNullOrEmpty(testAssemblyPathArgument.Value))
                     {
-                        System.Console.WriteLine($"The argument [testAssemblyPath] is required.");
+                        System.Console.WriteLine($"The argument {TestAssemblyPathArgumentName} is required.");
                         command.ShowHelp();
+
                         return -1;
                     }
 
                     if (!(featuresArgument.Values.Any()))
                     {
-                        System.Console.WriteLine("The argument [feature] is required.");
+                        System.Console.WriteLine($"The argument {FeaturesArgumentName} is required.");
                         command.ShowHelp();
+
                         return -1;
                     }
 
@@ -222,6 +238,7 @@ namespace YellowJacket.Console
                         {
                             System.Console.WriteLine($"The specified browser value {browserOption.Value()} is not valid.");
                             command.ShowHelp();
+
                             return -1;
                         }
                     }

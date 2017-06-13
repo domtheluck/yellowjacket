@@ -55,6 +55,10 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.IO.Compression.ZipFile, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.IO.Compression.ZipFile.4.3.0\lib\net46\System.IO.Compression.ZipFile.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -81,6 +85,7 @@
     <Compile Include="Engine\Events\ExecutionStartEventArgs.cs" />
     <Compile Include="Enums\HookType.cs" />
     <Compile Include="Framework\Configuration.cs" />
+    <Compile Include="Helpers\CompressionHelper.cs" />
     <Compile Include="Helpers\SerializationHelper.cs" />
     <Compile Include="Hook\HookProcessor.cs" />
     <Compile Include="Interfaces\IEngine.cs" />
