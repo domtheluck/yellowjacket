@@ -21,32 +21,59 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System.Xml.Serialization;
+using System.Collections.Generic;
 
-namespace YellowJacket.Core.NUnit.Models
+namespace YellowJacket.Core.Engine
 {
     /// <summary>
-    /// Represents a NUnit test property.
+    /// Contains the execution configuration.
     /// </summary>
-    [XmlRoot(ElementName = "property")]
-    public class Property
+    public class ExecutionConfiguration
     {
-        /// <summary>
-        /// Gets or sets the name.
-        /// </summary>
-        /// <value>
-        /// The name.
-        /// </value>
-        [XmlAttribute(AttributeName = "name")]
-        public string Name { get; set; }
+        #region Properties
 
         /// <summary>
-        /// Gets or sets the value.
+        /// Gets or sets the test package location.
         /// </summary>
         /// <value>
-        /// The value.
+        /// The test package location.
         /// </value>
-        [XmlAttribute(AttributeName = "value")]
-        public string Value { get; set; }
+        public string TestPackageLocation { get; set; }
+
+        /// <summary>
+        /// Gets or sets the test assembly name.
+        /// </summary>
+        /// <value>
+        /// The test assembly name.
+        /// </value>
+        public string TestAssemblyName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the plugin assemblies.
+        /// </summary>
+        /// <value>
+        /// The plugin assemblies.
+        /// </value>
+        public List<string> PluginAssemblies { get; set; }
+
+        /// <summary>
+        /// Gets or sets the browser configuration.
+        /// </summary>
+        /// <value>
+        /// The browser configuration.
+        /// </value>
+        public BrowserConfiguration BrowserConfiguration { get; set; }
+
+        #endregion
+
+        #region Constructors
+
+        public ExecutionConfiguration()
+        {
+            PluginAssemblies = new List<string>();
+        }
+
+        #endregion
+
     }
 }

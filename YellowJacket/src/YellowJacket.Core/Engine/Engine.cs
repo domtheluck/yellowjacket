@@ -27,20 +27,16 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using NUnit.Engine;
+using YellowJacket.Core.Contexts;
 using YellowJacket.Core.Engine.Events;
-using YellowJacket.Core.Framework;
 using YellowJacket.Core.Helpers;
 using YellowJacket.Core.Hook;
 using YellowJacket.Core.Interfaces;
-using YellowJacket.Core.Logging;
 using YellowJacket.Core.NUnit;
 using YellowJacket.Core.NUnit.Models;
-using ILogger = YellowJacket.Core.Interfaces.ILogger;
 
 namespace YellowJacket.Core.Engine
 {
-    // TODO: Need to support multiple features
-    
     /// <summary>
     /// YellowJacket engine.
     /// </summary>
@@ -76,10 +72,6 @@ namespace YellowJacket.Core.Engine
 
         #endregion
 
-        #region Properties
-
-        #endregion
-
         #region Constructors
 
         /// <summary>
@@ -95,88 +87,20 @@ namespace YellowJacket.Core.Engine
         #region Public Methods
 
         /// <summary>
-        /// Execute the specified features contains in the related assembly.
+        /// Executes the specified configuration.
         /// </summary>
-        /// <param name="assemblyPath">The assembly path.</param>
-        /// <param name="features">The features.</param>
-        public void Execute(string assemblyPath, List<string> features)
-        {
-            Execute(
-                assemblyPath,
-                features,
-                "None",
-                false,
-                new List<ILogger>
-                {
-                    new FileLogger(
-                        $"{Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString())}.txt") // TODO: need to change it to a more dynamic way
-                });
-        }
-
-        /// <summary>
-        /// Execute the specified features contains in the related assembly.
-        /// </summary>
-        /// <param name="assemblyPath">The assembly path.</param>
-        /// <param name="features">The features.</param>
-        /// <param name="loggers">The loggers.</param>
-        public void Execute(string assemblyPath, List<string> features, List<ILogger> loggers)
-        {
-            Execute(
-                assemblyPath,
-                features,
-                BrowserNone,
-                false,
-                loggers);
-        }
-
-        /// <summary>
-        /// Execute the specified features contains in the related assembly.
-        /// </summary>
-        /// <param name="assemblyPath">The assembly path.</param>
-        /// <param name="features">The features.</param>
-        /// <param name="browser">The browser</param>
-        /// <param name="useLocalBrowser">Determines if we want to use the local browser or not.</param>
-        public void Execute(string assemblyPath, List<string> features, string browser, bool useLocalBrowser = false)
-        {
-            Execute(
-                assemblyPath,
-                features,
-                BrowserNone,
-                useLocalBrowser,
-                new List<ILogger>
-                {
-                    new FileLogger(
-                        $"{Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString())}.txt") // TODO: need to change it to a more dynamic way
-                });
-        }
-
-        /// <summary>
-        /// Execute the specified features contains in the related assembly.
-        /// </summary>
-        /// <param name="assemblyPath">The assembly path.</param>
-        /// <param name="features">The features.</param>
-        /// <param name="browser">The browser</param>
-        /// <param name="useLocalBrowser">Determines if we want to use the local browser or not.</param>
-        /// <param name="loggers">The loggers.</param>
-        public void Execute(string assemblyPath, List<string> features, string browser, bool useLocalBrowser, List<ILogger> loggers)
+        /// <param name="executionConfiguration">The execution configuration.</param>
+        public void Execute(ExecutionConfiguration executionConfiguration)
         {
             Cleanup();
 
-            ValidateParameters(assemblyPath, features, browser);
-
-            RegisterLoggers(loggers);
+            ValidateConfiguration(executionConfiguration);
 
             try
             {
-                ValidateParameters(assemblyPath, features);
+                RegisterPlugins(executionConfiguration);
 
-                LoadTestAssembly(assemblyPath);
-
-                RegisterHooks();
-
-                FireExecutionStartEvent();
-
-                ExecuteFeature(assemblyPath, features);
+                LoadTestAssembly(executionConfiguration);
             }
             catch (Exception ex)
             {
@@ -186,8 +110,10 @@ namespace YellowJacket.Core.Engine
                 // TODO: for debugging purpose only. Don't forget to remove it.
                 throw;
             }
-
-            FireExecutionCompletedEvent();
+            finally
+            {
+                FireExecutionCompletedEvent();
+            }
         }
 
         #endregion
@@ -207,27 +133,28 @@ namespace YellowJacket.Core.Engine
         /// <summary>
         /// Loads the test assembly.
         /// </summary>
-        /// <param name="assemblyPath">The assembly path.</param>
-        private void LoadTestAssembly(string assemblyPath)
+        /// <param name="executionConfiguration">The executionConfiguration.</param>
+        private void LoadTestAssembly(ExecutionConfiguration executionConfiguration)
         {
-            _assembly = Assembly.LoadFrom(assemblyPath);
+            _assembly = Assembly.LoadFrom(Path.Combine(
+                executionConfiguration.TestPackageLocation, 
+                executionConfiguration.TestAssemblyName));
         }
 
         /// <summary>
-        /// Registers the loggers in the execution context.
+        /// Registers the plugins in the execution context.
         /// </summary>
-        /// <param name="loggers">The loggers.</param>
-        private void RegisterLoggers(List<ILogger> loggers)
+        private void RegisterPlugins(ExecutionConfiguration executionConfiguration)
         {
             // cleanup the existing loggers
-            ExecutionContext.Current.ClearLoggers();
+            ExecutionContext.Current.CLearLogPlugins();
 
-
-            // register the loggers
-            loggers.ForEach(x =>
-            {
-                ExecutionContext.Current.RegisterLogger(x);
-            });
+            // TODO: To refactor
+            //// register the loggers
+            //loggers.ForEach(x =>
+            //{
+            //    ExecutionContext.Current.RegisterLogger(x);
+            //});
         }
 
         /// <summary>
@@ -309,25 +236,17 @@ namespace YellowJacket.Core.Engine
             ExecutionProgress?.Invoke(this, new ExecutionProgressEventArgs(progress, currentState));
         }
 
-        /// <summary>
-        /// Validates the parameters.
-        /// </summary>
-        /// <param name="assemblyPath">The assembly path.</param>
-        /// <param name="features">The features.</param>
-        /// <exception cref="FileNotFoundException"></exception>
-        /// <exception cref="ArgumentNullException"></exception>
-        private void ValidateParameters(string assemblyPath, List<string> features)
+        private void ValidateConfiguration(ExecutionConfiguration engineConfiguration)
         {
-            if (!File.Exists(assemblyPath))
-                throw new FileNotFoundException($"Cannot find the assembly {assemblyPath}");
+
         }
 
         /// <summary>
-        /// Executes the specified feature.
+        /// Executes the specified features.
         /// </summary>
         /// <param name="assemblyPath">The assembly path.</param>
         /// <param name="features">The features.</param>
-        private void ExecuteFeature(string assemblyPath, List<string> features)
+        private void ExecuteFeatures(string assemblyPath, List<string> features)
         {
             TestPackage testPackage = NUnitEngineHelper.CreateTestPackage(new List<string> { assemblyPath });
 
@@ -357,7 +276,7 @@ namespace YellowJacket.Core.Engine
             decimal progress = finishedTestCaseCount / (decimal)testCaseCount * 100;
 
             FireExecutionProgressEvent(
-                Math.Round(progress, 2), 
+                Math.Round(progress, 2),
                 $"Execution of {_testCases.Last().ClassName.Split('.').Last().Substring(0, _testCases.Last().ClassName.Split('.').Last().Length - 7)} - {_testCases.Last().Name}: { _testCases.Last().Result}");
         }
 
@@ -482,21 +401,6 @@ namespace YellowJacket.Core.Engine
             ]]></output></test-case></test-suite></test-suite></test-suite></test-suite></test-suite></test-suite></test-run>
 
             */
-        }
-
-        /// <summary>
-        /// Validates the engine input parameters.
-        /// </summary>
-        /// <param name="assemblyPath">The assembly path.</param>
-        /// <param name="features">The features.</param>
-        /// <param name="browser">The browser.</param>
-        private void ValidateParameters(string assemblyPath, List<string> features, string browser)
-        {
-            if (string.IsNullOrEmpty(assemblyPath))
-                FireExecutionStopEvent(new ArgumentException("You must provide a value for the assembly path"));
-
-            if (!File.Exists(assemblyPath))
-                FireExecutionStopEvent(new IOException($"Cannot find the assembly located here: {assemblyPath}"));
         }
 
         #endregion

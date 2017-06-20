@@ -21,32 +21,16 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System.Xml.Serialization;
+using System.Collections.Generic;
+using YellowJacket.Core.Interfaces;
 
-namespace YellowJacket.Core.NUnit.Models
+namespace YellowJacket.Core.Packaging
 {
-    /// <summary>
-    /// Represents a NUnit test property.
-    /// </summary>
-    [XmlRoot(ElementName = "property")]
-    public class Property
+    public class PackageManager : IPackageManager
     {
-        /// <summary>
-        /// Gets or sets the name.
-        /// </summary>
-        /// <value>
-        /// The name.
-        /// </value>
-        [XmlAttribute(AttributeName = "name")]
-        public string Name { get; set; }
-
-        /// <summary>
-        /// Gets or sets the value.
-        /// </summary>
-        /// <value>
-        /// The value.
-        /// </value>
-        [XmlAttribute(AttributeName = "value")]
-        public string Value { get; set; }
+        public void Create(string deploymentFolderLocation, string testAssemblyName, string packageLocation, List<string> plugins)
+        {
+            
+        }
     }
 }

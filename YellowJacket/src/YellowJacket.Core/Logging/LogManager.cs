@@ -21,28 +21,49 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using YellowJacket.Core.Framework;
+using System.Collections.Generic;
+using YellowJacket.Core.Contexts;
 
 namespace YellowJacket.Core.Logging
 {
     /// <summary>
-    /// Used to log content to the different logger instances.
+    /// Used to log content to the different log plugins.
     /// </summary>
     public class LogManager
     {
         /// <summary>
-        /// Logs the specified content.
+        /// Writes the specified content to all log plugins.
         /// </summary>
-        /// <param name="content">The value.</param>
-        /// <param name="isNewLine">if set to <c>true</c> log the content as a new line; otherwise, <c>false</c>.</param>
-        public static void Log(string content, bool isNewLine = true)
+        /// <param name="content">The content to write.</param>
+        public static void Write(string content)
         {
-            ExecutionContext.Current.GetLoggers().ForEach(x =>
+            ExecutionContext.Current.GetLogPlugins().ForEach(x =>
             {
-                if (isNewLine)
-                    x.WriteLine(content);
-                else
-                    x.Write(content);
+                x.Write(content);
+            });
+        }
+
+        /// <summary>
+        /// Writes the specified line to all log plugins.
+        /// </summary>
+        /// <param name="content">The line to write.</param>
+        public static void WriteLine(string content)
+        {
+            ExecutionContext.Current.GetLogPlugins().ForEach(x =>
+            {
+                x.WriteLine(content);
+            });
+        }
+
+        /// <summary>
+        /// Writes the specified lines to the log plugin.
+        /// </summary>
+        /// <param name="content">The lines to write.</param>
+        public static void WriteAllLine(IEnumerable<string> content)
+        {
+            ExecutionContext.Current.GetLogPlugins().ForEach(x =>
+            {
+                x.WriteAllLine(content);
             });
         }
     }

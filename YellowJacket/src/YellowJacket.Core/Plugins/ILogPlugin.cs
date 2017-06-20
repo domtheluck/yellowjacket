@@ -21,32 +21,31 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System.Xml.Serialization;
+using System.Collections.Generic;
 
-namespace YellowJacket.Core.NUnit.Models
+namespace YellowJacket.Core.Plugins
 {
     /// <summary>
-    /// Represents a NUnit test property.
+    /// Interface definition for log plugin.
     /// </summary>
-    [XmlRoot(ElementName = "property")]
-    public class Property
+    public interface ILogPlugin
     {
         /// <summary>
-        /// Gets or sets the name.
+        /// Writes the specified content to the log plugin.
         /// </summary>
-        /// <value>
-        /// The name.
-        /// </value>
-        [XmlAttribute(AttributeName = "name")]
-        public string Name { get; set; }
+        /// <param name="content">The content.</param>
+        void Write(string content);
 
         /// <summary>
-        /// Gets or sets the value.
+        /// Writes the specified line to the log plugin.
         /// </summary>
-        /// <value>
-        /// The value.
-        /// </value>
-        [XmlAttribute(AttributeName = "value")]
-        public string Value { get; set; }
+        /// <param name="content">The line to write.</param>
+        void WriteLine(string content);
+
+        /// <summary>
+        /// Writes the specified lines to the log plugin.
+        /// </summary>
+        /// <param name="content">The lines to write.</param>
+        void WriteAllLine(IEnumerable<string> content);
     }
 }

@@ -21,19 +21,21 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using YellowJacket.Core.Interfaces;
+using YellowJacket.Core.Plugins;
 
 namespace YellowJacket.Core.Logging
 {
     // TODO: Need to add some logic to this logger to support intelligent file/folder management since it will probably be the default one.
-    
+
     /// <summary>
     /// Used to write log to a file.
     /// </summary>
-    /// <seealso cref="ILogger" />
-    internal class FileLogger: ILogger
+    /// <seealso cref="ILogPlugin" />
+    internal class FileLogger: ILogPlugin
     {
         #region Private Members
 
@@ -43,22 +45,19 @@ namespace YellowJacket.Core.Logging
 
         #region Public Methods
 
-        /// <summary>
-        /// Writes the content.
-        /// </summary>
-        /// <param name="content">The content.</param>
         public void WriteLine(string content)
         {
-            File.AppendAllLines(_path, new List<string> { content });
+            WriteAllLine(new List<string> { content });
         }
 
-        /// <summary>
-        /// Writes the specified content to the log.
-        /// </summary>
-        /// <param name="content">The content to write.</param>
         public void Write(string content)
         {
             File.AppendAllText(_path, content);
+        }
+
+        public void WriteAllLine(IEnumerable<string> content)
+        {
+            File.AppendAllLines(_path, content);
         }
 
         #endregion

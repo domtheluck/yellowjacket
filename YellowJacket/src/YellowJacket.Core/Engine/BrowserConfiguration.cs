@@ -21,32 +21,19 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System.Xml.Serialization;
+using YellowJacket.Core.Enums;
 
-namespace YellowJacket.Core.NUnit.Models
+namespace YellowJacket.Core.Engine
 {
     /// <summary>
-    /// Represents a NUnit test property.
+    /// Contains the browser configuration
     /// </summary>
-    [XmlRoot(ElementName = "property")]
-    public class Property
+    public class BrowserConfiguration
     {
-        /// <summary>
-        /// Gets or sets the name.
-        /// </summary>
-        /// <value>
-        /// The name.
-        /// </value>
-        [XmlAttribute(AttributeName = "name")]
-        public string Name { get; set; }
+        #region Properties
 
-        /// <summary>
-        /// Gets or sets the value.
-        /// </summary>
-        /// <value>
-        /// The value.
-        /// </value>
-        [XmlAttribute(AttributeName = "value")]
-        public string Value { get; set; }
+        public BrowserType Browser { get; set; }
+
+        #endregion
     }
 }

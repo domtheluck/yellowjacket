@@ -45,8 +45,7 @@ namespace YellowJacket.Core.Factories
             // TODO: Check if we need to modify the factory to support local as well as portable browser
             switch (browser)
             {
-                case BrowserType.InternetExplorer32:
-                case BrowserType.InternetExplorer64:
+                case BrowserType.InternetExplorer:
                     InternetExplorerOptions options = new InternetExplorerOptions
                     {
                         IntroduceInstabilityByIgnoringProtectedModeSettings = true,

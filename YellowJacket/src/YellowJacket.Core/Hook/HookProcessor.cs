@@ -22,8 +22,8 @@
 // ***********************************************************************
 
 using System.Collections.Generic;
+using YellowJacket.Core.Contexts;
 using YellowJacket.Core.Enums;
-using YellowJacket.Core.Framework;
 
 namespace YellowJacket.Core.Hook
 {

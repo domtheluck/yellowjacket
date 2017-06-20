@@ -27,10 +27,12 @@ using System.Linq;
 using System.Text;
 using Microsoft.Extensions.CommandLineUtils;
 using YellowJacket.Core.Builders;
+using YellowJacket.Core.Engine;
 using YellowJacket.Core.Engine.Events;
 using YellowJacket.Core.Enums;
 using YellowJacket.Core.Helpers;
 using YellowJacket.Core.Interfaces;
+using YellowJacket.Core.Packaging;
 
 namespace YellowJacket.Console
 {
@@ -40,18 +42,20 @@ namespace YellowJacket.Console
 
         private const string ApplicationName = "YellowJacket.Console";
 
+        private const string HelpOptionText = "-?|-h|--help";
 
-        private const string HelpOption = "-?|-h|--help";
-
+        // execute command
         private const string Execute = "execute";
 
+        // create-package command
         private const string CreatePackage = "create-package";
         
-        private const string DeploymentFolderLocationArgumentName = "[deploymentFolderLocation]";
-        private const string TestAssemblyNameArgumentName = "[testAssemblyName]";
-        private const string PackageLocationArgumentName = "[packageLocation]";
+        private const string DeploymentFolderLocationArgumentText = "[deploymentFolderLocation]";
+        private const string TestAssemblyNameArgumentText = "[testAssemblyName]";
+        private const string PackageLocationArgumentText = "[packageLocation]";
 
-        private const string OverwriteOption = "-o|--overwrite";
+        private const string PluginsOptionText = "-p|--plugins";
+        private const string OverwriteOptionText = "-o|--overwrite";
 
         #endregion
 
@@ -61,7 +65,7 @@ namespace YellowJacket.Console
         {
             CommandLineApplication app = new CommandLineApplication { Name = ApplicationName };
 
-            app.HelpOption(HelpOption);
+            app.HelpOption(HelpOptionText);
 
             app.OnExecute(() =>
             {
@@ -89,23 +93,29 @@ namespace YellowJacket.Console
             app.Command(CreatePackage, (command) =>
             {
                 command.Description = "Create a test package from a deployment folder.";
-                command.HelpOption(HelpOption);
+                command.HelpOption(HelpOptionText);
 
                 CommandArgument deploymentFolderLocationArgument = command.Argument(
-                    DeploymentFolderLocationArgumentName, 
+                    DeploymentFolderLocationArgumentText, 
                     "The location of the deployment folder.");
 
                 CommandArgument testAssemblyNameArgument = command.Argument(
-                    TestAssemblyNameArgumentName, 
+                    TestAssemblyNameArgumentText, 
                     "The test assembly name.");
 
                 CommandArgument packageLocationArgument = command.Argument(
-                    PackageLocationArgumentName, 
+                    PackageLocationArgumentText, 
                     "The location where the package will be created.");
+
+                CommandOption pluginOptions =
+                    command.Option(
+                        PluginsOptionText,
+                        "The plugin assembly names: pluginA.dll pluginB.dll ...",
+                        CommandOptionType.MultipleValue);
 
                 CommandOption overwriteOption =
                     command.Option(
-                        OverwriteOption,
+                        OverwriteOptionText,
                         "<true> if we want to overwrite the existing package configuration. If set to <false>, the package version will be incremented.",
                         CommandOptionType.SingleValue);
 
@@ -113,7 +123,7 @@ namespace YellowJacket.Console
                 {
                     if (string.IsNullOrEmpty(deploymentFolderLocationArgument.Value))
                     {
-                        System.Console.WriteLine($"The argument {DeploymentFolderLocationArgumentName} is required.");
+                        System.Console.WriteLine($"The argument {DeploymentFolderLocationArgumentText} is required.");
                         command.ShowHelp();
 
                         return -1;
@@ -121,7 +131,7 @@ namespace YellowJacket.Console
 
                     if (string.IsNullOrEmpty(testAssemblyNameArgument.Value))
                     {
-                        System.Console.WriteLine($"The argument {TestAssemblyNameArgumentName} is required.");
+                        System.Console.WriteLine($"The argument {TestAssemblyNameArgumentText} is required.");
                         command.ShowHelp();
 
                         return -1;
@@ -129,17 +139,22 @@ namespace YellowJacket.Console
 
                     if (string.IsNullOrEmpty(packageLocationArgument.Value))
                     {
-                        System.Console.WriteLine($"The argument {PackageLocationArgumentName} is required.");
+                        System.Console.WriteLine($"The argument {PackageLocationArgumentText} is required.");
                         command.ShowHelp();
 
                         return -1;
                     }
 
-                    if (!string.IsNullOrEmpty(overwriteOption.Value()))
+                    List<string> plugins = new List<string>();
+
+                    if (pluginOptions.HasValue())
+                        plugins = pluginOptions.Values;
+
+                    if (overwriteOption.HasValue())
                     {
                         try
                         {
-                            bool value = bool.Parse(overwriteOption.Value());
+                            bool result = bool.Parse(overwriteOption.Value());
                         }
                         catch
                         {
@@ -150,11 +165,13 @@ namespace YellowJacket.Console
                         }
                     }
 
-                    //string assemblyPath = assemblyPathArgument.Value;
-                    //List<string> features = featuresArgument.Values;
-                    //string browser = browserOption.HasValue() ? browserOption.Value() : "None";
+                    string deploymentFolderLocation = deploymentFolderLocationArgument.Value;
+                    string testAssemblyName = testAssemblyNameArgument.Value;
+                    string packageLocation = packageLocationArgument.Value;
 
                     IPackageManager packageManager = new PackageManager();
+
+                    packageManager.Create(deploymentFolderLocation, testAssemblyName, packageLocation, plugins);
 
                     return 0;
                 });
@@ -166,10 +183,13 @@ namespace YellowJacket.Console
             app.Command(Execute, (command) =>
             {
                 command.Description = "Execute one or multiple features.";
-                command.HelpOption(HelpOption);
+                command.HelpOption(HelpOptionText);
 
-                // TODO: we will need to modify it eventually to support the package
-                CommandArgument testAssemblyPathArgument = command.Argument("[testAssemblyPath]", "The test assembly path.");
+                CommandArgument testPackageLocationArgument =
+                    command.Argument("[testPackageLocation]", "The test package location");
+
+                CommandArgument testAssemblyNameArgument =
+                    command.Argument("[testAssemblyName]", "The test assembly name");
 
                 CommandArgument featuresArgument = command.Argument("[feature1] [feature2] ...", "The feature(s) to execute.");
 
@@ -201,16 +221,23 @@ namespace YellowJacket.Console
 
                 command.OnExecute(() =>
                 {
-                    if (string.IsNullOrEmpty(testAssemblyPathArgument.Value))
+                    if (string.IsNullOrEmpty(testPackageLocationArgument.Value))
                     {
-                        System.Console.WriteLine($"The argument [testAssemblyPath] is required.");
+                        System.Console.WriteLine($"The argument [testPackageLocation] is required.");
+                        command.ShowHelp();
+                        return -1;
+                    }
+
+                    if (string.IsNullOrEmpty(testAssemblyNameArgument.Value))
+                    {
+                        System.Console.WriteLine($"The argument [testAssemblyName] is required.");
                         command.ShowHelp();
                         return -1;
                     }
 
                     if (!(featuresArgument.Values.Any()))
                     {
-                        System.Console.WriteLine("The argument [feature] is required.");
+                        System.Console.WriteLine("The argument [features] is required.");
                         command.ShowHelp();
                         return -1;
                     }
@@ -226,7 +253,8 @@ namespace YellowJacket.Console
                         }
                     }
 
-                    string assemblyPath = testAssemblyPathArgument.Value;
+                    string testPackageLocation = testPackageLocationArgument.Value;
+                    string testAssemblyName = testAssemblyNameArgument.Value;
                     List<string> features = featuresArgument.Values;
                     string browser = browserOption.HasValue() ? browserOption.Value() : "None";
 
@@ -237,7 +265,23 @@ namespace YellowJacket.Console
                     executionEngine.ExecutionStop += Engine_OnExecutionStop;
                     executionEngine.ExecutionProgress += Engine_OnExecutionProgress;
 
-                    executionEngine.Execute(assemblyPath, features, browser, false);
+                    ExecutionConfiguration executionConfiguration =
+                        new ExecutionConfiguration
+                        {
+                            TestPackageLocation = testPackageLocation,
+                            TestAssemblyName = testAssemblyName
+                        };
+
+                    if (browser != "None")
+                        executionConfiguration.BrowserConfiguration = new BrowserConfiguration
+                        {
+                            Browser = new EnumHelper().GetEnumTypeFromDescription<BrowserType>(browser)
+                        };
+                        
+                    // TODO: Handles the plugins
+                    //executionConfiguration.PluginAssemblies
+
+                    executionEngine.Execute(executionConfiguration);
 
                     System.Console.ReadLine();
 

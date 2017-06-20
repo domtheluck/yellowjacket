@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System.Collections.Generic;
+using YellowJacket.Core.Engine;
 using YellowJacket.Core.Engine.Events;
 
 namespace YellowJacket.Core.Interfaces
@@ -51,38 +51,10 @@ namespace YellowJacket.Core.Interfaces
         #region Methods
 
         /// <summary>
-        /// Execute the specified features contains in the related assembly.
+        /// Executes the specified configuration.
         /// </summary>
-        /// <param name="assemblyPath">The assembly path.</param>
-        /// <param name="features">The features.</param>
-        void Execute(string assemblyPath, List<string> features);
-
-        /// <summary>
-        /// Execute the specified features contains in the related assembly.
-        /// </summary>
-        /// <param name="assemblyPath">The assembly path.</param>
-        /// <param name="features">The features.</param>
-        /// <param name="loggers">The loggers.</param>
-        void Execute(string assemblyPath, List<string> features, List<ILogger> loggers);
-
-        /// <summary>
-        /// Execute the specified features contains in the related assembly.
-        /// </summary>
-        /// <param name="assemblyPath">The assembly path.</param>
-        /// <param name="features">The features.</param>
-        /// <param name="browser">The browser</param>
-        /// <param name="useLocalBrowser">Determines if we want to use the local browser or not.</param>
-        void Execute(string assemblyPath, List<string> features, string browser, bool useLocalBrowser);
-
-        /// <summary>
-        /// Execute the specified features contains in the related assembly.
-        /// </summary>
-        /// <param name="assemblyPath">The assembly path.</param>
-        /// <param name="features">The features.</param>
-        /// <param name="browser">The browser</param>
-        /// <param name="useLocalBrowser">Determines if we want to use the local browser or not.</param>
-        /// <param name="loggers">The loggers.</param>
-        void Execute(string assemblyPath, List<string> features, string browser, bool useLocalBrowser, List<ILogger> loggers);
+        /// <param name="engineConfiguration">The execution configuration.</param>
+        void Execute(ExecutionConfiguration engineConfiguration);
 
         #endregion
     }

@@ -21,23 +21,12 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-namespace YellowJacket.Core.Interfaces
+namespace YellowJacket.Core.Plugins
 {
     /// <summary>
-    /// Interface definition for logger.
+    /// Base plugin interface definition.
     /// </summary>
-    public interface ILogger
+    internal interface IPlugin
     {
-        /// <summary>
-        /// Writes the content to the log.
-        /// </summary>
-        /// <param name="content">The content to write.</param>
-        void WriteLine(string content);
-
-        /// <summary>
-        /// Writes the specified content to the log.
-        /// </summary>
-        /// <param name="content">The content to write.</param>
-        void Write(string content);
     }
 }

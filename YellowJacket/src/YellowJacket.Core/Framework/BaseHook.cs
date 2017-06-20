@@ -1,4 +1,27 @@
-﻿using System;
+﻿// ***********************************************************************
+// Copyright (c) 2017 Dominik Lachance
+//
+// Permission is hereby granted, free of charge, to any person obtaining
+// a copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to
+// permit persons to whom the Software is furnished to do so, subject to
+// the following conditions:
+//
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// ***********************************************************************
+
+using System;
 using TechTalk.SpecFlow;
 using YellowJacket.Core.Enums;
 using YellowJacket.Core.Factories;
@@ -31,7 +54,7 @@ namespace YellowJacket.Core.Framework
         public static void AfterScenario()
         {
             // TODO: need to check if an error happened
-            LogManager.Log($"Scenario {ScenarioContext.Current.ScenarioInfo.Title} completed");
+            LogManager.WriteLine($"Scenario {ScenarioContext.Current.ScenarioInfo.Title} completed");
 
             HookProcessor.Process(HookType.AfterScenario);
         }
@@ -48,7 +71,7 @@ namespace YellowJacket.Core.Framework
         [AfterTestRun]
         public static void AfterTestRun()
         {
-            LogManager.Log($"Execution completed at {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
+            LogManager.WriteLine($"Execution completed at {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
 
             HookProcessor.Process(HookType.AfterExecution);
         }
@@ -59,7 +82,7 @@ namespace YellowJacket.Core.Framework
         [BeforeFeature]
         public static void BeforeFeature()
         {
-            LogManager.Log($"Feature {FeatureContext.Current.FeatureInfo.Title}");
+            LogManager.WriteLine($"Feature {FeatureContext.Current.FeatureInfo.Title}");
 
             HookProcessor.Process(HookType.BeforeFeature);
         }
@@ -70,7 +93,7 @@ namespace YellowJacket.Core.Framework
         [BeforeScenario]
         public static void BeforeScenario()
         {
-            LogManager.Log($"Starting scenario {ScenarioContext.Current.ScenarioInfo.Title}");
+            LogManager.WriteLine($"Starting scenario {ScenarioContext.Current.ScenarioInfo.Title}");
 
             HookProcessor.Process(HookType.BeforeScenario);
         }
@@ -89,7 +112,7 @@ namespace YellowJacket.Core.Framework
         {
             Initialize();
 
-            LogManager.Log($"Execution start at {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
+            LogManager.WriteLine($"Execution start at {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
 
             HookProcessor.Process(HookType.BeforeExecution);
         }
