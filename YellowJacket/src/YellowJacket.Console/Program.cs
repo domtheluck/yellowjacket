@@ -55,7 +55,6 @@ namespace YellowJacket.Console
         private const string PackageLocationArgumentText = "[packageLocation]";
 
         private const string PluginsOptionText = "-p|--plugins";
-        private const string OverwriteOptionText = "-o|--overwrite";
 
         #endregion
 
@@ -88,6 +87,10 @@ namespace YellowJacket.Console
             }
         }
 
+        /// <summary>
+        /// Initializes the create package command.
+        /// </summary>
+        /// <param name="app">The application.</param>
         private static void InitializeCreatePackageCommand(CommandLineApplication app)
         {
             app.Command(CreatePackage, (command) =>
@@ -112,12 +115,6 @@ namespace YellowJacket.Console
                         PluginsOptionText,
                         "The plugin assembly names: pluginA.dll pluginB.dll ...",
                         CommandOptionType.MultipleValue);
-
-                CommandOption overwriteOption =
-                    command.Option(
-                        OverwriteOptionText,
-                        "<true> if we want to overwrite the existing package configuration. If set to <false>, the package version will be incremented.",
-                        CommandOptionType.SingleValue);
 
                 command.OnExecute(() =>
                 {
@@ -150,21 +147,6 @@ namespace YellowJacket.Console
                     if (pluginOptions.HasValue())
                         plugins = pluginOptions.Values;
 
-                    if (overwriteOption.HasValue())
-                    {
-                        try
-                        {
-                            bool result = bool.Parse(overwriteOption.Value());
-                        }
-                        catch
-                        {
-                            System.Console.WriteLine($"The specified overwrite value {overwriteOption.Value()} is not valid.");
-                            command.ShowHelp();
-
-                            return -1;
-                        }
-                    }
-
                     string deploymentFolderLocation = deploymentFolderLocationArgument.Value;
                     string testAssemblyName = testAssemblyNameArgument.Value;
                     string packageLocation = packageLocationArgument.Value;
@@ -178,6 +160,10 @@ namespace YellowJacket.Console
             });
         }
 
+        /// <summary>
+        /// Initializes the execute command.
+        /// </summary>
+        /// <param name="app">The application.</param>
         private static void InitializeExecuteCommand(CommandLineApplication app)
         {
             app.Command(Execute, (command) =>
