@@ -22,57 +22,32 @@
 // ***********************************************************************
 
 using OpenQA.Selenium;
-using YellowJacket.Core.Contexts;
-using YellowJacket.Core.Enums;
+using YellowJacket.Core.Framework;
 
-namespace YellowJacket.Core.Framework
+namespace YellowJacket.Core.Contexts
 {
     /// <summary>
-    /// Contains browser and driver implementation.
+    /// The driver context.
     /// </summary>
-    public class Browser
+    public static class DriverContext
     {
-        #region Private Members
-
-        public readonly IWebDriver Driver;
-
-        #endregion
-
-        #region Constructors
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Browser"/> class.
-        /// </summary>
-        /// <param name="driver">The driver.</param>
-        public Browser(IWebDriver driver)
-        {
-            Driver = driver;
-        }
-
-        #endregion
-
         #region Properties
 
         /// <summary>
-        /// Gets or sets the browser type.
+        /// Gets or sets the driver.
         /// </summary>
         /// <value>
-        /// The browser type.
+        /// The driver.
         /// </value>
-        public BrowserType Type { get; set; }
-
-        #endregion
-
-        #region Public Methods
+        public static IWebDriver Driver   { get; set; }
 
         /// <summary>
-        /// Goes to URL.
+        /// Gets or sets the browser.
         /// </summary>
-        /// <param name="url">The URL.</param>
-        public void GoToUrl(string url)
-        {
-            DriverContext.Driver.Url = url;
-        }
+        /// <value>
+        /// The browser.
+        /// </value>
+        public static Browser Browser { get; set; }
 
         #endregion
     }

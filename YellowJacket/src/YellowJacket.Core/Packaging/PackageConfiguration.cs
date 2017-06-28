@@ -21,32 +21,29 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using OpenQA.Selenium;
+using System.Collections.Generic;
 
-namespace YellowJacket.Core.Framework
+namespace YellowJacket.Core.Packaging
 {
-    /// <summary>
-    /// The driver context.
-    /// </summary>
-    public static class DriverContext
+    public class PackageConfiguration
     {
         #region Properties
 
         /// <summary>
-        /// Gets or sets the driver.
+        /// Gets or sets the name of the test assembly.
         /// </summary>
         /// <value>
-        /// The driver.
+        /// The name of the test assembly.
         /// </value>
-        public static IWebDriver Driver   { get; set; }
+        public string TestAssemblyName { get; set; }
 
         /// <summary>
-        /// Gets or sets the browser.
+        /// Gets or sets the features.
         /// </summary>
         /// <value>
-        /// The browser.
+        /// The features.
         /// </value>
-        public static Browser Browser { get; set; }
+        public List<string> Features { get; set; }
 
         #endregion
     }

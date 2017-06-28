@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using OpenQA.Selenium.Support.PageObjects;
+using YellowJacket.Core.Contexts;
 
 namespace YellowJacket.Core.Framework
 {

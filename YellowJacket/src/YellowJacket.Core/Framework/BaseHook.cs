@@ -23,6 +23,7 @@
 
 using System;
 using TechTalk.SpecFlow;
+using YellowJacket.Core.Contexts;
 using YellowJacket.Core.Enums;
 using YellowJacket.Core.Factories;
 using YellowJacket.Core.Hook;

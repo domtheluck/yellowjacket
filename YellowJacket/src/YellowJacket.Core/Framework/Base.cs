@@ -24,6 +24,7 @@
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.PageObjects;
 using TechTalk.SpecFlow;
+using YellowJacket.Core.Contexts;
 
 namespace YellowJacket.Core.Framework
 {

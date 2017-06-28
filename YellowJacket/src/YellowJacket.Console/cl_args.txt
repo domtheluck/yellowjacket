@@ -1,0 +1,3 @@
+﻿create-package D:\Projects\DEV\yellowjacket\YellowJacket\samples\YellowJacket.WebApp.Automation\bin\Debug YellowJacket.WebApp.Automation.dll d:\
+
+execute D:\Projects\DEV\yellowjacket\YellowJacket\samples\YellowJacket.WebApp.Automation\bin\Debug\YellowJacket.WebApp.Automation.dll Feature001 Feature002 --browser Chrome

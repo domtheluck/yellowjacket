@@ -21,6 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
+using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -50,6 +51,20 @@ namespace YellowJacket.Core.Helpers
         }
 
         /// <summary>
+        /// Gets the all feature types from the specifed assembly.
+        /// </summary>
+        /// <param name="assembly">The assembly.</param>
+        /// <returns><see cref="List{Type}"/></returns>
+        public List<Type> GetFeatureTypes(Assembly assembly)
+        {
+            return assembly.GetTypes()
+                .Where(t => t.GetCustomAttributes(typeof(GeneratedCodeAttribute))
+                .Any())
+                .Where(type => ((GeneratedCodeAttribute) type.GetCustomAttributes(typeof(GeneratedCodeAttribute))
+                .FirstOrDefault())?.Tool == "TechTalk.SpecFlow").ToList();
+        }
+
+        /// <summary>
         /// Gets the type of the feature.
         /// </summary>
         /// <param name="assembly">The assembly.</param>
@@ -58,12 +73,14 @@ namespace YellowJacket.Core.Helpers
         /// <exception cref="Exception">.</exception>
         public Type GetFeatureType(Assembly assembly, string feature)
         {
+            // TODO: to rewrite
+
             List<Type> types =
                 assembly.GetTypes()
                     .Where(t => t.GetCustomAttributes(typeof(DescriptionAttribute)).Any()).ToList();
 
             if (!types.Any())
-                throw new Exception($"Cannot find any runnable test in assembly {assembly.FullName}");
+                throw new Exception($"Cannot find any feature in assembly {assembly.FullName}");
 
             foreach (Type type in types)
             {
