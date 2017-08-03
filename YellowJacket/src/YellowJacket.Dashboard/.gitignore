@@ -245,4 +245,4 @@ _Pvt_Extensions
 .fake/
 
 # Visual Studio Code settings
-.vscode/
+vscode/
