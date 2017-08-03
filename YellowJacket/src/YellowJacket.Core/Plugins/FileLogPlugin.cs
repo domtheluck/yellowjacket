@@ -21,13 +21,11 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
 using System.Collections.Generic;
 using System.IO;
-using YellowJacket.Core.Interfaces;
-using YellowJacket.Core.Plugins;
+using YellowJacket.Core.Plugins.Interfaces;
 
-namespace YellowJacket.Core.Logging
+namespace YellowJacket.Core.Plugins
 {
     // TODO: Need to add some logic to this logger to support intelligent file/folder management since it will probably be the default one.
 
@@ -35,7 +33,7 @@ namespace YellowJacket.Core.Logging
     /// Used to write log to a file.
     /// </summary>
     /// <seealso cref="ILogPlugin" />
-    internal class FileLogger: ILogPlugin
+    internal class FileLogPlugin: ILogPlugin
     {
         #region Private Members
 
@@ -65,10 +63,10 @@ namespace YellowJacket.Core.Logging
         #region Constructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FileLogger"/> class.
+        /// Initializes a new instance of the <see cref="FileLogPlugin"/> class.
         /// </summary>
         /// <param name="path">The path.</param>
-        public FileLogger(string path)
+        public FileLogPlugin(string path)
         {
             _path = path;
         }

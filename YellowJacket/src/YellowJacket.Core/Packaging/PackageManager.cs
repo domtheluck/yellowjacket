@@ -25,7 +25,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Reflection;
+using Newtonsoft.Json;
 using YellowJacket.Core.Helpers;
 using YellowJacket.Core.Interfaces;
 
@@ -37,6 +39,12 @@ namespace YellowJacket.Core.Packaging
     /// <seealso cref="IPackageManager" />
     public class PackageManager : IPackageManager
     {
+        #region Constants
+
+        private const string YellowJacket = "YellowJacket";
+
+        #endregion
+
         #region Public Methods
 
         /// <summary>
@@ -48,9 +56,9 @@ namespace YellowJacket.Core.Packaging
         /// <param name="plugins">The plugins.</param>
         /// <exception cref="ArgumentException">The test assembly name must be valid.</exception>
         public void Create(
-            string deploymentFolderLocation, 
-            string testAssemblyName, 
-            string packageLocation, 
+            string deploymentFolderLocation,
+            string testAssemblyName,
+            string packageLocation,
             List<string> plugins)
         {
             string packageName = Path.GetFileNameWithoutExtension(testAssemblyName);
@@ -77,31 +85,104 @@ namespace YellowJacket.Core.Packaging
 
                 Console.WriteLine("Creates the package configuration file...");
 
-                CreateConfigurationFile(testAssemblyName, packageLocation, packageName);
+                CreateConfigurationFile(deploymentFolderLocation, testAssemblyName, packageLocation, packageName);
 
                 Console.WriteLine("Package configuration file created...");
+            }
+            catch
+            {
+                Cleanup();
+                throw;
+            }
+        }
 
-                TypeLocatorHelper typeLocatorHelper = new TypeLocatorHelper();
+        /// <summary>
+        /// Gets the package configuration.
+        /// </summary>
+        /// <param name="packageFullName">Full name of the package.</param>
+        /// <returns><see cref="PackageConfiguration"/>.</returns>
+        public PackageConfiguration GetPackageConfiguration(string packageFullName)
+        {
+            string packageConfigurationFullName = $"{Path.GetFileName(packageFullName)}.json";
+
+            return JsonConvert.DeserializeObject<PackageConfiguration>(File.ReadAllText(packageConfigurationFullName));
+        }
+
+        /// <summary>
+        /// Extracts the package.
+        /// </summary>
+        /// <param name="packageFullName">Full name of the package.</param>
+        /// <returns>The package full name.</returns>
+        public string ExtractPackage(string packageFullName)
+        {
+            string packageName = "";
+
+            if (!string.IsNullOrEmpty(packageFullName))
+                packageName = Path.GetFileName(packageFullName);
+
+            string extractedPackageLocation = Path.Combine(Path.GetTempPath(), YellowJacket, packageName);
+
+            try
+            {
+                if (Directory.Exists(extractedPackageLocation))
+                    Directory.Delete(extractedPackageLocation);
+
+                ZipFile.ExtractToDirectory(packageFullName, extractedPackageLocation);
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
                 throw;
-            }  
+            }
+
+            return extractedPackageLocation;
         }
 
         #endregion
 
         #region Private Methods 
 
-        private void CreateConfigurationFile(string testAssemblyName, string packageLocationstring, string packageName)
+        /// <summary>
+        /// Creates the configuration file.
+        /// </summary>
+        /// <param name="deploymentFolderLocation">The deployment folder location.</param>
+        /// <param name="testAssemblyName">Name of the test assembly.</param>
+        /// <param name="packageLocation">The package location.</param>
+        /// <param name="packageName">Name of the package.</param>
+        private void CreateConfigurationFile(
+            string deploymentFolderLocation, 
+            string testAssemblyName, 
+            string packageLocation, 
+            string packageName)
         {
+            PackageConfiguration packageConfiguration =
+                new PackageConfiguration { TestAssemblyName = testAssemblyName };
 
-            PackageConfiguration packageConfiguration = 
-                new PackageConfiguration {TestAssemblyName = testAssemblyName};
+            string configFileFullName = Path.Combine(packageLocation, $"{packageName}.json");
 
+            TypeLocatorHelper typeLocatorHelper = new TypeLocatorHelper();
 
+            List<string> features = 
+                typeLocatorHelper.GetFeatureTypes(Assembly.LoadFrom(Path.Combine(deploymentFolderLocation, testAssemblyName)))
+                .Select(x => x.Name.Substring(0, x.Name.Length - 7))
+                .ToList();
 
+            if (!features.Any())
+                throw new Exception($"No feature have been found in the test assembly {Path.Combine(packageLocation, testAssemblyName)}");
+
+            packageConfiguration.Features = features;
+
+            File.WriteAllText(
+                configFileFullName,
+                JsonConvert.SerializeObject(packageConfiguration, Formatting.Indented));
+        }
+
+        /// <summary>
+        /// Cleanups the files if something wrong happen.
+        /// </summary>
+        private void Cleanup()
+        {
+            // TODO: to implements
         }
 
         #endregion

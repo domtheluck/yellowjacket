@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace YellowJacket.Core.Packaging
 {
@@ -35,6 +36,7 @@ namespace YellowJacket.Core.Packaging
         /// <value>
         /// The name of the test assembly.
         /// </value>
+        [JsonProperty("testAssemblyName")]
         public string TestAssemblyName { get; set; }
 
         /// <summary>
@@ -43,6 +45,7 @@ namespace YellowJacket.Core.Packaging
         /// <value>
         /// The features.
         /// </value>
+        [JsonProperty("features")]
         public List<string> Features { get; set; }
 
         #endregion

@@ -21,40 +21,59 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using YellowJacket.Core.Engine;
-using YellowJacket.Core.Engine.Events;
+using System;
+using System.Collections.Generic;
 
-namespace YellowJacket.Core.Interfaces
+namespace YellowJacket.Core.Engine
 {
-    public delegate void ExecutionStartHandler(object sender, ExecutionStartEventArgs eventArgs);
-    public delegate void ExecutionStopHandler(object sender, ExecutionStopEventArgs eventArgs);
-    public delegate void ExecutionCompletedHandler(object sender, ExecutionCompletedEventArgs eventArgs);
-    public delegate void ExecutionProgressHandler(object sender, ExecutionProgressEventArgs eventArgs);
-
     /// <summary>
-    /// Interface definition for the execution engine.
+    /// Contains the execution configuration.
     /// </summary>
-    public interface IEngine
+    public sealed class Configuration
     {
-        #region Events
+        #region Properties
 
-        event ExecutionStartHandler ExecutionStart;
+        /// <summary>
+        /// Gets or sets the test assembly full name.
+        /// </summary>
+        /// <value>
+        /// The test assembly full name.
+        /// </value>
+        public string TestAssemblyFullName { get; set; }
 
-        event ExecutionStopHandler ExecutionStop;
+        /// <summary>
+        /// Gets or sets the plugin assemblies.
+        /// </summary>
+        /// <value>
+        /// The plugin assemblies.
+        /// </value>
+        public List<string> PluginAssemblies { get; set; }
 
-        event ExecutionCompletedHandler ExecutionCompleted;
+        /// <summary>
+        /// Gets or sets the browser configuration.
+        /// </summary>
+        /// <value>
+        /// The browser configuration.
+        /// </value>
+        public BrowserConfiguration BrowserConfiguration { get; set; }
 
-        event ExecutionProgressHandler ExecutionProgress;
+        /// <summary>
+        /// Gets or sets the features.
+        /// </summary>
+        /// <value>
+        /// The features.
+        /// </value>
+        public List<string> Features { get; set; }
 
         #endregion
 
-        #region Methods
+        #region Constructors
 
-        /// <summary>
-        /// Executes the specified configuration.
-        /// </summary>
-        /// <param name="engineConfiguration">The execution configuration.</param>
-        void Run(Configuration engineConfiguration);
+        public Configuration()
+        {
+            PluginAssemblies = new List<string>();
+            Features = new List<string>();
+        }
 
         #endregion
     }

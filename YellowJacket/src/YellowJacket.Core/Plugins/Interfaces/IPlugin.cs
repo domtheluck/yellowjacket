@@ -21,31 +21,12 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System.Collections.Generic;
-
-namespace YellowJacket.Core.Plugins
+namespace YellowJacket.Core.Plugins.Interfaces
 {
     /// <summary>
-    /// Interface definition for log plugin.
+    /// Base plugin interface definition.
     /// </summary>
-    public interface ILogPlugin
+    internal interface IPlugin
     {
-        /// <summary>
-        /// Writes the specified content to the log plugin.
-        /// </summary>
-        /// <param name="content">The content.</param>
-        void Write(string content);
-
-        /// <summary>
-        /// Writes the specified line to the log plugin.
-        /// </summary>
-        /// <param name="content">The line to write.</param>
-        void WriteLine(string content);
-
-        /// <summary>
-        /// Writes the specified lines to the log plugin.
-        /// </summary>
-        /// <param name="content">The lines to write.</param>
-        void WriteAllLine(IEnumerable<string> content);
     }
 }

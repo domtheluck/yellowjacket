@@ -23,9 +23,7 @@
 
 using System;
 using TechTalk.SpecFlow;
-using YellowJacket.Core.Contexts;
 using YellowJacket.Core.Enums;
-using YellowJacket.Core.Factories;
 using YellowJacket.Core.Hook;
 using YellowJacket.Core.Logging;
 
@@ -137,8 +135,7 @@ namespace YellowJacket.Core.Framework
         /// </summary>
         private static void Initialize()
         {
-            // TODO: Modify this code to get the right driver according to the execution context
-            DriverContext.Driver = WebDriverFactory.Get(BrowserType.Chrome);
+
         }
     }
 }

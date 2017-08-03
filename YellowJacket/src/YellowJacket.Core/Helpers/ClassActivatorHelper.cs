@@ -28,7 +28,7 @@ namespace YellowJacket.Core.Helpers
     /// Uses to create instance of a specific type.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class ClassActivator<T>
+    public class ClassActivatorHelper<T>
     {
         /// <summary>
         /// Creates an instance of the specified type.

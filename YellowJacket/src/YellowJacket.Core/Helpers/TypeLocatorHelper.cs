@@ -36,15 +36,15 @@ namespace YellowJacket.Core.Helpers
     public class TypeLocatorHelper
     {
         /// <summary>
-        /// Gets the hook types.
+        /// Gets thew implemented types.
         /// </summary>
         /// <param name="assembly">The assembly.</param>
         /// <returns><see cref="List{Type}"/>.</returns>
-        public List<Type> GetHookTypes(Assembly assembly)
+        public List<Type> GetImplementedTypes<T>(Assembly assembly)
         {
             return
                 assembly.GetTypes()
-                    .Where(t => t.GetInterfaces().Contains(typeof(IHook)) &&
+                    .Where(t => t.GetInterfaces().Contains(typeof(T)) &&
                                 t.IsClass &&
                                 t.GetConstructor(Type.EmptyTypes) != null)
                     .ToList();

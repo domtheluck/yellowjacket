@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.13
+VisualStudioVersion = 15.0.26430.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{AA56D832-3C1B-44C1-9F68-02428AE74F4A}"
 EndProject
@@ -15,7 +15,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YellowJacket.Agent", "src\Y
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YellowJacket.Dashboard", "src\YellowJacket.Dashboard\YellowJacket.Dashboard.csproj", "{BCD1139C-585B-40B6-B7CB-298E5D56FE4F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YellowJacket.Models", "src\YellowJacket.Models\YellowJacket.Models.csproj", "{7811E115-4CC8-4D4D-AFA2-6E029B1F2090}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YellowJacket.Models", "src\YellowJacket.Models\YellowJacket.Models.csproj", "{7811E115-4CC8-4D4D-AFA2-6E029B1F2090}"
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{3FB52DE6-8EBC-4F8B-900F-CC3C26E08F48}"
 EndProject
@@ -50,7 +50,6 @@ Global
 		{7811E115-4CC8-4D4D-AFA2-6E029B1F2090}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7811E115-4CC8-4D4D-AFA2-6E029B1F2090}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3FB52DE6-8EBC-4F8B-900F-CC3C26E08F48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3FB52DE6-8EBC-4F8B-900F-CC3C26E08F48}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3FB52DE6-8EBC-4F8B-900F-CC3C26E08F48}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3FB52DE6-8EBC-4F8B-900F-CC3C26E08F48}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D0739B5D-2D5E-410B-8A44-0B5B4C5C1B87}.Debug|Any CPU.ActiveCfg = Debug|Any CPU

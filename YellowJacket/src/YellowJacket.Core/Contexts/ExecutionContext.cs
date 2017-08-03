@@ -24,16 +24,16 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using YellowJacket.Core.Enums;
+using OpenQA.Selenium;
 using YellowJacket.Core.Hook;
-using YellowJacket.Core.Plugins;
+using YellowJacket.Core.Plugins.Interfaces;
 
 namespace YellowJacket.Core.Contexts
 {
     /// <summary>
     /// Represents the execution context.
     /// </summary>
-    public sealed class ExecutionContext
+    internal sealed class ExecutionContext
     {
         #region Private Members
 
@@ -45,6 +45,8 @@ namespace YellowJacket.Core.Contexts
 
         private static readonly List<ILogPlugin> LogPlugins =
             new List<ILogPlugin>();
+
+        private static IWebDriverConfigurationPlugin _webDriverConfigurationPlugin;
 
         #endregion
 
@@ -58,6 +60,14 @@ namespace YellowJacket.Core.Contexts
         /// </value>
         public static ExecutionContext Current => Context.Value;
 
+        /// <summary>
+        /// Gets or sets the driver.
+        /// </summary>
+        /// <value>
+        /// The driver.
+        /// </value>
+        public IWebDriver WebDriver { get; set; }
+
         #endregion
 
         #region Constructors
@@ -70,6 +80,8 @@ namespace YellowJacket.Core.Contexts
         #endregion
 
         #region Internal Methods
+
+        #region Hooks
 
         /// <summary>
         /// Registers the hook in the context.
@@ -88,24 +100,6 @@ namespace YellowJacket.Core.Contexts
             HookInstances.Clear();
         }
 
-
-        /// <summary>
-        /// Registers the logplugins.
-        /// </summary>
-        /// <param name="logPlugin">The log plugin.</param>
-        internal void RegisterLogplugins(ILogPlugin logPlugin)
-        {
-            LogPlugins.Add(logPlugin);
-        }
-
-        /// <summary>
-        /// Clears the log plugins.
-        /// </summary>
-        internal void CLearLogPlugins()
-        {
-            LogPlugins.Clear();
-        }
-
         /// <summary>
         /// Gets the hooks ordered by priority.
         /// </summary>
@@ -115,7 +109,28 @@ namespace YellowJacket.Core.Contexts
             return HookInstances.OrderBy(x => x.Priority).ToList();
         }
 
+        #endregion
 
+        #region Plugins
+
+        /// <summary>
+        /// Clears the registered plugins.
+        /// </summary>
+        internal void ClearPlugins()
+        {
+            LogPlugins.Clear();
+            _webDriverConfigurationPlugin = null;
+        }
+
+        /// <summary>
+        /// Registers the Log plugin.
+        /// </summary>
+        /// <param name="logPlugin">The plugin.</param>
+        internal void RegisterLogPlugin(ILogPlugin logPlugin)
+        {
+            LogPlugins.Add(logPlugin);
+        }
+        
         /// <summary>
         /// Gets the log plugins.
         /// </summary>
@@ -124,6 +139,26 @@ namespace YellowJacket.Core.Contexts
         {
             return LogPlugins;
         }
+
+        /// <summary>
+        /// Registers the web driver configuration plugin.
+        /// </summary>
+        /// <param name="webDriverConfigurationPlugin">The web driver configuration plugin.</param>
+        internal void RegisterWebDriverConfigurationPlugin(IWebDriverConfigurationPlugin webDriverConfigurationPlugin)
+        {
+            _webDriverConfigurationPlugin = webDriverConfigurationPlugin;
+        }
+
+        /// <summary>
+        /// Gets the web driver configuration plugin.
+        /// </summary>
+        /// <returns><see cref="IWebDriverConfigurationPlugin"/>.</returns>
+        internal IWebDriverConfigurationPlugin GetWebDriverConfigurationPlugin()
+        {
+            return _webDriverConfigurationPlugin;
+        }
+
+        #endregion
 
         #endregion
     }

@@ -23,57 +23,29 @@
 
 using System.Collections.Generic;
 
-namespace YellowJacket.Core.Engine
+namespace YellowJacket.Core.Plugins.Interfaces
 {
     /// <summary>
-    /// Contains the execution configuration.
+    /// Interface definition for log plugin.
     /// </summary>
-    public class ExecutionConfiguration
+    public interface ILogPlugin
     {
-        #region Properties
+        /// <summary>
+        /// Writes the specified content to the log plugin.
+        /// </summary>
+        /// <param name="content">The content.</param>
+        void Write(string content);
 
         /// <summary>
-        /// Gets or sets the test package location.
+        /// Writes the specified line to the log plugin.
         /// </summary>
-        /// <value>
-        /// The test package location.
-        /// </value>
-        public string TestPackageLocation { get; set; }
+        /// <param name="content">The line to write.</param>
+        void WriteLine(string content);
 
         /// <summary>
-        /// Gets or sets the test assembly name.
+        /// Writes the specified lines to the log plugin.
         /// </summary>
-        /// <value>
-        /// The test assembly name.
-        /// </value>
-        public string TestAssemblyName { get; set; }
-
-        /// <summary>
-        /// Gets or sets the plugin assemblies.
-        /// </summary>
-        /// <value>
-        /// The plugin assemblies.
-        /// </value>
-        public List<string> PluginAssemblies { get; set; }
-
-        /// <summary>
-        /// Gets or sets the browser configuration.
-        /// </summary>
-        /// <value>
-        /// The browser configuration.
-        /// </value>
-        public BrowserConfiguration BrowserConfiguration { get; set; }
-
-        #endregion
-
-        #region Constructors
-
-        public ExecutionConfiguration()
-        {
-            PluginAssemblies = new List<string>();
-        }
-
-        #endregion
-
+        /// <param name="content">The lines to write.</param>
+        void WriteAllLine(IEnumerable<string> content);
     }
 }

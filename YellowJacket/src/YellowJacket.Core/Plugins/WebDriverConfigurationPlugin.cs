@@ -19,26 +19,18 @@
 // LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
 
 using System;
 using OpenQA.Selenium;
 using OpenQA.Selenium.IE;
 using YellowJacket.Core.Enums;
+using YellowJacket.Core.Plugins.Interfaces;
 
-namespace YellowJacket.Core.Factories
+namespace YellowJacket.Core.Plugins
 {
-    /// <summary>
-    /// Used to create Web Driver.
-    /// </summary>
-    internal class WebDriverFactory
+    internal class WebDriverConfigurationPlugin : IWebDriverConfigurationPlugin
     {
-        /// <summary>
-        /// Gets a <see cref="IWebDriver"/> according to the specified browser.
-        /// </summary>
-        /// <param name="browser">The browser.</param>
-        /// <returns><see cref="IWebDriver"/>.</returns>
-        public static IWebDriver Get(BrowserType browser)
+        public IWebDriver Get(BrowserType browser)
         {
             IWebDriver webDriver = null;
 

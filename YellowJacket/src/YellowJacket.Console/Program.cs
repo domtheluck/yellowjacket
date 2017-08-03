@@ -47,6 +47,10 @@ namespace YellowJacket.Console
         // execute command
         private const string Execute = "execute";
 
+        // run command
+
+        // run with package command
+
         // create-package command
         private const string CreatePackage = "create-package";
         
@@ -209,14 +213,14 @@ namespace YellowJacket.Console
                 {
                     if (string.IsNullOrEmpty(testPackageLocationArgument.Value))
                     {
-                        System.Console.WriteLine($"The argument [testPackageLocation] is required.");
+                        System.Console.WriteLine("The argument [testPackageLocation] is required.");
                         command.ShowHelp();
                         return -1;
                     }
 
                     if (string.IsNullOrEmpty(testAssemblyNameArgument.Value))
                     {
-                        System.Console.WriteLine($"The argument [testAssemblyName] is required.");
+                        System.Console.WriteLine("The argument [testAssemblyName] is required.");
                         command.ShowHelp();
                         return -1;
                     }
@@ -240,7 +244,6 @@ namespace YellowJacket.Console
                     }
 
                     string testPackageLocation = testPackageLocationArgument.Value;
-                    string testAssemblyName = testAssemblyNameArgument.Value;
                     List<string> features = featuresArgument.Values;
                     string browser = browserOption.HasValue() ? browserOption.Value() : "None";
 
@@ -251,15 +254,21 @@ namespace YellowJacket.Console
                     executionEngine.ExecutionStop += Engine_OnExecutionStop;
                     executionEngine.ExecutionProgress += Engine_OnExecutionProgress;
 
-                    ExecutionConfiguration executionConfiguration =
-                        new ExecutionConfiguration
+                    // TODO: Read the package configuration + extract the package to a temp folder + get the test assembly full name
+                    PackageManager packageManager = new PackageManager();
+
+                    String extractedPackageLocation = packageManager.ExtractPackage(testPackageLocation);
+                    string testAssemblyFullName = "";
+                   
+                    Configuration configuration =
+                        new Configuration
                         {
-                            TestPackageLocation = testPackageLocation,
-                            TestAssemblyName = testAssemblyName
+                            TestAssemblyFullName = testAssemblyFullName,
+                            Features = features
                         };
 
                     if (browser != "None")
-                        executionConfiguration.BrowserConfiguration = new BrowserConfiguration
+                        configuration.BrowserConfiguration = new BrowserConfiguration
                         {
                             Browser = new EnumHelper().GetEnumTypeFromDescription<BrowserType>(browser)
                         };
@@ -267,7 +276,7 @@ namespace YellowJacket.Console
                     // TODO: Handles the plugins
                     //executionConfiguration.PluginAssemblies
 
-                    executionEngine.Execute(executionConfiguration);
+                    executionEngine.Run(configuration);
 
                     System.Console.ReadLine();
 

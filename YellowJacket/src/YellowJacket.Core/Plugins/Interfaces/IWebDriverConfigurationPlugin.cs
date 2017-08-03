@@ -19,14 +19,14 @@
 // LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
 
-namespace YellowJacket.Core.Plugins
+using OpenQA.Selenium;
+using YellowJacket.Core.Enums;
+
+namespace YellowJacket.Core.Plugins.Interfaces
 {
-    /// <summary>
-    /// Base plugin interface definition.
-    /// </summary>
-    internal interface IPlugin
+    interface IWebDriverConfigurationPlugin
     {
+        IWebDriver Get(BrowserType browser);
     }
 }

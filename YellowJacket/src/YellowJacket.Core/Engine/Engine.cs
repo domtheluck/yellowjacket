@@ -21,56 +21,57 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using NUnit.Engine;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using NUnit.Engine;
 using YellowJacket.Core.Contexts;
 using YellowJacket.Core.Engine.Events;
+using YellowJacket.Core.Enums;
 using YellowJacket.Core.Helpers;
 using YellowJacket.Core.Hook;
 using YellowJacket.Core.Interfaces;
 using YellowJacket.Core.NUnit;
 using YellowJacket.Core.NUnit.Models;
+using YellowJacket.Core.Plugins;
+using YellowJacket.Core.Plugins.Interfaces;
 
 namespace YellowJacket.Core.Engine
 {
     /// <summary>
     /// YellowJacket engine.
     /// </summary>
-    public class Engine : IEngine
+    public sealed class Engine : IEngine
     {
         #region Constants
 
-        private const string BrowserNone = "None";
+        private const string BrowserNone = "None"; // TODO: move that somewhere else
 
-        #endregion
+        #endregion Constants
 
         #region Private Members
 
-        private ITestEngine _testEngine;
-
         private readonly TypeLocatorHelper _typeLocatorHelper = new TypeLocatorHelper();
-
-        private Assembly _assembly;
-
-        private TestSuite _testSuite;
-        private List<TestCase> _testCases = new List<TestCase>();
-
+        private Assembly _testAssembly;
+        private Configuration _configuration;
+        private readonly List<Assembly> _pluginAssemblies = new List<Assembly>();
         private int _testCaseCount;
+        private List<TestCase> _testCases = new List<TestCase>();
+        private ITestEngine _testEngine;
+        private TestSuite _testSuite;
 
-        #endregion
+        #endregion Private Members
 
         #region Events
 
-        public event ExecutionStartHandler ExecutionStart;
-        public event ExecutionStopHandler ExecutionStop;
         public event ExecutionCompletedHandler ExecutionCompleted;
         public event ExecutionProgressHandler ExecutionProgress;
+        public event ExecutionStartHandler ExecutionStart;
+        public event ExecutionStopHandler ExecutionStop;
 
-        #endregion
+        #endregion Events
 
         #region Constructors
 
@@ -82,33 +83,38 @@ namespace YellowJacket.Core.Engine
             Initialize();
         }
 
-        #endregion
+        #endregion Constructors
 
         #region Public Methods
 
         /// <summary>
-        /// Executes the specified configuration.
+        /// Runs the engine with the specified configuration.
         /// </summary>
-        /// <param name="executionConfiguration">The execution configuration.</param>
-        public void Execute(ExecutionConfiguration executionConfiguration)
+        /// <param name="configuration">The engine configuration.</param>
+        public void Run(Configuration configuration)
         {
             Cleanup();
 
-            ValidateConfiguration(executionConfiguration);
+            _configuration = configuration;
+
+            ValidateConfiguration();
 
             try
             {
-                RegisterPlugins(executionConfiguration);
+                LoadPluginAssemblies();
 
-                LoadTestAssembly(executionConfiguration);
+                RegisterPlugins();
+
+                LoadTestAssembly();
+
+                InitializeWebDriver();
+
+                ExecuteFeatures();
             }
             catch (Exception ex)
             {
                 // if an exception is raised, we are raising a specific event to inform the caller.
                 FireExecutionStopEvent(ex);
-
-                // TODO: for debugging purpose only. Don't forget to remove it.
-                throw;
             }
             finally
             {
@@ -116,46 +122,200 @@ namespace YellowJacket.Core.Engine
             }
         }
 
-        #endregion
+        #endregion Public Methods
 
         #region Private Methods
+
+        private void InitializeWebDriver()
+        {
+            if (_configuration.BrowserConfiguration.Browser == BrowserType.None)
+                return;
+
+            ExecutionContext.Current.WebDriver = ExecutionContext.Current
+                .GetWebDriverConfigurationPlugin()
+                .Get(_configuration.BrowserConfiguration.Browser);
+        }
+
+        /// <summary>
+        /// Updates the execution progress.
+        /// </summary>
+        private void UpdateProgress()
+        {
+            // TODO: temp code. Need something more flexible. Also, we need to think about the result output.
+            int testCaseCount = _testSuite.TestCaseCount;
+
+            int finishedTestCaseCount = _testCases.Count;
+
+            decimal progress = finishedTestCaseCount / (decimal)testCaseCount * 100;
+
+            FireExecutionProgressEvent(
+                Math.Round(progress, 2),
+                $"Execution of {_testCases.Last().ClassName.Split('.').Last().Substring(0, _testCases.Last().ClassName.Split('.').Last().Length - 7)} - {_testCases.Last().Name}: {_testCases.Last().Result}");
+        }
+
+        private void ValidateConfiguration()
+        {
+            if (string.IsNullOrEmpty(_configuration.TestAssemblyFullName))
+                throw new ArgumentException("You must provide a value for the Test Assembly");
+
+            string location = Path.GetDirectoryName(_configuration.TestAssemblyFullName);
+
+            if (string.IsNullOrEmpty(location))
+                throw new IOException("The test assembly location is invalid");
+
+            if (!File.Exists(_configuration.TestAssemblyFullName))
+                throw new IOException($"Cannot found the The Test Assembly {_configuration.TestAssemblyFullName}");
+        }
 
         /// <summary>
         /// Cleanups the engine setup.
         /// </summary>
         private void Cleanup()
         {
-            _assembly = null;
+            _configuration = null;
+            _testAssembly = null;
+            _pluginAssemblies.Clear();
             _testSuite = null;
             _testCases = new List<TestCase>();
         }
 
         /// <summary>
+        /// Executes the specified features.
+        /// </summary>
+        /// <param name="assemblyPath">The assembly path.</param>
+        /// <param name="features">The features.</param>
+        private void ExecuteFeatures()
+        {
+            TestPackage testPackage = NUnitEngineHelper.CreateTestPackage(new List<string> { _configuration.TestAssemblyFullName });
+
+            TestFilter testFilter = NUnitEngineHelper.CreateTestFilter(_testAssembly, _configuration.Features);
+
+            ITestRunner testRunner = _testEngine.GetRunner(testPackage);
+
+            _testSuite = NUnitEngineHelper.ParseTestRun(testRunner.Explore(testFilter)).TestSuite;
+
+            CustomTestEventListener testEventListener = new CustomTestEventListener();
+
+            testEventListener.TestReport += OnTestReport;
+
+            TestRun testRun = NUnitEngineHelper.ParseTestRun(testRunner.Run(testEventListener, testFilter));
+        }
+
+        /// <summary>
+        /// Initializes the engine.
+        /// </summary>
+        private void Initialize()
+        {
+            _testCaseCount = 0;
+
+            // initialize the NUnit test engine
+            _testEngine = TestEngineActivator.CreateInstance();
+
+            //_testEngine.WorkDirectory = ""; // TODO: check if we need to put the WorkDirectory elsewhere
+            _testEngine.InternalTraceLevel = InternalTraceLevel.Off; // TODO: should be customizable
+
+        }
+
+        /// <summary>
         /// Loads the test assembly.
         /// </summary>
-        /// <param name="executionConfiguration">The executionConfiguration.</param>
-        private void LoadTestAssembly(ExecutionConfiguration executionConfiguration)
+        private void LoadTestAssembly()
         {
-            _assembly = Assembly.LoadFrom(Path.Combine(
-                executionConfiguration.TestPackageLocation, 
-                executionConfiguration.TestAssemblyName));
+            _testAssembly = Assembly.LoadFrom(_configuration.TestAssemblyFullName);
+        }
+
+        #region Plugins
+
+        /// <summary>
+        /// Gets the log plugins.
+        /// </summary>
+        /// <returns></returns>
+        private List<ILogPlugin> GetLogPlugins()
+        {
+            List<ILogPlugin> plugins = GetPlugins<ILogPlugin>();
+
+            if (!plugins.Any())
+                plugins.Add(ClassActivatorHelper<FileLogPlugin>.CreateInstance(typeof(FileLogPlugin)));
+
+            return plugins;
+        }
+
+        /// <summary>
+        /// Gets the web driver configuration plugin.
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException">You cannot have more than one instance of the IWebDriverConfiguration plugin</exception>
+        private IWebDriverConfigurationPlugin GetWebDriverConfigurationPlugin()
+        {
+            List<IWebDriverConfigurationPlugin> plugins = GetPlugins<IWebDriverConfigurationPlugin>();
+
+            if (plugins.Any() && plugins.Count > 1)
+                throw new ArgumentException("You cannot have more than one instance of the IWebDriverConfiguration plugin");
+
+            if (plugins.Any())
+                return plugins.First();
+
+            return ClassActivatorHelper<WebDriverConfigurationPlugin>.CreateInstance(
+                typeof(WebDriverConfigurationPlugin));
+        }
+
+        private List<T> GetPlugins<T>()
+        {
+            List<T> plugins = new List<T>();
+
+            TypeLocatorHelper typeLocatorHelper = new TypeLocatorHelper();
+
+            foreach (Assembly assembly in _pluginAssemblies)
+            {
+                List<Type> types = typeLocatorHelper.GetImplementedTypes<T>(assembly);
+
+                if (!types.Any())
+                    continue;
+
+                types.ForEach(x =>
+                {
+                    plugins.Add(ClassActivatorHelper<T>.CreateInstance(x));
+                });
+            }
+
+            return plugins;
+        }
+
+        /// <summary>
+        /// Loads the plugin assemblies from the test assembly folder.
+        /// </summary>
+        private void LoadPluginAssemblies()
+        {
+            string location = Path.GetDirectoryName(_configuration.TestAssemblyFullName);
+
+            if (string.IsNullOrEmpty(location))
+                return;
+
+            _configuration.PluginAssemblies.ForEach(x =>
+            {
+                _pluginAssemblies.Add(Assembly.LoadFile(Path.Combine(location, x)));
+            });     
         }
 
         /// <summary>
         /// Registers the plugins in the execution context.
         /// </summary>
-        private void RegisterPlugins(ExecutionConfiguration executionConfiguration)
+        private void RegisterPlugins()
         {
-            // cleanup the existing loggers
-            ExecutionContext.Current.CLearLogPlugins();
+            // cleanup the existing plugins
+            ExecutionContext.Current.ClearPlugins();
 
-            // TODO: To refactor
-            //// register the loggers
-            //loggers.ForEach(x =>
-            //{
-            //    ExecutionContext.Current.RegisterLogger(x);
-            //});
+            GetLogPlugins().ForEach(x =>
+            {
+                ExecutionContext.Current.RegisterLogPlugin(x);
+            });
+
+            ExecutionContext.Current.RegisterWebDriverConfigurationPlugin(GetWebDriverConfigurationPlugin());
         }
+
+        #endregion Plugins
+
+        #region Hooks
 
         /// <summary>
         /// Registers the hooks in the execution context.
@@ -166,7 +326,7 @@ namespace YellowJacket.Core.Engine
             ExecutionContext.Current.ClearHooks();
 
             // get the hook list from the test assembly
-            List<Type> hooks = _typeLocatorHelper.GetHookTypes(_assembly);
+            List<Type> hooks = _typeLocatorHelper.GetImplementedTypes<IHook>(_testAssembly);
 
             // instantiate each hook class and register it in the execution context
             foreach (Type type in hooks)
@@ -182,41 +342,15 @@ namespace YellowJacket.Core.Engine
                 ExecutionContext.Current.RegisterHook(
                     new HookInstance
                     {
-                        Instance = ClassActivator<IHook>.CreateInstance(type),
+                        Instance = ClassActivatorHelper<IHook>.CreateInstance(type),
                         Priority = priority
                     });
             }
         }
 
-        /// <summary>
-        /// Initializes the engine.
-        /// </summary>
-        private void Initialize()
-        {
-            _testCaseCount = 0;
+        #endregion Hooks
 
-            // initialize the NUnit test engine
-            _testEngine = TestEngineActivator.CreateInstance();
-
-            //_testEngine.WorkDirectory = ""; // TODO: check if we need to put the WorkDirectory elsewhere
-            _testEngine.InternalTraceLevel = InternalTraceLevel.Off; // TODO: should be customizable
-        }
-
-        /// <summary>
-        /// Fires the execution start event.
-        /// </summary>
-        private void FireExecutionStartEvent()
-        {
-            ExecutionStart?.Invoke(this, new ExecutionStartEventArgs());
-        }
-
-        /// <summary>
-        /// Fires the execution stop event.
-        /// </summary>
-        private void FireExecutionStopEvent(Exception ex)
-        {
-            ExecutionStop?.Invoke(this, new ExecutionStopEventArgs(ex));
-        }
+        #region Events
 
         /// <summary>
         /// Fires the execution completed event.
@@ -236,51 +370,25 @@ namespace YellowJacket.Core.Engine
             ExecutionProgress?.Invoke(this, new ExecutionProgressEventArgs(progress, currentState));
         }
 
-        private void ValidateConfiguration(ExecutionConfiguration engineConfiguration)
+        /// <summary>
+        /// Fires the execution start event.
+        /// </summary>
+        private void FireExecutionStartEvent()
         {
-
+            ExecutionStart?.Invoke(this, new ExecutionStartEventArgs());
         }
 
         /// <summary>
-        /// Executes the specified features.
+        /// Fires the execution stop event.
         /// </summary>
-        /// <param name="assemblyPath">The assembly path.</param>
-        /// <param name="features">The features.</param>
-        private void ExecuteFeatures(string assemblyPath, List<string> features)
+        private void FireExecutionStopEvent(Exception ex)
         {
-            TestPackage testPackage = NUnitEngineHelper.CreateTestPackage(new List<string> { assemblyPath });
-
-            TestFilter testFilter = NUnitEngineHelper.CreateTestFilter(_assembly, features);
-
-            ITestRunner testRunner = _testEngine.GetRunner(testPackage);
-
-            _testSuite = NUnitEngineHelper.ParseTestRun(testRunner.Explore(testFilter)).TestSuite;
-
-            CustomTestEventListener testEventListener = new CustomTestEventListener();
-
-            testEventListener.TestReport += OnTestReport;
-
-            TestRun testRun = NUnitEngineHelper.ParseTestRun(testRunner.Run(testEventListener, testFilter));
+            ExecutionStop?.Invoke(this, new ExecutionStopEventArgs(ex));
         }
+        
+        #endregion Events
 
-        /// <summary>
-        /// Updates the execution progress.
-        /// </summary>
-        private void UpdateProgress()
-        {
-            // TODO: temp code. Need something more flexible. Also, we need to think about the result output.
-            int testCaseCount = _testSuite.TestCaseCount;
-
-            int finishedTestCaseCount = _testCases.Count;
-
-            decimal progress = finishedTestCaseCount / (decimal)testCaseCount * 100;
-
-            FireExecutionProgressEvent(
-                Math.Round(progress, 2),
-                $"Execution of {_testCases.Last().ClassName.Split('.').Last().Substring(0, _testCases.Last().ClassName.Split('.').Last().Length - 7)} - {_testCases.Last().Name}: { _testCases.Last().Result}");
-        }
-
-        #endregion
+        #endregion Private Methods
 
         #region Event Handlers
 
@@ -293,18 +401,15 @@ namespace YellowJacket.Core.Engine
         {
             if (eventArgs.Report.StartsWith("<start-suite"))
             {
-
             }
             if (eventArgs.Report.StartsWith("<start-test"))
             {
-
             }
             else if (eventArgs.Report.StartsWith("<test-case"))
             {
                 _testCases.Add(NUnitEngineHelper.ParseTestCase(eventArgs.Report));
                 UpdateProgress();
             }
-
 
             // TODO: need to analyse the test report structure to be able to report progress and generate the result output.
             //Console.WriteLine(eventArgs.Report);
@@ -403,6 +508,6 @@ namespace YellowJacket.Core.Engine
             */
         }
 
-        #endregion
+        #endregion Event Handlers
     }
 }
