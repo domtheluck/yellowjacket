@@ -39,5 +39,10 @@ namespace YellowJacket.Core.Helpers
         {
             return (T)Activator.CreateInstance(type);
         }
+
+        public static T CreateInstance(Type type, params object[] args)
+        {
+            return (T) Activator.CreateInstance(type, args);
+        }
     }
 }

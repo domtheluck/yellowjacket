@@ -182,8 +182,6 @@ namespace YellowJacket.Core.Engine
         /// <summary>
         /// Executes the specified features.
         /// </summary>
-        /// <param name="assemblyPath">The assembly path.</param>
-        /// <param name="features">The features.</param>
         private void ExecuteFeatures()
         {
             TestPackage testPackage = NUnitEngineHelper.CreateTestPackage(new List<string> { _configuration.TestAssemblyFullName });
@@ -212,7 +210,7 @@ namespace YellowJacket.Core.Engine
             _testEngine = TestEngineActivator.CreateInstance();
 
             //_testEngine.WorkDirectory = ""; // TODO: check if we need to put the WorkDirectory elsewhere
-            _testEngine.InternalTraceLevel = InternalTraceLevel.Off; // TODO: should be customizable
+            _testEngine.InternalTraceLevel = InternalTraceLevel.Verbose; // TODO: should be customizable
 
         }
 
@@ -235,7 +233,7 @@ namespace YellowJacket.Core.Engine
             List<ILogPlugin> plugins = GetPlugins<ILogPlugin>();
 
             if (!plugins.Any())
-                plugins.Add(ClassActivatorHelper<FileLogPlugin>.CreateInstance(typeof(FileLogPlugin)));
+                plugins.Add(ClassActivatorHelper<FileLogPlugin>.CreateInstance(typeof(FileLogPlugin), @"c:\temp")); // TODO: need to have this in the input args
 
             return plugins;
         }
@@ -412,7 +410,7 @@ namespace YellowJacket.Core.Engine
             }
 
             // TODO: need to analyse the test report structure to be able to report progress and generate the result output.
-            //Console.WriteLine(eventArgs.Report);
+            Console.WriteLine(eventArgs.Report);
 
             /*
 

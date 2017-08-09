@@ -88,6 +88,7 @@
     <Compile Include="Engine\Events\ExecutionCompletedEventArgs.cs" />
     <Compile Include="Engine\Events\ExecutionStartEventArgs.cs" />
     <Compile Include="Enums\HookType.cs" />
+    <Compile Include="Helpers\ResourceHelper.cs" />
     <Compile Include="Helpers\SerializationHelper.cs" />
     <Compile Include="Hook\HookProcessor.cs" />
     <Compile Include="Interfaces\IEngine.cs" />

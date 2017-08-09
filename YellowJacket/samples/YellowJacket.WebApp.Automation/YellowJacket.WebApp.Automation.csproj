@@ -74,14 +74,14 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Features\Feature001.feature">
+    <EmbeddedResource Include="Features\Feature001.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>Feature001.feature.cs</LastGenOutput>
-    </None>
-    <None Include="Features\Feature002.feature">
+    </EmbeddedResource>
+    <EmbeddedResource Include="Features\Feature002.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>Feature002.feature.cs</LastGenOutput>
-    </None>
+    </EmbeddedResource>
     <None Include="YellowJacket.WebApp.Automation.dll.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using Microsoft.Extensions.CommandLineUtils;
@@ -44,16 +45,15 @@ namespace YellowJacket.Console
 
         private const string HelpOptionText = "-?|-h|--help";
 
-        // execute command
-        private const string Execute = "execute";
-
         // run command
+        private const string Run = "run";
 
-        // run with package command
+        // run-package command
+        private const string RunPackage = "run-package";
 
         // create-package command
         private const string CreatePackage = "create-package";
-        
+
         private const string DeploymentFolderLocationArgumentText = "[deploymentFolderLocation]";
         private const string TestAssemblyNameArgumentText = "[testAssemblyName]";
         private const string PackageLocationArgumentText = "[packageLocation]";
@@ -76,7 +76,9 @@ namespace YellowJacket.Console
                 return -1;
             });
 
-            InitializeExecuteCommand(app);
+            InitializeRunCommand(app);
+
+            InitializeRunPackageCommand(app);
 
             InitializeCreatePackageCommand(app);
 
@@ -103,21 +105,21 @@ namespace YellowJacket.Console
                 command.HelpOption(HelpOptionText);
 
                 CommandArgument deploymentFolderLocationArgument = command.Argument(
-                    DeploymentFolderLocationArgumentText, 
+                    DeploymentFolderLocationArgumentText,
                     "The location of the deployment folder.");
 
                 CommandArgument testAssemblyNameArgument = command.Argument(
-                    TestAssemblyNameArgumentText, 
+                    TestAssemblyNameArgumentText,
                     "The test assembly name.");
 
                 CommandArgument packageLocationArgument = command.Argument(
-                    PackageLocationArgumentText, 
+                    PackageLocationArgumentText,
                     "The location where the package will be created.");
 
                 CommandOption pluginOptions =
                     command.Option(
                         PluginsOptionText,
-                        "The plugin assembly names: pluginA.dll pluginB.dll ...",
+                        "The plugin assemblies: pluginA.dll pluginB.dll ...",
                         CommandOptionType.MultipleValue);
 
                 command.OnExecute(() =>
@@ -165,23 +167,117 @@ namespace YellowJacket.Console
         }
 
         /// <summary>
-        /// Initializes the execute command.
+        /// Initializes the run command.
         /// </summary>
         /// <param name="app">The application.</param>
-        private static void InitializeExecuteCommand(CommandLineApplication app)
+        private static void InitializeRunCommand(CommandLineApplication app)
         {
-            app.Command(Execute, (command) =>
+            app.Command(Run, (command) =>
             {
-                command.Description = "Execute one or multiple features.";
+                command.Description = "Run one or multiple features located in a test assembly.";
+                command.HelpOption(HelpOptionText);
+
+                CommandArgument testAssemblyFullNameArgument =
+                    command.Argument("[testAssemblyFullName]", "The test assembly full name.");
+
+                CommandArgument featuresArgument = command.Argument("[feature1] [feature2] ...", "The feature(s) to run.");
+
+                featuresArgument.MultipleValues = true;
+
+                StringBuilder browserOptionDescription = new StringBuilder();
+
+                browserOptionDescription.Append(
+                    "The browser used to execute the test. ");
+
+                browserOptionDescription.Append(
+                    "Please note that you must specify a browser if you want to execute a Web UI feature. ");
+
+                EnumHelper enumHelper = new EnumHelper();
+
+                List<string> browsers = (
+                    Enum.GetValues(typeof(BrowserType))
+                        .Cast<BrowserType>()
+                        .Select(browserType => enumHelper.GetEnumFieldDescription(browserType))).ToList();
+
+                browserOptionDescription.Append(
+                    $"Possible values are: {string.Join(", ", browsers)}.");
+
+                CommandOption browserOption =
+                    command.Option(
+                        "-b|--browser <browser>",
+                        browserOptionDescription.ToString(),
+                        CommandOptionType.SingleValue);
+
+                command.OnExecute(() =>
+                {
+                    if (string.IsNullOrEmpty(testAssemblyFullNameArgument.Value))
+                    {
+                        System.Console.WriteLine("The argument [testAssemblyFullName] is required.");
+                        command.ShowHelp();
+                        return -1;
+                    }
+
+                    if (!(featuresArgument.Values.Any()))
+                    {
+                        System.Console.WriteLine("The argument [features] is required.");
+                        command.ShowHelp();
+                        return -1;
+                    }
+
+                    if (!string.IsNullOrEmpty(browserOption.Value()))
+                    {
+                        if (browsers.All(
+                            x => !string.Equals(x, browserOption.Value(), StringComparison.CurrentCultureIgnoreCase)))
+                        {
+                            System.Console.WriteLine($"The specified browser value {browserOption.Value()} is not valid.");
+                            command.ShowHelp();
+                            return -1;
+                        }
+                    }
+
+                    List<string> features = featuresArgument.Values;
+                    string browser = browserOption.HasValue() ? browserOption.Value() : "None";
+
+                    IEngine executionEngine = GetExecutionEngine();
+
+                    string testAssemblyFullName = testAssemblyFullNameArgument.Value;
+
+                    Configuration configuration =
+                        new Configuration
+                        {
+                            TestAssemblyFullName = testAssemblyFullName,
+                            Features = features
+                        };
+
+                    if (browser != "None")
+                        configuration.BrowserConfiguration = new BrowserConfiguration
+                        {
+                            Browser = new EnumHelper().GetEnumTypeFromDescription<BrowserType>(browser)
+                        };
+
+                    // TODO: Handles the plugins
+                    //executionConfiguration.PluginAssemblies
+
+                    executionEngine.Run(configuration);
+
+                    System.Console.ReadLine();
+
+                    return 0;
+                });
+            });
+        }
+
+        private static void InitializeRunPackageCommand(CommandLineApplication app)
+        {
+            app.Command(RunPackage, (command) =>
+            {
+                command.Description = "Run one or multiple features located in a package.";
                 command.HelpOption(HelpOptionText);
 
                 CommandArgument testPackageLocationArgument =
                     command.Argument("[testPackageLocation]", "The test package location");
 
-                CommandArgument testAssemblyNameArgument =
-                    command.Argument("[testAssemblyName]", "The test assembly name");
-
-                CommandArgument featuresArgument = command.Argument("[feature1] [feature2] ...", "The feature(s) to execute.");
+                CommandArgument featuresArgument = command.Argument("[feature1] [feature2] ...", "The feature(s) to run.");
 
                 featuresArgument.MultipleValues = true;
 
@@ -218,13 +314,6 @@ namespace YellowJacket.Console
                         return -1;
                     }
 
-                    if (string.IsNullOrEmpty(testAssemblyNameArgument.Value))
-                    {
-                        System.Console.WriteLine("The argument [testAssemblyName] is required.");
-                        command.ShowHelp();
-                        return -1;
-                    }
-
                     if (!(featuresArgument.Values.Any()))
                     {
                         System.Console.WriteLine("The argument [features] is required.");
@@ -247,19 +336,18 @@ namespace YellowJacket.Console
                     List<string> features = featuresArgument.Values;
                     string browser = browserOption.HasValue() ? browserOption.Value() : "None";
 
-                    IEngine executionEngine = ExecutionEngineBuilder.CreateEngine();
-
-                    executionEngine.ExecutionStart += Engine_OnExecutionStart;
-                    executionEngine.ExecutionCompleted += Engine_OnExecutionCompleted;
-                    executionEngine.ExecutionStop += Engine_OnExecutionStop;
-                    executionEngine.ExecutionProgress += Engine_OnExecutionProgress;
+                    IEngine executionEngine = GetExecutionEngine();
 
                     // TODO: Read the package configuration + extract the package to a temp folder + get the test assembly full name
                     PackageManager packageManager = new PackageManager();
 
-                    String extractedPackageLocation = packageManager.ExtractPackage(testPackageLocation);
-                    string testAssemblyFullName = "";
-                   
+                    PackageConfiguration packageConfiguration = packageManager.GetPackageConfiguration(testPackageLocation);
+
+                    string extractedPackageLocation = packageManager.ExtractPackage(testPackageLocation);
+                    string testAssemblyFullName = Path.Combine(extractedPackageLocation, packageConfiguration.TestAssemblyName);
+
+                    // TODO: Validate the specified features vs what's inside the test assembly (package configuration)
+
                     Configuration configuration =
                         new Configuration
                         {
@@ -272,7 +360,7 @@ namespace YellowJacket.Console
                         {
                             Browser = new EnumHelper().GetEnumTypeFromDescription<BrowserType>(browser)
                         };
-                        
+
                     // TODO: Handles the plugins
                     //executionConfiguration.PluginAssemblies
 
@@ -283,6 +371,22 @@ namespace YellowJacket.Console
                     return 0;
                 });
             });
+        }
+
+        /// <summary>
+        /// Gets the execution engine.
+        /// </summary>
+        /// <returns><see cref="IEngine"/>.</returns>
+        private static IEngine GetExecutionEngine()
+        {
+            IEngine executionEngine = ExecutionEngineBuilder.CreateEngine();
+
+            executionEngine.ExecutionStart += Engine_OnExecutionStart;
+            executionEngine.ExecutionCompleted += Engine_OnExecutionCompleted;
+            executionEngine.ExecutionStop += Engine_OnExecutionStop;
+            executionEngine.ExecutionProgress += Engine_OnExecutionProgress;
+
+            return executionEngine;
         }
 
         #endregion
