@@ -59,7 +59,7 @@ namespace YellowJacket.Dashboard
         public void ConfigureServices(IServiceCollection services)
         {
             // TODO: talk to Scott Hanselman about CosmosDB and MongoDB support in core 2.0.
-            services.AddDbContext<YellowJacketContext>(opt => opt.UseInMemoryDatabase());
+            services.AddDbContext<YellowJacketContext>(opt => opt.UseInMemoryDatabase("TEST"));
 
             // add framework services.
             services.AddMvc();

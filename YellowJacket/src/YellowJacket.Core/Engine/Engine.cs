@@ -30,6 +30,7 @@ using System.Reflection;
 using YellowJacket.Core.Contexts;
 using YellowJacket.Core.Engine.Events;
 using YellowJacket.Core.Enums;
+using YellowJacket.Core.Gherkin;
 using YellowJacket.Core.Helpers;
 using YellowJacket.Core.Hook;
 using YellowJacket.Core.Interfaces;
@@ -57,10 +58,15 @@ namespace YellowJacket.Core.Engine
         private Assembly _testAssembly;
         private Configuration _configuration;
         private readonly List<Assembly> _pluginAssemblies = new List<Assembly>();
-        private int _testCaseCount;
+
         private List<TestCase> _testCases = new List<TestCase>();
         private ITestEngine _testEngine;
         private TestSuite _testSuite;
+        private int _testCaseCount;
+
+        private GherkinManager _gherkinManager = new GherkinManager();
+
+        private string _tempFolder;
 
         #endregion Private Members
 
@@ -99,6 +105,8 @@ namespace YellowJacket.Core.Engine
 
             ValidateConfiguration();
 
+            InitializeFileSystem();
+
             try
             {
                 LoadPluginAssemblies();
@@ -106,6 +114,8 @@ namespace YellowJacket.Core.Engine
                 RegisterPlugins();
 
                 LoadTestAssembly();
+
+                ExtractFeatures();
 
                 InitializeWebDriver();
 
@@ -125,6 +135,55 @@ namespace YellowJacket.Core.Engine
         #endregion Public Methods
 
         #region Private Methods
+
+        private void ExtractFeatures()
+        {
+            _configuration.Features.ForEach(x =>
+            {
+                _gherkinManager.ExtractFeature(_testAssembly, x, Path.Combine(_tempFolder, "Features"));
+            });
+        }
+
+        private void InitializeFileSystem()
+        {
+            _tempFolder = Path.Combine(Path.GetTempPath(), "YellowJacket");
+
+            if (Directory.Exists(_tempFolder))
+                DeleteDirectory(_tempFolder, true);
+        }
+
+        public void DeleteDirectory(string path, bool recursive)
+        {
+            if (recursive)
+            {
+                var subfolders = Directory.GetDirectories(path);
+                foreach (var s in subfolders)
+                {
+                    DeleteDirectory(s, recursive);
+                }
+            }
+            var files = Directory.GetFiles(path);
+            foreach (var f in files)
+            {
+                try
+                {
+                    var attr = File.GetAttributes(f);
+                    if ((attr & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
+                    {
+                        File.SetAttributes(f, attr ^ FileAttributes.ReadOnly);
+                    }
+                    File.Delete(f);
+                }
+                catch (IOException)
+                {
+                    //IOErrorOnDelete = true;
+                }
+            }
+
+            // At this point, all the files and sub-folders have been deleted.
+            // So we delete the empty folder using the OOTB Directory.Delete method.
+            Directory.Delete(path);
+        }
 
         private void InitializeWebDriver()
         {
@@ -184,6 +243,10 @@ namespace YellowJacket.Core.Engine
         /// </summary>
         private void ExecuteFeatures()
         {
+            //GherkinManager gherkinManager = new GherkinManager();
+
+            //gherkinManager.ExtractFeature();
+
             TestPackage testPackage = NUnitEngineHelper.CreateTestPackage(new List<string> { _configuration.TestAssemblyFullName });
 
             TestFilter testFilter = NUnitEngineHelper.CreateTestFilter(_testAssembly, _configuration.Features);

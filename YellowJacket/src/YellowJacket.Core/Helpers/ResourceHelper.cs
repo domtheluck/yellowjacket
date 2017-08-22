@@ -33,102 +33,92 @@ namespace YellowJacket.Core.Helpers
     /// </summary>
     public class ResourceHelper
     {
-        /// <summary>
-        /// Gets the embeded resources.
-        /// </summary>
-        /// <typeparam name="TAssembly">The type of the assembly.</typeparam>
-        /// <param name="predicate">The predicate.</param>
-        /// <returns><see cref="IEnumerable{String}"/>.</returns>
-        /// <exception cref="ArgumentNullException">predicate.</exception>
-        public static IEnumerable<string> GetEmbededResources<TAssembly>(Func<string, bool> predicate)
+        public IEnumerable<string> GetEmbededResources(Assembly assembly, Func<string, bool> predicate)
         {
-            if (predicate == null)
-                throw new ArgumentNullException(nameof(predicate));
+                if (predicate == null)
+                    throw new ArgumentNullException(nameof(predicate));
 
-            return
-                GetEmbededResourceNames<TAssembly>()
-                    .Where(predicate)
-                    .Select(name => ReadEmbededResource(typeof(TAssembly), name))
-                    .Where(x => !string.IsNullOrEmpty(x));
+                return
+                    GetEmbededResourceNames(assembly)
+                        .Where(predicate)
+                        .Select(name => ReadEmbededResource(assembly, name))
+                        .Where(x => !string.IsNullOrEmpty(x));
         }
 
         /// <summary>
         /// Gets the embeded resource names.
         /// </summary>
-        /// <typeparam name="TAssembly">The type of the assembly.</typeparam>
-        /// <returns><see cref="IEnumerable{String}"/>.</returns>
-        public static IEnumerable<string> GetEmbededResourceNames<TAssembly>()
+        /// <param name="assembly">The assembly.</param>
+        /// <returns>
+        ///   <see cref="IEnumerable{String}" />.
+        /// </returns>
+        public IEnumerable<string> GetEmbededResourceNames(Assembly assembly)
         {
-            Assembly assembly = Assembly.GetAssembly(typeof(TAssembly));
-
             return assembly.GetManifestResourceNames();
         }
 
-        /// <summary>
-        /// Gets the embeded resource.
-        /// </summary>
-        /// <typeparam name="TAssembly">The type of the assembly.</typeparam>
-        /// <typeparam name="TNamespace">The type of the namespace.</typeparam>
-        /// <param name="name">The name.</param>
-        /// <returns>The embeded resource.</returns>
-        /// <exception cref="ArgumentNullException">name</exception>
-        public static string GetEmbededResource<TAssembly, TNamespace>(string name)
-        {
-            if (string.IsNullOrEmpty(name))
-                throw new ArgumentNullException(nameof(name));
+        ///// <summary>
+        ///// Gets the embeded resource.
+        ///// </summary>
+        ///// <typeparam name="TAssembly">The type of the assembly.</typeparam>
+        ///// <typeparam name="TNamespace">The type of the namespace.</typeparam>
+        ///// <param name="name">The name.</param>
+        ///// <returns>The embeded resource.</returns>
+        ///// <exception cref="ArgumentNullException">name</exception>
+        //public static string GetEmbededResource<TAssembly, TNamespace>(string name)
+        //{
+        //    if (string.IsNullOrEmpty(name))
+        //        throw new ArgumentNullException(nameof(name));
 
-            return ReadEmbededResource(typeof(TAssembly), typeof(TNamespace), name);
-        }
+        //    return ReadEmbededResource(typeof(TAssembly), typeof(TNamespace), name);
+        //}
+
+        ///// <summary>
+        ///// Reads the embeded resource.
+        ///// </summary>
+        ///// <param name="assemblyType">Type of the assembly.</param>
+        ///// <param name="namespaceType">Type of the namespace.</param>
+        ///// <param name="name">The name.</param>
+        ///// <returns>The embeded resource.</returns>
+        ///// <exception cref="ArgumentNullException">
+        ///// assemblyType
+        ///// or
+        ///// namespaceType
+        ///// or
+        ///// name
+        ///// </exception>
+        //public static string ReadEmbededResource(Type assemblyType, Type namespaceType, string name)
+        //{
+        //    if (assemblyType == null)
+        //        throw new ArgumentNullException(nameof(assemblyType));
+
+        //    if (namespaceType == null)
+        //        throw new ArgumentNullException(nameof(namespaceType));
+
+        //    if (string.IsNullOrEmpty(name))
+        //        throw new ArgumentNullException(nameof(name));
+
+        //    return ReadEmbededResource(assemblyType, $"{namespaceType.Namespace}.{name}");
+        //}
 
         /// <summary>
         /// Reads the embeded resource.
         /// </summary>
-        /// <param name="assemblyType">Type of the assembly.</param>
-        /// <param name="namespaceType">Type of the namespace.</param>
+        /// <param name="assembly">The assembly.</param>
         /// <param name="name">The name.</param>
-        /// <returns>The embeded resource.</returns>
-        /// <exception cref="ArgumentNullException">
-        /// assemblyType
+        /// <returns>
+        /// The embeded resource.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">assemblyType
         /// or
-        /// namespaceType
-        /// or
-        /// name
-        /// </exception>
-        public static string ReadEmbededResource(Type assemblyType, Type namespaceType, string name)
+        /// name</exception>
+        public string ReadEmbededResource(Assembly assembly, string name)
         {
-            if (assemblyType == null)
-                throw new ArgumentNullException(nameof(assemblyType));
-
-            if (namespaceType == null)
-                throw new ArgumentNullException(nameof(namespaceType));
+            if (assembly == null)
+                throw new ArgumentNullException(nameof(assembly));
 
             if (string.IsNullOrEmpty(name))
                 throw new ArgumentNullException(nameof(name));
-
-            return ReadEmbededResource(assemblyType, $"{namespaceType.Namespace}.{name}");
-        }
-
-        /// <summary>
-        /// Reads the embeded resource.
-        /// </summary>
-        /// <param name="assemblyType">Type of the assembly.</param>
-        /// <param name="name">The name.</param>
-        /// <returns>The embeded resource.</returns>
-        /// <exception cref="ArgumentNullException">
-        /// assemblyType
-        /// or
-        /// name
-        /// </exception>
-        public static string ReadEmbededResource(Type assemblyType, string name)
-        {
-            if (assemblyType == null)
-                throw new ArgumentNullException(nameof(assemblyType));
-
-            if (string.IsNullOrEmpty(name))
-                throw new ArgumentNullException(nameof(name));
-
-
-            Assembly assembly = Assembly.GetAssembly(assemblyType);
 
             using (Stream resourceStream = assembly.GetManifestResourceStream(name))
             {
