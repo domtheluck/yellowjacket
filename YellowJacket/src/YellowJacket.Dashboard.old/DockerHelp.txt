@@ -1,0 +1,41 @@
+﻿Remove all images: 
+	docker rmi $(docker images -a -q)
+
+List container:
+	docker ps -a
+
+List images:
+	docker images
+
+Run a container from an image:
+	docker run -it imagename /bin/bash
+
+	- the -i tells docker to attach stdin to the container
+    - the -t tells docker to give us a pseudo-terminal
+    - /bin/bash will run a terminal process in your container
+
+Commit an image:
+	docker commit containerid newimagename
+
+	ex: docker commit 4234SDSD331 domtheluck/aspnetcore-node
+
+Build a docker image containing the application:
+	docker build bin\Debug\netcoreapp1.1\publish -t imagename
+
+	ex: docker build bin\Debug\netcoreapp1.1\publish -t yellowjacket
+
+Start a container:
+	docker run -it --name containername -d -p 85:80 imaginename
+
+	ex: docker run -it --name linuxcontainer -d -p 85:80 yellowjacket	
+
+Stop a container:
+	docker stop containername
+
+Stop all container:
+	docker stop $(docker ps -a -q)
+
+Remove all containers
+	docker rm $(docker ps -a -q)
+
+
