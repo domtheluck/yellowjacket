@@ -25,6 +25,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YellowJacket.Dashboard.old"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YellowJacket.Dashboard.old2", "src\YellowJacket.Dashboard.old2\YellowJacket.Dashboard.old2.csproj", "{C382C08C-0B43-4553-96A0-4403D8D3A46E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YellowJacket.Dashboard", "src\YellowJacket.Dashboard\YellowJacket.Dashboard.csproj", "{405A0E31-C829-4C30-AA59-711CE2869283}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -61,9 +63,12 @@ Global
 		{2F3BE132-1521-48B9-BBB1-0741C210846C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2F3BE132-1521-48B9-BBB1-0741C210846C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C382C08C-0B43-4553-96A0-4403D8D3A46E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C382C08C-0B43-4553-96A0-4403D8D3A46E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C382C08C-0B43-4553-96A0-4403D8D3A46E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C382C08C-0B43-4553-96A0-4403D8D3A46E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{405A0E31-C829-4C30-AA59-711CE2869283}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{405A0E31-C829-4C30-AA59-711CE2869283}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{405A0E31-C829-4C30-AA59-711CE2869283}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{405A0E31-C829-4C30-AA59-711CE2869283}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -77,6 +82,7 @@ Global
 		{F944458C-6CFD-4958-AC3B-65FCCBAC5DF0} = {9B17E28E-6960-4C5F-B3D1-6C5301711854}
 		{2F3BE132-1521-48B9-BBB1-0741C210846C} = {AA56D832-3C1B-44C1-9F68-02428AE74F4A}
 		{C382C08C-0B43-4553-96A0-4403D8D3A46E} = {AA56D832-3C1B-44C1-9F68-02428AE74F4A}
+		{405A0E31-C829-4C30-AA59-711CE2869283} = {AA56D832-3C1B-44C1-9F68-02428AE74F4A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {34634A09-3B1F-4151-A9D0-B76AF2AB8973}
