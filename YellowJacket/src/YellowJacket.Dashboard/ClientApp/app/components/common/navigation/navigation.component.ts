@@ -1,18 +1,15 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
-declare var jQuery: any;
-import * as $ from 'jquery';
-
 @Component({
     selector: 'navigation',
     templateUrl: 'navigation.template.html'
 })
 
 export class NavigationComponent {
-    constructor(private router: Router) { }
+    constructor(private readonly router: Router) { }
 
-    activeRoute(routename: string): boolean {
+    public activeRoute(routename: string): boolean {
         return this.router.url.indexOf(routename) > -1;
     }
 }

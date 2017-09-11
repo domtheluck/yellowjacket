@@ -12,8 +12,8 @@ import IAgent from '../../models/agent.model'
 
 })
 export class AgentListComponent {
-    agentService: IAgentService;
-    agents: Observable<IAgent[]>;
+    public agentService: IAgentService;
+    public agents: Observable<IAgent[]>;
 
     constructor( @Inject('IAgentService') agentService: IAgentService) {
         this.agentService = agentService;

@@ -24,13 +24,21 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="ClientApp\app\components\agent\agentAdd.component.ts" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Entities\JobInstanceResult\" />
     <Folder Include="Entities\JobInstance\" />
   </ItemGroup>
 
   <ItemGroup>
     <TypeScriptCompile Include="ClientApp\app\components\agent\agent.module.ts" />
+    <TypeScriptCompile Include="ClientApp\app\components\job\job.module.ts" />
+    <TypeScriptCompile Include="ClientApp\app\components\job\jobAdd.component.ts" />
+    <TypeScriptCompile Include="ClientApp\app\models\job.model.ts" />
     <TypeScriptCompile Include="ClientApp\app\models\agent.model.ts" />
+    <TypeScriptCompile Include="ClientApp\app\services\job.service.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\agent.service.ts" />
   </ItemGroup>
 
