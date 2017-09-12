@@ -9,7 +9,8 @@ import 'rxjs/add/observable/throw';
 import IJob from '../models/job.model'
 
 export interface IJobService {
-    getAll(): Observable<IJob[]>
+    getAll(): Observable<IJob[]>,
+    add(job: IJob): Observable<IJob>;
 }
 
 @Injectable()
@@ -21,7 +22,11 @@ export class JobService implements IJobService {
         this.http = http;
         this.baseUrl = baseUrl;
     }
-    
+
+    public add(job: IJob): Observable<IJob> {
+         throw new Error('Not implemented');
+    }
+
     public getAll(): Observable<IJob[]> {
         const agent$ = this.http
             .get(`${this.baseUrl}api/v1/job`, { headers: this.getHeaders() })

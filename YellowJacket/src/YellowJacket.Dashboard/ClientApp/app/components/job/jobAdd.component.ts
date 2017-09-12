@@ -14,10 +14,12 @@ import IJob from '../../models/job.model'
 
 })
 export class JobAddComponent implements OnInit {
-    public jobService: IJobService;
+    private readonly jobService: IJobService;
 
-    public jobAddForm: FormGroup;
-    public name: FormControl;
+    private job: IJob;
+
+    private jobAddForm: FormGroup;
+    private name: FormControl;
 
     constructor( @Inject('IJobService') agentService: IJobService) {
         this.jobService = agentService;
@@ -28,22 +30,37 @@ export class JobAddComponent implements OnInit {
         this.createForm();
     }
 
-    public onSubmit() {
+    private onSubmit() {
         console.log(JSON.stringify(this.jobAddForm.value));
+
+        this.job = this.prepareJob();
+
+        this.jobService.add(this.job).subscribe();
 
         //this.hero = this.prepareSaveHero();
         //this.heroService.updateHero(this.hero).subscribe(/* error handling */);
         //this.ngOnChanges();
     }
 
-    public createFormControls() {
+    private createFormControls() {
         this.name = new FormControl('', Validators.required);
     }
 
-    public createForm() {
+    private createForm() {
         this.jobAddForm = new FormGroup({
             name: this.name
         });
+    }
+
+    private prepareJob() {
+        const formModel = this.jobAddForm.value;    
+
+        const job: IJob = {
+            id: 'add',
+            name: formModel.name as string
+        };
+
+        return job;
     }
 
     //public ngOnInit() {
