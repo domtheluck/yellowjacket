@@ -23,23 +23,32 @@
 
 using AutoMapper;
 using YellowJacket.Dashboard.Entities.Agent;
+using YellowJacket.Dashboard.Entities.Job;
 using YellowJacket.Dashboard.Models.Agent;
+using YellowJacket.Dashboard.Models.Job;
 
 namespace YellowJacket.Dashboard.Mapping
 {
-    public class MappingProfile: Profile
+  /// <summary>
+  /// Initialize the different mapping profiles.
+  /// </summary>
+  /// <seealso cref="AutoMapper.Profile" />
+  public class MappingProfile : Profile
+  {
+    #region Constructors
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="MappingProfile"/> class.
+    /// </summary>
+    public MappingProfile()
     {
-        #region Constructors
+      CreateMap<AgentEntity, AgentModel>();
+      CreateMap<AgentModel, AgentEntity>();
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MappingProfile"/> class.
-        /// </summary>
-        public MappingProfile()
-        {
-            CreateMap<AgentModel, AgentEntity>();
-            CreateMap<AgentEntity, AgentModel>();
-        }
-
-        #endregion
+      CreateMap<JobEntity, JobModel>();
+      CreateMap<JobModel, JobEntity>();
     }
+
+    #endregion
+  }
 }

@@ -10,6 +10,7 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="6.1.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="3.0.1" />
+    <PackageReference Include="FluentValidation.AspNetCore" Version="7.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="1.0.0" />
   </ItemGroup>
@@ -30,6 +31,7 @@
   <ItemGroup>
     <Folder Include="Entities\JobInstanceResult\" />
     <Folder Include="Entities\JobInstance\" />
+    <Folder Include="Validators\" />
   </ItemGroup>
 
   <ItemGroup>

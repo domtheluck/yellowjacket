@@ -14,7 +14,8 @@
                             <label for="name" sr-only>Name</label>
                             <input type="text" class="form-control" id="name" formControlName="name" required>
                             <i *ngIf="name.errors && (name.dirty || name.touched)" class="glyphicon glyphicon-remove form-control-feedback"></i>
-                            <span *ngIf="name.errors && (name.dirty || name.touched)" class="help-block has-error">The Name is required.</span>
+                            <span *ngIf="name.errors && (name.dirty || name.touched) && name.errors.required" class="help-block has-error">The Name is required.</span>
+                            <span *ngIf="name.errors && (name.dirty || name.touched) && name.errors.maxlength" class="help-block has-error">The Name must contains a maximum of 25 characters.</span>
                         </div>
 
                         <div class="form-group">

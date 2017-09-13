@@ -26,19 +26,19 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using YellowJacket.Dashboard.Entities.Agent;
+using YellowJacket.Dashboard.Entities.Job;
+using YellowJacket.Dashboard.Models.Job;
 using YellowJacket.Dashboard.Repositories.Interfaces;
-using YellowJacket.Dashboard.Models.Agent;
 
 namespace YellowJacket.Dashboard.Controllers.Api
 {
     [Produces("application/json")]
-    [Route("api/v1/agent")]
-    public class AgentController : BaseController
+    [Route("api/v1/job")]
+    public class JobController : BaseController
     {
         #region Private Members
 
-        private readonly IAgentRepository _agentRepository;
+        private readonly IJobRepository _jobRepository;
 
         private readonly IMapper _mapper;
 
@@ -47,31 +47,31 @@ namespace YellowJacket.Dashboard.Controllers.Api
         #region Constructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AgentController"/> class.
+        /// Initializes a new instance of the <see cref="JobController"/> class.
         /// </summary>
         /// <param name="mapper">The mapper.</param>
-        /// <param name="agentRepository">The agent repository.</param>
-        public AgentController(IMapper mapper, IAgentRepository agentRepository)
+        /// <param name="jobRepository">The job repository.</param>
+        public JobController(IMapper mapper, IJobRepository jobRepository)
         {
             _mapper = mapper;
-            _agentRepository = agentRepository;
+            _jobRepository = jobRepository;
         }
 
         #endregion
 
         #region Public Methods
 
-        [HttpGet("{id}", Name = "GetAgentById")]
+        [HttpGet("{id}", Name = "GetJobById")]
         public async Task<IActionResult> Get(string id)
         {
             try
             {
-                AgentEntity entity = await _agentRepository.Find(id);
+                JobEntity entity = await _jobRepository.Find(id);
 
                 if (entity == null)
                     return StatusCode(404);
 
-                return Ok(_mapper.Map<AgentEntity, AgentModel>(entity));
+                return Ok(_mapper.Map<JobEntity, JobModel>(entity));
             }
             catch (Exception ex)
             {
@@ -81,12 +81,12 @@ namespace YellowJacket.Dashboard.Controllers.Api
             }
         }
 
-        [HttpGet(Name="GetAllAgents")]
+        [HttpGet(Name="GetAllJobs")]
         public async Task<IActionResult> GetAll()
         {
             try
             {
-                return Ok(_mapper.Map<IEnumerable<AgentEntity>, IEnumerable<AgentModel>>(await _agentRepository.GetAll()));
+                return Ok(_mapper.Map<IEnumerable<JobEntity>, IEnumerable<JobModel>>(await _jobRepository.GetAll()));
             }
             catch (Exception ex)
             {
@@ -96,14 +96,14 @@ namespace YellowJacket.Dashboard.Controllers.Api
             }
         }
 
-        [HttpPut("{id}", Name = "PutAgent")]
-        public async Task<IActionResult> Put(string id, [FromBody] AgentModel model)
+        [HttpPut("{id}", Name="PutJob")]
+        public async Task<IActionResult> Put(string id, [FromBody] JobModel model)
         {
             try
             {
-                AgentEntity entity = await _agentRepository.Update(_mapper.Map<AgentModel, AgentEntity>(model));
+                JobEntity entity = await _jobRepository.Update(_mapper.Map<JobModel, JobEntity>(model));
 
-                return Ok(_mapper.Map<AgentEntity, AgentModel>(entity));
+                return Ok(_mapper.Map<JobEntity, JobModel>(entity));
             }
             catch (Exception ex)
             {
@@ -113,22 +113,22 @@ namespace YellowJacket.Dashboard.Controllers.Api
             }
         }
 
-        [HttpPost(Name = "PostAgent")]
-        public async Task<IActionResult> Post([FromBody]AgentModel model)
+        [HttpPost(Name="PostJob")]
+        public async Task<IActionResult> Post([FromBody]JobModel model)
         {
             try
             {
-                AgentEntity entity = await _agentRepository.Find(model.Id);
+              JobEntity entity = await _jobRepository.Find(model.Id);
 
                 if (entity != null)
-                    await _agentRepository.Remove(entity.Id);
+                    await _jobRepository.Remove(entity.Id);
 
-                entity = await _agentRepository.Add(_mapper.Map<AgentModel, AgentEntity>(model));
+                entity = await _jobRepository.Add(_mapper.Map<JobModel, JobEntity>(model));
 
                 return CreatedAtRoute(
                     "Get",
                     new { id = entity.Id },
-                    _mapper.Map<AgentEntity, AgentModel>(entity));
+                    _mapper.Map<JobEntity, JobModel>(entity));
             }
             catch (Exception ex)
             {

@@ -1,6 +1,5 @@
 ﻿import { Component, Inject, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-//import { ReactiveFormsModule, FormsModule, FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 import { IJobService, JobService } from '../../services/job.service'
@@ -30,6 +29,10 @@ export class JobAddComponent implements OnInit {
         this.createForm();
     }
 
+    public ngOnChanges() {
+        
+    }
+
     private onSubmit() {
         console.log(JSON.stringify(this.jobAddForm.value));
 
@@ -37,13 +40,14 @@ export class JobAddComponent implements OnInit {
 
         this.jobService.add(this.job).subscribe();
 
-        //this.hero = this.prepareSaveHero();
-        //this.heroService.updateHero(this.hero).subscribe(/* error handling */);
-        //this.ngOnChanges();
+        this.ngOnChanges();
     }
 
     private createFormControls() {
-        this.name = new FormControl('', Validators.required);
+        this.name = new FormControl('', [
+            Validators.required,
+            Validators.maxLength(25)
+            ]);
     }
 
     private createForm() {

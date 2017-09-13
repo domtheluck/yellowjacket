@@ -21,30 +21,31 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace YellowJacket.Dashboard.Entities.Job
+namespace YellowJacket.Dashboard.Models.Job
 {
-  public class JobEntity
-  {
     /// <summary>
-    /// Gets or sets the id.
+    /// Represents  Job model.
     /// </summary>
-    /// <value>
-    /// The id.
-    /// </value>
-    [Key]
-    [DatabaseGenerated( DatabaseGeneratedOption.Identity )]
-    public string Id { get; set; }
+    public class JobModel
+    {
+        #region Properties
 
-    /// <summary>
-    /// Gets or sets the name.
-    /// </summary>
-    /// <value>
-    /// The name.
-    /// </value>
-    [Required]
-    public string Name { get; set; }
-  }
+        /// <summary>
+        /// Gets or sets the id.
+        /// </summary>
+        /// <value>
+        /// The id.
+        /// </value>
+        public string Id { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name.
+        /// </summary>
+        /// <value>
+        /// The name.
+        /// </value>
+        public string Name { get; set; }
+
+        #endregion
+    }
 }
