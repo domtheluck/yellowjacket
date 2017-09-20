@@ -5,15 +5,6 @@ import { Subject } from 'rxjs/Subject';
 
 import { Notification, NotificationType } from '../models/notification.model';
 
-//export interface INotificationService {
-//    getNotification(): Observable<any>,
-//    success(message: string, keepAfterRouteChange: boolean): void;
-//    error(message: string, keepAfterRouteChange: boolean): void;
-//    info(message: string, keepAfterRouteChange: boolean): void;
-//    warning(message: string, keepAfterRouteChange: boolean): void;
-//    success(message: string, keepAfterRouteChange: boolean): void;
-//}
-
 @Injectable()
 export class NotificationService {
     private subject = new Subject<Notification>();
