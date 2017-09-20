@@ -16,7 +16,7 @@ export interface IJobService {
 @Injectable()
 export class JobService implements IJobService {
     private readonly http: Http;
-    private readonly baseUrl: string;    
+    private readonly baseUrl: string;
 
     constructor(http: Http, @Inject('BASE_URL') baseUrl: string) {
         this.http = http;
@@ -24,15 +24,19 @@ export class JobService implements IJobService {
     }
 
     public add(job: IJob): Observable<IJob> {
-         throw new Error('Not implemented');
+        const agent$ = this.http
+            .post(`${this.baseUrl}api/v1/job`, job, { headers: this.getHeaders() })
+            .map(this.toJob);
+
+        return agent$;
     }
 
     public getAll(): Observable<IJob[]> {
-        const agent$ = this.http
+        const agents$ = this.http
             .get(`${this.baseUrl}api/v1/job`, { headers: this.getHeaders() })
             .map(this.mapJobs);
 
-        return agent$;
+        return agents$;
     }
 
     private getHeaders() {

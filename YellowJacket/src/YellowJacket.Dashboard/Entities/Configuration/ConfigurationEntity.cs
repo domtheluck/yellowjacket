@@ -21,34 +21,30 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using AutoMapper;
-using YellowJacket.Dashboard.Entities.Agent;
-using YellowJacket.Dashboard.Entities.Job;
-using YellowJacket.Dashboard.Models.Agent;
-using YellowJacket.Dashboard.Models.Job;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace YellowJacket.Dashboard.Mapping
+namespace YellowJacket.Dashboard.Entities.Job
 {
-  /// <summary>
-  /// Initialize the different mapping profiles.
-  /// </summary>
-  /// <seealso cref="Profile" />
-  public class MappingProfile : Profile
+  public class ConfigurationEntity
   {
-    #region Constructors
+    /// <summary>
+    /// Gets or sets the id.
+    /// </summary>
+    /// <value>
+    /// The id.
+    /// </value>
+    [Key]
+    [DatabaseGenerated( DatabaseGeneratedOption.Identity )]
+    public string Id { get; set; }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="MappingProfile"/> class.
+    /// Gets or sets the name.
     /// </summary>
-    public MappingProfile()
-    {
-      CreateMap<AgentEntity, AgentModel>();
-      CreateMap<AgentModel, AgentEntity>();
-
-      CreateMap<JobEntity, JobModel>();
-      CreateMap<JobModel, JobEntity>();
-    }
-
-    #endregion
+    /// <value>
+    /// The name.
+    /// </value>
+    [Required]
+    public string Name { get; set; }
   }
 }

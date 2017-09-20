@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
@@ -6,6 +6,9 @@ import { RouterModule } from '@angular/router';
 
 import { AgentModule } from './components/agent/agent.module';
 import { JobModule } from './components/job/job.module';
+
+import { NotificationService } from './services/notification.service';
+//import { NotificationComponent } from './components/common/notification/index';
 
 import { AppComponent } from './components/app/app.component';
 import { NavMenuComponent } from './components/navmenu/navmenu.component';
@@ -53,7 +56,11 @@ import { BasicLayoutComponent } from './components/common/layouts/basicLayout.co
         CommonModule,
         FormsModule,
         ReactiveFormsModule
-    ]
+    ],
+    providers: [
+        NotificationService
+    ],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 
 export class AppModuleShared { }

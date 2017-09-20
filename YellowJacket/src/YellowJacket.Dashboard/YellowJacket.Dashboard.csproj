@@ -26,22 +26,27 @@
 
   <ItemGroup>
     <None Remove="ClientApp\app\components\agent\agentAdd.component.ts" />
+    <None Remove="ClientApp\app\components\common\notification\notification.component.ts" />
+    <None Remove="ClientApp\app\models\notification.model.ts" />
+    <None Remove="ClientApp\app\services\notification.service.ts" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Entities\JobInstanceResult\" />
     <Folder Include="Entities\JobInstance\" />
-    <Folder Include="Validators\" />
   </ItemGroup>
 
   <ItemGroup>
     <TypeScriptCompile Include="ClientApp\app\components\agent\agent.module.ts" />
+    <TypeScriptCompile Include="ClientApp\app\components\common\notification\notification.component.ts" />
     <TypeScriptCompile Include="ClientApp\app\components\job\job.module.ts" />
     <TypeScriptCompile Include="ClientApp\app\components\job\jobAdd.component.ts" />
     <TypeScriptCompile Include="ClientApp\app\models\job.model.ts" />
     <TypeScriptCompile Include="ClientApp\app\models\agent.model.ts" />
+    <TypeScriptCompile Include="ClientApp\app\models\notification.model.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\job.service.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\agent.service.ts" />
+    <TypeScriptCompile Include="ClientApp\app\services\notification.service.ts" />
   </ItemGroup>
 
   <Target Name="DebugRunWebpack" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('wwwroot\dist') ">

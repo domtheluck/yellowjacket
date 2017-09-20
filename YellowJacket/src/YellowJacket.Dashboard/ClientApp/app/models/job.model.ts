@@ -1,5 +1,5 @@
 ﻿interface IJob {
-    id: string,
+    id?: string,
     name: string;
 }
 

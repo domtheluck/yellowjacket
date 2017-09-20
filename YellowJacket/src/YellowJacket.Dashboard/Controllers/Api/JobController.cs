@@ -25,10 +25,12 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using YellowJacket.Dashboard.Entities.Job;
 using YellowJacket.Dashboard.Models.Job;
 using YellowJacket.Dashboard.Repositories.Interfaces;
+using YellowJacket.Dashboard.Validators.Job;
 
 namespace YellowJacket.Dashboard.Controllers.Api
 {
@@ -81,7 +83,7 @@ namespace YellowJacket.Dashboard.Controllers.Api
             }
         }
 
-        [HttpGet(Name="GetAllJobs")]
+        [HttpGet(Name = "GetAllJobs")]
         public async Task<IActionResult> GetAll()
         {
             try
@@ -96,7 +98,7 @@ namespace YellowJacket.Dashboard.Controllers.Api
             }
         }
 
-        [HttpPut("{id}", Name="PutJob")]
+        [HttpPut("{id}", Name = "PutJob")]
         public async Task<IActionResult> Put(string id, [FromBody] JobModel model)
         {
             try
@@ -113,22 +115,23 @@ namespace YellowJacket.Dashboard.Controllers.Api
             }
         }
 
-        [HttpPost(Name="PostJob")]
+        [HttpPost(Name = "PostJob")]
         public async Task<IActionResult> Post([FromBody]JobModel model)
         {
             try
             {
-              JobEntity entity = await _jobRepository.Find(model.Id);
+                return StatusCode(400, "no no no");
 
-                if (entity != null)
-                    await _jobRepository.Remove(entity.Id);
+                JobValidator validator = new JobValidator();
+                ValidationResult results = validator.Validate(model);
 
-                entity = await _jobRepository.Add(_mapper.Map<JobModel, JobEntity>(model));
+                if (!results.IsValid)
+                    return StatusCode(400, model);
 
-                return CreatedAtRoute(
-                    "Get",
-                    new { id = entity.Id },
-                    _mapper.Map<JobEntity, JobModel>(entity));
+                JobEntity entity =
+                  await _jobRepository.Add(_mapper.Map<JobModel, JobEntity>(model));
+
+                return StatusCode(200, _mapper.Map<JobEntity, JobModel>(entity));
             }
             catch (Exception ex)
             {

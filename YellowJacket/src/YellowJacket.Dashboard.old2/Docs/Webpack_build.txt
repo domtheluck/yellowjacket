@@ -1,9 +1,0 @@
-﻿Development:
---------------------
-webpack --config webpack.config.vendor.js
-webpack --config webpack.config.js
-
-Production:
---------------------
-webpack --config webpack.config.vendor.js --env.prod
-webpack --config webpack.config.js --env.prod

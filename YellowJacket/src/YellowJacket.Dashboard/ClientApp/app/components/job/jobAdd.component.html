@@ -1,13 +1,15 @@
-<h1>Add Agent</h1>
+<h1>Add a job</h1>
 
-<p>Add an agent</p>
+<p>Use this form to add a new Job</p>
 
-<!--<p *ngIf="!agents"><em>Loading...</em></p>-->
-<div class="wrapper wrapper-content animated fadeInRight">
+<p *ngIf="!jobAddForm"><em>Loading...</em></p>
+<div class="wrapper wrapper-content">
+    <!--<div class="wrapper wrapper-content animated fadeInRight">-->
     <div class="row">
         <div class="col-lg-6">
             <div class="ibox">
                 <div class="ibox-title">
+                    <notification-component></notification-component>
                     <form novalidate [formGroup]="jobAddForm" (ngSubmit)="onSubmit()">
                         <div class="form-group has-feedback"
                              [ngClass]="{'has-error': name.invalid && (name.dirty || name.touched),'has-success': name.valid && (name.dirty || name.touched)}">

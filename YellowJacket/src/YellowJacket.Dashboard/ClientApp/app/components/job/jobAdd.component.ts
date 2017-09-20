@@ -1,27 +1,37 @@
 ﻿import { Component, Inject, OnInit } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
-import { IJobService, JobService } from '../../services/job.service'
+import { NotificationService } from '../../services/notification.service';
 
-import IJob from '../../models/job.model'
+import { IJobService, JobService } from '../../services/job.service';
+
+import IJob from '../../models/job.model';
 
 @Component({
     selector: 'jobAdd',
     templateUrl: './jobAdd.component.html',
-    providers: [{ provide: 'IJobService', useClass: JobService }]
-
+    providers: [
+        {
+            provide: 'IJobService',
+            useClass: JobService
+        },
+        {
+            provide: 'INotificationService',
+            useClass: NotificationService
+        }]
 })
 export class JobAddComponent implements OnInit {
     private readonly jobService: IJobService;
+    //private readonly notificationService: INotificationService;
 
     private job: IJob;
 
     private jobAddForm: FormGroup;
     private name: FormControl;
 
-    constructor( @Inject('IJobService') agentService: IJobService) {
+    constructor( @Inject('IJobService') agentService: IJobService, private notificationService: NotificationService) {
         this.jobService = agentService;
+        //this.notificationService = notificationService;
     }
 
     public ngOnInit(): void {
@@ -30,15 +40,25 @@ export class JobAddComponent implements OnInit {
     }
 
     public ngOnChanges() {
-        
+
     }
 
     private onSubmit() {
         console.log(JSON.stringify(this.jobAddForm.value));
 
+        this.notificationService.clear();
+
         this.job = this.prepareJob();
 
-        this.jobService.add(this.job).subscribe();
+        this.jobService.add(this.job)
+            .subscribe(result => {
+                console.log(JSON.stringify(result));
+                this.notificationService.success('TEST SUCCESS', true);
+            },
+            error => {
+                console.log(JSON.stringify(error));
+                this.notificationService.error('TEST ERROR', true);
+            });
 
         this.ngOnChanges();
     }
@@ -47,7 +67,7 @@ export class JobAddComponent implements OnInit {
         this.name = new FormControl('', [
             Validators.required,
             Validators.maxLength(25)
-            ]);
+        ]);
     }
 
     private createForm() {
@@ -57,33 +77,12 @@ export class JobAddComponent implements OnInit {
     }
 
     private prepareJob() {
-        const formModel = this.jobAddForm.value;    
+        const formModel = this.jobAddForm.value;
 
         const job: IJob = {
-            id: 'add',
             name: formModel.name as string
         };
 
         return job;
     }
-
-    //public ngOnInit() {
-    //    const myform = new FormGroup({
-    //        name: new FormGroup({
-    //            name: new FormControl('', [
-    //                Validators.required,
-    //                Validators.minLength(1),
-    //                Validators.maxLength(25)])
-    //        }),
-    //        email: new FormControl('', [
-    //            Validators.required,
-    //            Validators.pattern("[^ @]*@[^ @]*")
-    //        ]),
-    //        password: new FormControl('', [
-    //            Validators.minLength(8),
-    //            Validators.required
-    //        ]),
-    //        language: new FormControl()
-    //    });
-    //}
 }

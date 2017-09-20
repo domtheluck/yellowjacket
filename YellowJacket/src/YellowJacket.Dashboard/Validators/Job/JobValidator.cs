@@ -21,34 +21,21 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using AutoMapper;
-using YellowJacket.Dashboard.Entities.Agent;
-using YellowJacket.Dashboard.Entities.Job;
-using YellowJacket.Dashboard.Models.Agent;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using FluentValidation;
 using YellowJacket.Dashboard.Models.Job;
 
-namespace YellowJacket.Dashboard.Mapping
+namespace YellowJacket.Dashboard.Validators.Job
 {
-  /// <summary>
-  /// Initialize the different mapping profiles.
-  /// </summary>
-  /// <seealso cref="Profile" />
-  public class MappingProfile : Profile
+  public class JobValidator : AbstractValidator<JobModel>
   {
-    #region Constructors
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="MappingProfile"/> class.
-    /// </summary>
-    public MappingProfile()
+    public JobValidator()
     {
-      CreateMap<AgentEntity, AgentModel>();
-      CreateMap<AgentModel, AgentEntity>();
-
-      CreateMap<JobEntity, JobModel>();
-      CreateMap<JobModel, JobEntity>();
+      RuleFor( job => job.Name ).NotEmpty();
+      RuleFor( customer => customer.Name ).Length( 1, 25 );
     }
-
-    #endregion
   }
 }

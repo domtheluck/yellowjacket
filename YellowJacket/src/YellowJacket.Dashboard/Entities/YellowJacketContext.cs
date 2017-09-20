@@ -38,5 +38,7 @@ namespace YellowJacket.Dashboard.Entities
 
         public DbSet<JobEntity> Jobs { get; set; }
 
+        public DbSet<ConfigurationEntity> Configurations { get; set; }
+
     }
 }

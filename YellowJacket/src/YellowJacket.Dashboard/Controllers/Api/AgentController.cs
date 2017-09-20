@@ -126,7 +126,7 @@ namespace YellowJacket.Dashboard.Controllers.Api
                 entity = await _agentRepository.Add(_mapper.Map<AgentModel, AgentEntity>(model));
 
                 return CreatedAtRoute(
-                    "Get",
+                    "GetAgentById",
                     new { id = entity.Id },
                     _mapper.Map<AgentEntity, AgentModel>(entity));
             }
