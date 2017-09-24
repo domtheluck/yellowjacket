@@ -3,12 +3,12 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
+import { IboxtoolsModule } from '../../components/common/iboxtools/iboxtools.module';
+
 import { NotificationComponent } from '../common/notification/index';
 
 import { JobListComponent } from './jobList.component';
 import { JobAddComponent } from './jobAdd.component';
-
-import { IboxtoolsModule } from '../../components/common/iboxtools/iboxtools.module';
 
 @NgModule({
     declarations: [JobListComponent, JobAddComponent, NotificationComponent],
@@ -21,7 +21,7 @@ import { IboxtoolsModule } from '../../components/common/iboxtools/iboxtools.mod
     exports: [
         JobListComponent,
         JobAddComponent],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 
 export class JobModule { }

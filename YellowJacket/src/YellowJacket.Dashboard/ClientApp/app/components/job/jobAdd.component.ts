@@ -38,7 +38,7 @@ export class JobAddComponent implements OnInit {
     }
 
     /**
-     * Angular nbOnInit function.
+     * Angular ngOnInit function.
      */
     public ngOnInit(): void {
         this.createFormControls();
@@ -46,7 +46,7 @@ export class JobAddComponent implements OnInit {
     }
 
     /**
-     * Angular nbOnInit function.
+     * Angular ngOnChanges function.
      */
     public ngOnChanges() {
 
