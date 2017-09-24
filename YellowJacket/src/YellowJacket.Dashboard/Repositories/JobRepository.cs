@@ -25,7 +25,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using YellowJacket.Dashboard.Entities;
-using YellowJacket.Dashboard.Entities.Job;
 using YellowJacket.Dashboard.Repositories.Interfaces;
 
 namespace YellowJacket.Dashboard.Repositories

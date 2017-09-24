@@ -26,6 +26,7 @@ export class NotificationService {
         return this.subject.asObservable();
     }
 
+    
     public success(message: string, keepAfterRouteChange = false) {
         this.notification(NotificationType.Success, message, keepAfterRouteChange);
     }

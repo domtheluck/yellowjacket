@@ -33,12 +33,12 @@ using YellowJacket.Dashboard.Repositories.Interfaces;
 namespace YellowJacket.Dashboard.Controllers.Api
 {
     [Produces("application/json")]
-    [Route("api/v1/agent")]
-    public class AgentController : BaseController
+    [Route("api/v1/configuration")]
+    public class ConfigurationController : BaseController
     {
         #region Private Members
 
-        private readonly IAgentRepository _agentRepository;
+        private readonly IConfigurationRepository _configurationRepository;
 
         private readonly IMapper _mapper;
 
@@ -47,46 +47,31 @@ namespace YellowJacket.Dashboard.Controllers.Api
         #region Constructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AgentController"/> class.
+        /// Initializes a new instance of the <see cref="ConfigurationController"/> class.
         /// </summary>
         /// <param name="mapper">The mapper.</param>
-        /// <param name="agentRepository">The agent repository.</param>
-        public AgentController(IMapper mapper, IAgentRepository agentRepository)
+        /// <param name="configurationRepository">The configuration repository.</param>
+        public ConfigurationController(IMapper mapper, IConfigurationRepository configurationRepository)
         {
             _mapper = mapper;
-            _agentRepository = agentRepository;
+            _configurationRepository = configurationRepository;
         }
 
         #endregion
 
         #region Public Methods
 
-        [HttpGet("{id}", Name = "GetAgentById")]
-        public async Task<IActionResult> Get(string id)
+        [HttpGet(Name = "GetConfiguration")]
+        public async Task<IActionResult> Get()
         {
             try
             {
-                AgentEntity entity = await _agentRepository.Find(id);
+                ConfigurationEntity entity = await _configurationRepository.Get();
 
                 if (entity == null)
                     return StatusCode(404);
 
-                return Ok(_mapper.Map<AgentEntity, AgentModel>(entity));
-            }
-            catch (Exception ex)
-            {
-                HandleError(ex);
-
-                return StatusCode(500, id);
-            }
-        }
-
-        [HttpGet(Name="GetAllAgents")]
-        public async Task<IActionResult> GetAll()
-        {
-            try
-            {
-                return Ok(_mapper.Map<IEnumerable<AgentEntity>, IEnumerable<AgentModel>>(await _agentRepository.GetAll()));
+                return Ok(_mapper.Map<ConfigurationEntity, ConfigurationModel>(entity));
             }
             catch (Exception ex)
             {
@@ -96,39 +81,15 @@ namespace YellowJacket.Dashboard.Controllers.Api
             }
         }
 
-        [HttpPut("{id}", Name = "PutAgent")]
-        public async Task<IActionResult> Put(string id, [FromBody] AgentModel model)
+        [HttpPut("{id}", Name = "PutConfiguration")]
+        public async Task<IActionResult> Put(string id, [FromBody] ConfigurationModel model)
         {
             try
             {
-                AgentEntity entity = await _agentRepository.Update(_mapper.Map<AgentModel, AgentEntity>(model));
+                ConfigurationEntity entity = 
+                    await _configurationRepository.Update(_mapper.Map<ConfigurationModel, ConfigurationEntity>(model));
 
-                return Ok(_mapper.Map<AgentEntity, AgentModel>(entity));
-            }
-            catch (Exception ex)
-            {
-                HandleError(ex);
-
-                return StatusCode(500, model);
-            }
-        }
-
-        [HttpPost(Name = "PostAgent")]
-        public async Task<IActionResult> Post([FromBody]AgentModel model)
-        {
-            try
-            {
-                AgentEntity entity = await _agentRepository.Find(model.Id);
-
-                if (entity != null)
-                    await _agentRepository.Remove(entity.Id);
-
-                entity = await _agentRepository.Add(_mapper.Map<AgentModel, AgentEntity>(model));
-
-                return CreatedAtRoute(
-                    "GetAgentById",
-                    new { id = entity.Id },
-                    _mapper.Map<AgentEntity, AgentModel>(entity));
+                return Ok(_mapper.Map<ConfigurationEntity, ConfigurationModel>(entity));
             }
             catch (Exception ex)
             {

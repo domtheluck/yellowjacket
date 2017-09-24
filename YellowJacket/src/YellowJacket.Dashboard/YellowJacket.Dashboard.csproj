@@ -32,11 +32,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Entities\JobInstanceResult\" />
-    <Folder Include="Entities\JobInstance\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <TypeScriptCompile Include="ClientApp\app\components\agent\agent.module.ts" />
     <TypeScriptCompile Include="ClientApp\app\components\common\notification\notification.component.ts" />
     <TypeScriptCompile Include="ClientApp\app\components\job\job.module.ts" />

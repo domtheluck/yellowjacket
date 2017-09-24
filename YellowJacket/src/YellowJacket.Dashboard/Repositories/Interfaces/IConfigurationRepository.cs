@@ -21,57 +21,24 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
+using System.Threading.Tasks;
+using YellowJacket.Dashboard.Entities;
 
-namespace YellowJacket.Dashboard.Models.Agent
+namespace YellowJacket.Dashboard.Repositories.Interfaces
 {
-    /// <summary>
-    /// Represents an Agent model.
-    /// </summary>
-    public class AgentModel
+    public interface IConfigurationRepository
     {
-        #region Properties
+        /// <summary>
+        /// Gets the configuration.
+        /// </summary>
+        /// <returns><see cref="ConfigurationEntity"/>.</returns>
+        Task<ConfigurationEntity> Get();
 
         /// <summary>
-        /// Gets or sets the id.
+        /// Updates the specified configuration.
         /// </summary>
-        /// <value>
-        /// The id.
-        /// </value>
-        public string Id { get; set; }
-
-        /// <summary>
-        /// Gets or sets the name.
-        /// </summary>
-        /// <value>
-        /// The name.
-        /// </value>
-        public string Name { get; set; }
-
-        /// <summary>
-        /// Gets or sets the status.
-        /// </summary>
-        /// <value>
-        /// The status.
-        /// </value>
-        public string Status { get; set; }
-
-        /// <summary>
-        /// Gets or sets the last update date time.
-        /// </summary>
-        /// <value>
-        /// The last update date time.
-        /// </value>
-        public DateTime LastUpdateOn { get; set; }
-
-        /// <summary>
-        /// Gets or sets the registration date time.
-        /// </summary>
-        /// <value>
-        /// The registration date time.
-        /// </value>
-        public DateTime RegisteredOn { get; set; }
-
-        #endregion
+        /// <param name="configuration">The configuration.</param>
+        /// <returns><see cref="ConfigurationEntity"/>.</returns>
+        Task<ConfigurationEntity> Update(ConfigurationEntity configuration);
     }
 }

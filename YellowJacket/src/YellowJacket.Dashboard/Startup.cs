@@ -12,72 +12,73 @@ using YellowJacket.Dashboard.Repositories.Interfaces;
 
 namespace YellowJacket.Dashboard
 {
-  public class Startup
-  {
-    public Startup( IConfiguration configuration )
+    public class Startup
     {
-      Configuration = configuration;
-    }
-
-    public IConfiguration Configuration { get; }
-
-    // This method gets called by the runtime. Use this method to add services to the container.
-    public void ConfigureServices( IServiceCollection services )
-    {
-      services.AddDbContext<YellowJacketContext>( opt => opt.UseInMemoryDatabase( "TEST" ) );
-
-      services.AddMvc();
-      services.AddAutoMapper();
-
-      services.AddSwaggerGen( c =>
-       {
-         c.SwaggerDoc( "v1", new Info { Title = "YellowJacket API V1", Version = "v1" } );
-       } );
-
-      services.AddScoped<IAgentRepository, AgentRepository>();
-      services.AddScoped<IJobRepository, JobRepository>();
-    }
-
-    // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    public void Configure( IApplicationBuilder app, IHostingEnvironment env )
-    {
-      if ( env.IsDevelopment() )
-      {
-        app.UseDeveloperExceptionPage();
-        app.UseWebpackDevMiddleware( new WebpackDevMiddlewareOptions
+        public Startup(IConfiguration configuration)
         {
-          HotModuleReplacement = true
-        } );
-      }
-      else
-      {
-        app.UseExceptionHandler( "/Home/Error" );
-      }
+            Configuration = configuration;
+        }
 
-      // need to configure Swagger before MVC because it caused some interferences with the react-rooter routes.
-      app.UseSwagger();
+        public IConfiguration Configuration { get; }
 
-      app.UseSwaggerUI( c =>
-       {
-         c.SwaggerEndpoint( "/swagger/v1/swagger.json", "My API V1" );
-       } );
+        // This method gets called by the runtime. Use this method to add services to the container.
+        public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddDbContext<YellowJacketContext>(opt => opt.UseInMemoryDatabase("TEST"));
 
-      app.UseStaticFiles();
+            services.AddMvc();
+            services.AddAutoMapper();
 
-      app.UseMvc( routes =>
-       {
-         routes.MapRoute(
-                  name: "default",
-                  template: "{controller=Home}/{action=Index}/{id?}" );
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info { Title = "YellowJacket API V1", Version = "v1" });
+            });
 
-         routes.MapRoute(
-                  name: "swagger",
-                  template: "swagger/" );
+            services.AddScoped<IConfigurationRepository, ConfigurationRepository>();
+            services.AddScoped<IAgentRepository, AgentRepository>();
+            services.AddScoped<IJobRepository, JobRepository>();
+        }
 
-         routes.MapSpaFallbackRoute(
-                  name: "spa-fallback",
-                  defaults: new { controller = "Home", action = "Index" } );
-       } );
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        {
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+                app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
+                {
+                    HotModuleReplacement = true
+                });
+            }
+            else
+            {
+                app.UseExceptionHandler("/Home/Error");
+            }
+
+            // need to configure Swagger before MVC because it caused some interferences with the react-rooter routes.
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+            });
+
+            app.UseStaticFiles();
+
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute(
+                    name: "default",
+                    template: "{controller=Home}/{action=Index}/{id?}");
+
+                routes.MapRoute(
+                    name: "swagger",
+                    template: "swagger/");
+
+                routes.MapSpaFallbackRoute(
+                    name: "spa-fallback",
+                    defaults: new { controller = "Home", action = "Index" });
+            });
+        }
     }
-  }
 }

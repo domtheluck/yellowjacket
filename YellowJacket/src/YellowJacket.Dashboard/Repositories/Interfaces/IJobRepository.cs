@@ -23,7 +23,7 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using YellowJacket.Dashboard.Entities.Job;
+using YellowJacket.Dashboard.Entities;
 
 namespace YellowJacket.Dashboard.Repositories.Interfaces
 {

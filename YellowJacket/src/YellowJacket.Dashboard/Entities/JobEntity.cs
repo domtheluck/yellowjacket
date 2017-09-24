@@ -21,21 +21,21 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-namespace YellowJacket.Dashboard.Models.Job
-{
-    /// <summary>
-    /// Represents  Job model.
-    /// </summary>
-    public class JobModel
-    {
-        #region Properties
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
+namespace YellowJacket.Dashboard.Entities
+{
+    public class JobEntity
+    {
         /// <summary>
         /// Gets or sets the id.
         /// </summary>
         /// <value>
         /// The id.
         /// </value>
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string Id { get; set; }
 
         /// <summary>
@@ -44,8 +44,7 @@ namespace YellowJacket.Dashboard.Models.Job
         /// <value>
         /// The name.
         /// </value>
+        [Required]
         public string Name { get; set; }
-
-        #endregion
     }
 }

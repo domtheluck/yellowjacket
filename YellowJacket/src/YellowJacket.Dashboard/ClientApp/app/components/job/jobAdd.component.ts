@@ -22,27 +22,39 @@ import IJob from '../../models/job.model';
 })
 export class JobAddComponent implements OnInit {
     private readonly jobService: IJobService;
-    //private readonly notificationService: INotificationService;
 
     private job: IJob;
 
     private jobAddForm: FormGroup;
     private name: FormControl;
 
-    constructor( @Inject('IJobService') agentService: IJobService, private notificationService: NotificationService) {
-        this.jobService = agentService;
-        //this.notificationService = notificationService;
+    /**
+     * Initialize a new instance of JobAddComponent.
+     * @param {IJobService} jobService An instance of the job service.
+     * @param {NotificationService} notificationService An instance of the notification service.
+     */
+    constructor( @Inject('IJobService') jobService: IJobService, private readonly notificationService: NotificationService) {
+        this.jobService = jobService;
     }
 
+    /**
+     * Angular nbOnInit function.
+     */
     public ngOnInit(): void {
         this.createFormControls();
         this.createForm();
     }
 
+    /**
+     * Angular nbOnInit function.
+     */
     public ngOnChanges() {
 
     }
 
+    /**
+     * Used when submitting the form.
+     */
     private onSubmit() {
         console.log(JSON.stringify(this.jobAddForm.value));
 
@@ -63,6 +75,9 @@ export class JobAddComponent implements OnInit {
         this.ngOnChanges();
     }
 
+    /**
+     * Creates the form different controls.
+     */
     private createFormControls() {
         this.name = new FormControl('', [
             Validators.required,
@@ -70,12 +85,19 @@ export class JobAddComponent implements OnInit {
         ]);
     }
 
+    /**
+     * Creates the form.
+     */
     private createForm() {
         this.jobAddForm = new FormGroup({
             name: this.name
         });
     }
 
+    /**
+     * Prepare the job for sending to the API.
+     * @returns [IJob] An instance of IJob.
+     */
     private prepareJob() {
         const formModel = this.jobAddForm.value;
 

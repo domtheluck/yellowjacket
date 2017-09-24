@@ -22,8 +22,6 @@
 // ***********************************************************************
 
 using Microsoft.EntityFrameworkCore;
-using YellowJacket.Dashboard.Entities.Agent;
-using YellowJacket.Dashboard.Entities.Job;
 
 namespace YellowJacket.Dashboard.Entities
 {

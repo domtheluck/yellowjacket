@@ -24,9 +24,9 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
-import { AgentListComponent } from './agentList.component';
-
 import { IboxtoolsModule } from '../../components/common/iboxtools/iboxtools.module';
+
+import { AgentListComponent } from './agentList.component';
 
 @NgModule({
     declarations: [AgentListComponent],

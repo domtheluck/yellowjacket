@@ -26,7 +26,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FluentValidation;
-using YellowJacket.Dashboard.Models.Job;
+using YellowJacket.Dashboard.Models;
 
 namespace YellowJacket.Dashboard.Validators.Job
 {

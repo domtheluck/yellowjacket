@@ -27,8 +27,8 @@ using System.Threading.Tasks;
 using AutoMapper;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
-using YellowJacket.Dashboard.Entities.Job;
-using YellowJacket.Dashboard.Models.Job;
+using YellowJacket.Dashboard.Entities;
+using YellowJacket.Dashboard.Models;
 using YellowJacket.Dashboard.Repositories.Interfaces;
 using YellowJacket.Dashboard.Validators.Job;
 
@@ -120,8 +120,6 @@ namespace YellowJacket.Dashboard.Controllers.Api
         {
             try
             {
-                return StatusCode(400, "no no no");
-
                 JobValidator validator = new JobValidator();
                 ValidationResult results = validator.Validate(model);
 

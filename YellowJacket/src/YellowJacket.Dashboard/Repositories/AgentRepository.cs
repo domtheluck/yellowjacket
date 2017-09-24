@@ -26,7 +26,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using YellowJacket.Dashboard.Entities;
-using YellowJacket.Dashboard.Entities.Agent;
 using YellowJacket.Dashboard.Repositories.Interfaces;
 using System;
 
@@ -107,7 +106,7 @@ namespace YellowJacket.Dashboard.Repositories
         {
             return await _context.Agents.ToListAsync();
         }
-        
+
         /// <summary>
         /// Finds an agent by its id.
         /// </summary>
@@ -140,7 +139,7 @@ namespace YellowJacket.Dashboard.Repositories
         /// <returns><see cref="AgentEntity"/>.</returns>
         public async Task<AgentEntity> Update(AgentEntity agent)
         {
-             AgentEntity currentEntity = await Find(agent.Id);
+            AgentEntity currentEntity = await Find(agent.Id);
 
             currentEntity.LastUpdateOn = agent.LastUpdateOn;
             currentEntity.RegisteredOn = agent.RegisteredOn;

@@ -24,7 +24,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace YellowJacket.Dashboard.Entities.Agent
+namespace YellowJacket.Dashboard.Entities
 {
     public class AgentEntity
     {
