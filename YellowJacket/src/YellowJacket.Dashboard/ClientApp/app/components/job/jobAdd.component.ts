@@ -2,6 +2,7 @@
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 import { NotificationService } from '../../services/notification.service';
+import { IResourceService, ResourceService, MessageId } from '../../services/resource.service';
 
 import { IJobService, JobService } from '../../services/job.service';
 
@@ -16,12 +17,17 @@ import IJob from '../../models/job.model';
             useClass: JobService
         },
         {
+            provide: 'IResourceService',
+            useClass: ResourceService
+        },
+        {
             provide: 'INotificationService',
             useClass: NotificationService
         }]
 })
 export class JobAddComponent implements OnInit {
     private readonly jobService: IJobService;
+    private readonly resourceService: IResourceService;
 
     private job: IJob;
 
@@ -33,12 +39,16 @@ export class JobAddComponent implements OnInit {
      * @param {IJobService} jobService An instance of the job service.
      * @param {NotificationService} notificationService An instance of the notification service.
      */
-    constructor( @Inject('IJobService') jobService: IJobService, private readonly notificationService: NotificationService) {
+    constructor(
+        @Inject('IJobService') jobService: IJobService,
+        @Inject('IResourceService') resourceService: IResourceService,
+        private readonly notificationService: NotificationService) {
         this.jobService = jobService;
+        this.resourceService = resourceService;
     }
 
     /**
-     * Angular ngOnInit function.
+     * {Agular} Lifecycle hook that is called after data-bound properties of a directive are initialized.
      */
     public ngOnInit(): void {
         this.createFormControls();
@@ -46,14 +56,14 @@ export class JobAddComponent implements OnInit {
     }
 
     /**
-     * Angular ngOnChanges function.
+     * {Angular} Lifecycle hook that is called when any data-bound property of a directive changes..
      */
     public ngOnChanges() {
 
     }
 
     /**
-     * Used when submitting the form.
+     * Invoked when submitting the form.
      */
     private onSubmit() {
         console.log(JSON.stringify(this.jobAddForm.value));
@@ -65,18 +75,18 @@ export class JobAddComponent implements OnInit {
         this.jobService.add(this.job)
             .subscribe(result => {
                 console.log(JSON.stringify(result));
-                this.notificationService.success('TEST SUCCESS', true);
+                this.notificationService.success(this.resourceService.getMessage(MessageId.OperationSuccessfullyCompleted), true);
             },
             error => {
                 console.log(JSON.stringify(error));
-                this.notificationService.error('TEST ERROR', true);
+                this.notificationService.error(this.resourceService.getMessage(MessageId.ErrorHappened), true);
             });
 
         this.ngOnChanges();
     }
 
     /**
-     * Creates the form different controls.
+     * Creates the form controls.
      */
     private createFormControls() {
         this.name = new FormControl('', [
@@ -95,8 +105,8 @@ export class JobAddComponent implements OnInit {
     }
 
     /**
-     * Prepare the job for sending to the API.
-     * @returns [IJob] An instance of IJob.
+     * Prepare the job for sending to the Api.
+     * @returns {IJob} An instance of IJob.
      */
     private prepareJob() {
         const formModel = this.jobAddForm.value;

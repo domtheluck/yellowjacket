@@ -35,14 +35,14 @@ export class JobListComponent {
     }
 
     /**
-     * Angular ngOnInit function.
-    */
+     * {Agular} Lifecycle hook that is called after data-bound properties of a directive are initialized.
+     */
     private ngOnInit() {
         this.jobs = this.jobService.getAll();
     }
 
     /**
-     * Used to refresh the job job data.
+     * Used to refresh the jobs from the service.
      */
     private refreshData() {
         this.jobs = this.jobService.getAll();

@@ -3,7 +3,7 @@ import { Router, NavigationStart } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Subject } from 'rxjs/Subject';
 
-import { Notification, NotificationType } from '../models/notification.model';
+import { Notification, NotificationType } from '../components/common/notification/notification.component';
 
 @Injectable()
 export class NotificationService {
@@ -26,7 +26,7 @@ export class NotificationService {
         return this.subject.asObservable();
     }
 
-    
+
     public success(message: string, keepAfterRouteChange = false) {
         this.notification(NotificationType.Success, message, keepAfterRouteChange);
     }

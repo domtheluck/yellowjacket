@@ -8,13 +8,11 @@ import { AgentModule } from './components/agent/agent.module';
 import { JobModule } from './components/job/job.module';
 
 import { NotificationService } from './services/notification.service';
-//import { NotificationComponent } from './components/common/notification/index';
+import { ResourceService } from './services/resource.service';
 
 import { AppComponent } from './components/app/app.component';
 import { NavMenuComponent } from './components/navmenu/navmenu.component';
 import { HomeComponent } from './components/home/home.component';
-import { FetchDataComponent } from './components/fetchdata/fetchdata.component';
-import { CounterComponent } from './components/counter/counter.component';
 
 import { AgentListComponent } from './components/agent/agentList.component';
 
@@ -28,8 +26,6 @@ import { BasicLayoutComponent } from './components/common/layouts/basicLayout.co
     declarations: [
         AppComponent,
         NavMenuComponent,
-        CounterComponent,
-        FetchDataComponent,
         HomeComponent
     ],
     imports: [
@@ -58,7 +54,7 @@ import { BasicLayoutComponent } from './components/common/layouts/basicLayout.co
         ReactiveFormsModule
     ],
     providers: [
-        NotificationService
+        NotificationService, ResourceService
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
