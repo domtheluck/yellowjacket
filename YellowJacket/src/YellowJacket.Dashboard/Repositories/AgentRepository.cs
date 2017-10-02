@@ -100,9 +100,9 @@ namespace YellowJacket.Dashboard.Repositories
         /// Gets all agents from the repository.
         /// </summary>
         /// <returns>
-        ///   <see cref="IEnumerable{AgentEntity}" />.
+        ///   <see cref="List{AgentEntity}" />.
         /// </returns>
-        public async Task<IEnumerable<AgentEntity>> GetAll()
+        public async Task<List<AgentEntity>> GetAll()
         {
             return await _context.Agents.ToListAsync();
         }

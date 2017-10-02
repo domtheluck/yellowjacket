@@ -27,7 +27,7 @@ export class JobListComponent {
 
     /**
      * Initialize a new instance of JobListComponent.
-     * @param {IJobService} jobService An instance of the job service.
+     * @param {IJobService} jobService An instance of the IJobService.
      * @param {NotificationService} notificationService An instance of the notification service.
      */
     constructor( @Inject('IJobService') jobService: IJobService, private readonly notificationService: NotificationService) {

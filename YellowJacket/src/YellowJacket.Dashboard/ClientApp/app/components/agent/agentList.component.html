@@ -1,9 +1,9 @@
 <h1>Agents</h1>
 
-<p>Represents the list of active agents.</p>
+<p>The list of active agents.</p>
 
-<p *ngIf="!agents"><em>Loading...</em></p>
-<div class="wrapper wrapper-content animated fadeInRight">
+<!--<p *ngIf="!agents"><em>Loading...</em></p>-->
+<div class="wrapper wrapper-content">
     <div class="row">
         <div class="col-lg-12">
             <div class="ibox">
@@ -18,28 +18,22 @@
         </div>
     </div>
     <br />
-    <div class="row">
+    <div *ngIf="agents" class="row">
         <div class="col-lg-3" *ngFor="let agent of agents | async">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
-                    <span class="label label-success pull-right">Monthly</span>
-                    <h5>Income</h5>
+                    <span class="label label-success pull-right">{{agent.id}}</span>
+                    <h5>{{agent.name}}</h5>
                 </div>
                 <div class="ibox-content">
-                    <h1 class="no-margins">40 886,200</h1>
+                    <h1 class="no-margins">{{agent.status}}</h1>
                     <div class="stat-percent font-bold text-success">
-                        {{agent.name}} <i class="fa fa-bolt"></i>
+                        <a href="#" title="Details">Details <i class="fa fa-info-circle"></i></a>
                     </div>
-                    <small>Total income</small>
+                    <small>Status</small>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-<!--<ul class="agents">
-    <li *ngFor="let agent of agents | async">
-        {{agent.name}}
-    </li>
-</ul>-->
 

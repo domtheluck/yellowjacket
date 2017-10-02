@@ -41,8 +41,8 @@ namespace YellowJacket.Dashboard.Repositories.Interfaces
         /// <summary>
         /// Gets all agents from the repository.
         /// </summary>
-        /// <returns><see cref="IEnumerable{AgentEntity}"/>.</returns>
-        Task<IEnumerable<AgentEntity>> GetAll();
+        /// <returns><see cref="List{AgentEntity}"/>.</returns>
+        Task<List<AgentEntity>> GetAll();
 
         /// <summary>
         /// Finds an agent by its id.

@@ -11,7 +11,6 @@ import { NotificationService } from './services/notification.service';
 import { ResourceService } from './services/resource.service';
 
 import { AppComponent } from './components/app/app.component';
-import { NavMenuComponent } from './components/navmenu/navmenu.component';
 import { HomeComponent } from './components/home/home.component';
 
 import { AgentListComponent } from './components/agent/agentList.component';
@@ -25,7 +24,6 @@ import { BasicLayoutComponent } from './components/common/layouts/basicLayout.co
 @NgModule({
     declarations: [
         AppComponent,
-        NavMenuComponent,
         HomeComponent
     ],
     imports: [

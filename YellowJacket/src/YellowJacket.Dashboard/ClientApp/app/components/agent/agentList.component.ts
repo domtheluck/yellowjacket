@@ -15,14 +15,24 @@ export class AgentListComponent {
     public agentService: IAgentService;
     public agents: Observable<IAgent[]>;
 
+    /**
+     * Initialize a new instance of AgentListComponent.
+     * @param {IAgentService} An instance of the IAgentService.
+     */
     constructor( @Inject('IAgentService') agentService: IAgentService) {
         this.agentService = agentService;
     }
 
+    /**
+    * {Agular} Lifecycle hook that is called after data-bound properties of a directive are initialized.
+    */
     private ngOnInit() {
         this.agents = this.agentService.getAll();
     }
 
+    /**
+     * Used to refresh the agents from the service.
+    */
     private refreshData() {
         this.agents = this.agentService.getAll();
     }
