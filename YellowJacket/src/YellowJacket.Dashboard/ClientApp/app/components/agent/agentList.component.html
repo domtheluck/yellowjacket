@@ -19,7 +19,7 @@
     </div>
     <br />
     <div *ngIf="agents" class="row">
-        <div class="col-lg-3" *ngFor="let agent of agents | async">
+        <div class="col-lg-3 col-md-4 col-sm-6" *ngFor="let agent of agents | async">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
                     <span class="label label-success pull-right">{{agent.id}}</span>
