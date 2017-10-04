@@ -29,19 +29,19 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
 
-import IAgent from '../models/agent.model'
+import IPackage from '../models/package.model'
 
-export interface IAgentService {
-    getAll(): Observable<IAgent[]>
+export interface IPackageService {
+    getAll(): Observable<IPackage[]>
 }
 
 @Injectable()
-export class AgentService implements IAgentService {
+export class PackageService implements IPackageService {
     private readonly http: Http;
-    private readonly baseUrl: string;    
+    private readonly baseUrl: string;
 
     /**
-     * Initialize a new instance of AgentService.
+     * Initialize a new instance of PackageService.
      * @param {Http} http Angular http component.
      * @param {string} baseUrl The base url.
      */
@@ -50,51 +50,31 @@ export class AgentService implements IAgentService {
         this.baseUrl = baseUrl;
     }
 
-    /**
-     * Gets all agents from the repository.
-     * @returns {Observable<IAgent[]>} An Angular Observable who contains an array of agent.
-     */
-    public getAll(): Observable<IAgent[]> {
-        const agent$ = this.http
-            .get(`${this.baseUrl}api/v1/agent`, { headers: this.getHeaders() })
-            .map(this.mapAgents);
+    public getAll(): Observable<IPackage[]> {
+        const package$ = this.http
+            .get(`${this.baseUrl}api/v1/package`, { headers: this.getHeaders() })
+            .map(this.mapPackages);
 
-        return agent$;
+        return package$;
     }
 
-    /**
-     * Get the request headers.
-     * @returns {Headers} An Augular Headers instance.
-     */
     private getHeaders() {
         const headers = new Headers();
         headers.append('Accept', 'application/json');
         return headers;
     }
 
-    /**
-     * Maps the Api response to an array of IAgent.
-     * @param {Response} response The Api response.
-     * @returns {IAgent[]} An array of IAgent.
-     */
-    private mapAgents = (response: Response): IAgent[] => {
+    private mapPackages = (response: Response): IPackage[] => {
         if (response.json().length === 0)
             return [];
 
-        return response.json().map(this.toAgent);
+        return response.json().map(this.toPackage);
     }
 
-    /**
-     * Maps a single item to a IAgent instance.
-     * @param {any} item The item to map.
-     * @returns {IAgent} The mapped IAgent instance.
-     */
-    private toAgent = (item: any): IAgent => {
+    private toPackage = (item: any): IPackage => {
         const model = ({
-            id: item.id,
-            name: item.name,
-            status: item.status
-        }) as IAgent;
+            name: item.name
+        }) as IPackage;
 
         return model;
     }

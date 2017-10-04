@@ -75,11 +75,11 @@ export class JobAddComponent implements OnInit {
         this.jobService.add(this.job)
             .subscribe(result => {
                 console.log(JSON.stringify(result));
-                this.notificationService.success(this.resourceService.getMessage(MessageId.OperationSuccessfullyCompleted), true);
+                this.notificationService.addSuccess(this.resourceService.getMessage(MessageId.OperationSuccessfullyCompleted), true);
             },
             error => {
                 console.log(JSON.stringify(error));
-                this.notificationService.error(this.resourceService.getMessage(MessageId.ErrorHappened), true);
+                this.notificationService.addError(this.resourceService.getMessage(MessageId.ErrorHappened), true);
             });
 
         this.ngOnChanges();

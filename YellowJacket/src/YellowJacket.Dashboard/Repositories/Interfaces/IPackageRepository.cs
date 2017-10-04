@@ -21,10 +21,21 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-interface IAgent {
-    id: string,
-    name: string,
-    status: string;
-}
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using YellowJacket.Dashboard.Entities;
 
-export default IAgent;
+namespace YellowJacket.Dashboard.Repositories.Interfaces
+{
+  public interface IPackageRepository
+  {
+    /// <summary>
+    /// Gets all package from the repository.
+    /// </summary>
+    /// <param name="packagesRootPath">The packages root path.</param>
+    /// <returns>
+    ///   <see cref="List{PackageEntity}" />.
+    /// </returns>
+    Task<IEnumerable<PackageEntity>> GetAll(string packagesRootPath);
+  }
+}

@@ -21,10 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-interface IAgent {
-    id: string,
-    name: string,
-    status: string;
+interface IPackage {
+    name: string;
 }
 
-export default IAgent;
+export default IPackage;

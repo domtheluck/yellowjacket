@@ -24,7 +24,7 @@ namespace YellowJacket.Dashboard
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<YellowJacketContext>(opt => opt.UseInMemoryDatabase("TEST"));
+            services.AddDbContext<YellowJacketContext>(opt => opt.UseInMemoryDatabase("InMemoryDatabase"));
 
             services.AddMvc();
             services.AddAutoMapper();
@@ -37,6 +37,7 @@ namespace YellowJacket.Dashboard
             services.AddScoped<IConfigurationRepository, ConfigurationRepository>();
             services.AddScoped<IAgentRepository, AgentRepository>();
             services.AddScoped<IJobRepository, JobRepository>();
+            services.AddScoped<IPackageRepository, PackageRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

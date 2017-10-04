@@ -48,6 +48,9 @@ namespace YellowJacket.Dashboard.Mapping
 
             CreateMap<ConfigurationEntity, ConfigurationModel>();
             CreateMap<ConfigurationModel, ConfigurationEntity>();
+
+            CreateMap<PackageEntity, PackageModel>();
+            CreateMap<PackageModel, PackageEntity>();
         }
 
         #endregion

@@ -21,10 +21,23 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-interface IAgent {
-    id: string,
-    name: string,
-    status: string;
-}
+namespace YellowJacket.Dashboard.Models
+{
+    /// <summary>
+    /// Represents a package.
+    /// </summary>
+    public class PackageModel
+    {
+        #region Properties
 
-export default IAgent;
+        /// <summary>
+        /// Gets or sets the name.
+        /// </summary>
+        /// <value>
+        /// The name.
+        /// </value>
+        public string Name { get; set; }
+
+        #endregion
+    }
+}

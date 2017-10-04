@@ -21,10 +21,37 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-interface IAgent {
-    id: string,
-    name: string,
-    status: string;
-}
+using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using YellowJacket.Dashboard.Repositories.Interfaces;
 
-export default IAgent;
+namespace YellowJacket.Dashboard.Controllers.Api
+{
+  [Produces("application/json")]
+  [Route("api/v1/package")]
+  public class PackageController : BaseController
+  {
+    #region Private Members
+
+    private readonly IPackageRepository _packageRepository;
+
+    private readonly IMapper _mapper;
+
+    #endregion
+
+    #region Constructors
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PackageController"/> class.
+    /// </summary>
+    /// <param name="mapper">The mapper.</param>
+    /// <param name="packageRepository">The package repository.</param>
+    public PackageController(IMapper mapper, IPackageRepository packageRepository)
+    {
+      _mapper = mapper;
+      _packageRepository = packageRepository;
+    }
+
+    #endregion
+  }
+}
