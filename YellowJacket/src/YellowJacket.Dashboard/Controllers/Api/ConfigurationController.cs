@@ -22,13 +22,12 @@
 // ***********************************************************************
 
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using YellowJacket.Dashboard.Entities;
-using YellowJacket.Dashboard.Models;
 using YellowJacket.Dashboard.Repositories.Interfaces;
+using YellowJacket.Models;
 
 namespace YellowJacket.Dashboard.Controllers.Api
 {

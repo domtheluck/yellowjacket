@@ -23,7 +23,7 @@
 
 using AutoMapper;
 using YellowJacket.Dashboard.Entities;
-using YellowJacket.Dashboard.Models;
+using YellowJacket.Models;
 
 namespace YellowJacket.Dashboard.Mapping
 {
@@ -51,6 +51,12 @@ namespace YellowJacket.Dashboard.Mapping
 
             CreateMap<PackageEntity, PackageModel>();
             CreateMap<PackageModel, PackageEntity>();
+
+            CreateMap<PackageEntity, PackageModel>();
+            CreateMap<PackageModel, PackageEntity>();
+
+            CreateMap<FeatureEntity, FeatureModel>();
+            CreateMap<FeatureModel, FeatureEntity>();
         }
 
         #endregion

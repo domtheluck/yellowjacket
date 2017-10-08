@@ -21,16 +21,50 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System.Collections.Generic;
+
 namespace YellowJacket.Dashboard.Entities
 {
     public class PackageEntity
     {
-      /// <summary>
-      /// Gets or sets the name.
-      /// </summary>
-      /// <value>
-      /// The name.
-      /// </value>
-      public string Name { get; set; }
+        #region Properties
+
+        /// <summary>
+        /// Gets or sets the name.
+        /// </summary>
+        /// <value>
+        /// The name.
+        /// </value>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name of the test assembly.
+        /// </summary>
+        /// <value>
+        /// The name of the test assembly.
+        /// </value>
+        public string TestAssemblyName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the features.
+        /// </summary>
+        /// <value>
+        /// The features.
+        /// </value>
+        public List<FeatureEntity> Features { get; set; }
+
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PackageEntity"/> class.
+        /// </summary>
+        public PackageEntity()
+        {
+            Features = new List<FeatureEntity>();
+        }
+
+        #endregion
     }
 }

@@ -158,6 +158,7 @@
     <Compile Include="Gherkin\GherkinManager.cs" />
     <Compile Include="Gherkin\Scenario.cs" />
     <Compile Include="Gherkin\Step.cs" />
+    <Compile Include="Helpers\CryptographyHelper.cs" />
     <Compile Include="Helpers\ResourceHelper.cs" />
     <Compile Include="Helpers\SerializationHelper.cs" />
     <Compile Include="Hook\HookProcessor.cs" />
@@ -172,6 +173,7 @@
     <Compile Include="Enums\BrowserType.cs" />
     <Compile Include="Builders\ExecutionEngineBuilder.cs" />
     <Compile Include="Interfaces\IPackageManager.cs" />
+    <Compile Include="Packaging\Feature.cs" />
     <Compile Include="Plugins\FileLogPlugin.cs" />
     <Compile Include="Helpers\EnumHelper.cs" />
     <Compile Include="Logging\LogManager.cs" />

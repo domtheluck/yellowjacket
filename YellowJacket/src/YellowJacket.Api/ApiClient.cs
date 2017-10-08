@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using YellowJacket.Models;
 using System.Text;
-using YellowJacket.Models.Agent;
 
 namespace YellowJacket.Api
 {

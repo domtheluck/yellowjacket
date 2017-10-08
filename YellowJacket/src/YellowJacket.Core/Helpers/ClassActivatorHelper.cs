@@ -19,6 +19,7 @@
 // LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// ***********************************************************************
 
 using System;
 
@@ -40,6 +41,12 @@ namespace YellowJacket.Core.Helpers
             return (T)Activator.CreateInstance(type);
         }
 
+        /// <summary>
+        /// Uses to create instance of a specific type.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <param name="args">The arguments.</param>
+        /// <returns></returns>
         public static T CreateInstance(Type type, params object[] args)
         {
             return (T) Activator.CreateInstance(type, args);

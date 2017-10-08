@@ -27,6 +27,8 @@
   <ItemGroup>
     <None Remove="ClientApp\app\components\agent\agentAdd.component.ts" />
     <None Remove="ClientApp\app\components\common\notification\notification.component.ts" />
+    <None Remove="ClientApp\app\mapping\feature.mapper.ts" />
+    <None Remove="ClientApp\app\models\feature.model.ts" />
     <None Remove="ClientApp\app\models\package.model.ts" />
     <None Remove="ClientApp\app\services\notification.service.ts" />
     <None Remove="ClientApp\app\services\package.service.ts" />
@@ -34,10 +36,17 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\YellowJacket.Models\YellowJacket.Models.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <TypeScriptCompile Include="ClientApp\app\components\agent\agent.module.ts" />
     <TypeScriptCompile Include="ClientApp\app\components\common\notification\notification.component.ts" />
     <TypeScriptCompile Include="ClientApp\app\components\job\job.module.ts" />
     <TypeScriptCompile Include="ClientApp\app\components\job\jobAdd.component.ts" />
+    <TypeScriptCompile Include="ClientApp\app\mapping\feature.mapper.ts" />
+    <TypeScriptCompile Include="ClientApp\app\mapping\package.mapper.ts" />
+    <TypeScriptCompile Include="ClientApp\app\models\feature.model.ts" />
     <TypeScriptCompile Include="ClientApp\app\models\job.model.ts" />
     <TypeScriptCompile Include="ClientApp\app\models\agent.model.ts" />
     <TypeScriptCompile Include="ClientApp\app\models\package.model.ts" />
@@ -46,6 +55,12 @@
     <TypeScriptCompile Include="ClientApp\app\services\notification.service.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\package.service.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\resource.service.ts" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <Target Name="DebugRunWebpack" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('wwwroot\dist') ">

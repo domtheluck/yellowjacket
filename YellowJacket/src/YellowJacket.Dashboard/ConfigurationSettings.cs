@@ -21,28 +21,17 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-namespace YellowJacket.Dashboard.Models
+namespace YellowJacket.Dashboard
 {
-    /// <summary>
-    /// Represents a configuration model.
-    /// </summary>
-    public class ConfigurationModel
+    public class ConfigurationSettings
     {
         #region Properties
 
         /// <summary>
-        /// Gets or sets the id.
+        /// Gets or sets the packages root path.
         /// </summary>
         /// <value>
-        /// The id.
-        /// </value>
-        public string Id { get; set; }
-
-        /// <summary>
-        /// Gets or sets the name.
-        /// </summary>
-        /// <value>
-        /// The name.
+        /// The packages root path.
         /// </value>
         public string PackagesRootPath { get; set; }
 

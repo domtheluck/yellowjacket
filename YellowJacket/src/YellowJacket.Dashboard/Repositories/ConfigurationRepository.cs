@@ -25,7 +25,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using YellowJacket.Dashboard.Entities;
 using YellowJacket.Dashboard.Repositories.Interfaces;
-using System;
 using Microsoft.EntityFrameworkCore;
 
 namespace YellowJacket.Dashboard.Repositories
@@ -57,7 +56,7 @@ namespace YellowJacket.Dashboard.Repositories
 
             Task.Run(async () =>
             {
-                await _context.Configurations.AddAsync(new ConfigurationEntity{Id = "main", PackagesRootPath = @"d:\projects\dev\packages"});
+                await _context.Configurations.AddAsync(new ConfigurationEntity { Id = "main" });
 
                 await _context.SaveChangesAsync();
             });
@@ -81,8 +80,6 @@ namespace YellowJacket.Dashboard.Repositories
         public async Task<ConfigurationEntity> Update(ConfigurationEntity configuration)
         {
             ConfigurationEntity currentEntity = await Get();
-
-            currentEntity.PackagesRootPath = configuration.PackagesRootPath;
 
             _context.Configurations.Update(currentEntity);
 

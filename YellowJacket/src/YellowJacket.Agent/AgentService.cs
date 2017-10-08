@@ -28,7 +28,6 @@ using System.Threading.Tasks;
 using YellowJacket.Agent.Enums;
 using YellowJacket.Api;
 using YellowJacket.Models;
-using YellowJacket.Models.Agent;
 
 namespace YellowJacket.Agent
 {

@@ -21,23 +21,9 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-namespace YellowJacket.Dashboard.Models
-{
-    /// <summary>
-    /// Represents a package.
-    /// </summary>
-    public class PackageModel
-    {
-        #region Properties
-
-        /// <summary>
-        /// Gets or sets the name.
-        /// </summary>
-        /// <value>
-        /// The name.
-        /// </value>
-        public string Name { get; set; }
-
-        #endregion
-    }
+export interface IFeature {
+    id: string,
+    name: string;
 }
+
+export default IFeature;

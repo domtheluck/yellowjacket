@@ -38,15 +38,6 @@ namespace YellowJacket.Dashboard.Entities
         [Key]
         public string Id { get; set; }
 
-        /// <summary>
-        ///     Gets or sets the packages root path.
-        /// </summary>
-        /// <value>
-        ///     The packages root path.
-        /// </value>
-        [Required]
-        public string PackagesRootPath { get; set; }
-
         #endregion
     }
 }

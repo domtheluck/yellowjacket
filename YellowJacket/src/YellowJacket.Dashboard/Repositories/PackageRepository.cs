@@ -21,31 +21,84 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using YellowJacket.Dashboard.Entities;
 using YellowJacket.Dashboard.Repositories.Interfaces;
 
 namespace YellowJacket.Dashboard.Repositories
 {
-  public class PackageRepository : IPackageRepository
-  {
     /// <summary>
-    /// Gets all package from the repository.
+    /// PackageRepository implementation.
     /// </summary>
-    /// <param name="packagesRootPath">The packages root path.</param>
-    /// <returns>
-    /// <see cref="IEnumerable{PackageEntity}"/>.
-    /// </returns>
-    public Task<IEnumerable<PackageEntity>> GetAll( String packagesRootPath )
+    /// <seealso cref="IJobRepository" />
+    public class PackageRepository : IPackageRepository
     {
-      string testPackagePath = Path.Combine(packagesRootPath, "Test");
+        #region Constants
 
+        private const string PackageExtension = ".zip";
+        private const string PackageConfigurationExtension = ".json";
 
+        #endregion
 
-      return null;
+        #region Private Members
+
+        private readonly ConfigurationSettings _configuration;
+
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PackageRepository"/> class.
+        /// </summary>
+        /// <param name="configuration">The configuration.</param>
+        public PackageRepository(IOptions<ConfigurationSettings> configuration)
+        {
+            _configuration = configuration.Value;
+        }
+
+        #endregion
+
+        /// <summary>
+        /// Gets all package from the repository.
+        /// </summary>
+        /// <returns>
+        /// <see cref="IEnumerable{PackageEntity}"/>.
+        /// </returns>
+        public async Task<IEnumerable<PackageEntity>> GetAll()
+        {
+            string testPackagePath = Path.Combine(_configuration.PackagesRootPath, "Test");
+
+            List<PackageEntity> results = new List<PackageEntity>();
+
+            await Task.Run(() =>
+            {
+                List<FileInfo> packages =
+                    new DirectoryInfo(testPackagePath).GetFiles($"*{PackageExtension}").ToList();
+
+                foreach (FileInfo package in packages)
+                {
+                    string packageConfigurationPath =
+                        $"{Path.Combine(package.DirectoryName, Path.GetFileNameWithoutExtension(package.Name))}{PackageConfigurationExtension}";
+
+                    if (!File.Exists(packageConfigurationPath))
+                        continue;
+
+                    PackageEntity packageEntity =
+                        JsonConvert.DeserializeObject<PackageEntity>(File.ReadAllText(packageConfigurationPath));
+
+                    packageEntity.Name = Path.GetFileNameWithoutExtension(package.Name);
+
+                    results.Add(packageEntity);
+                }
+            });
+
+            return results;
+        }
     }
-  }
 }

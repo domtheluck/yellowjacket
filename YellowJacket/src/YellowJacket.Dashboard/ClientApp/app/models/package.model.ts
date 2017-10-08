@@ -21,8 +21,12 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-interface IPackage {
-    name: string;
+import { IFeature } from '../models/feature.model';
+
+export interface IPackage {
+    name: string,
+    testAssemblyName: string,
+    features: IFeature[];
 }
 
 export default IPackage;

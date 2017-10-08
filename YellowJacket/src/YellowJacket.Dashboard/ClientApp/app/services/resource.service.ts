@@ -38,6 +38,9 @@ export interface IResourceService {
 export class ResourceService implements IResourceService{
     private readonly messages: MessageContainer[];
 
+    /**
+     * Initialize a new instance of ResourceService.
+     */
     constructor() {
         this.messages = new Array<MessageContainer>();
 
@@ -45,8 +48,13 @@ export class ResourceService implements IResourceService{
         this.messages.push({ messageId: MessageId.ErrorHappened, value: 'An error happened. Please check the log files.' }); 
     }
 
-    public getMessage(message: MessageId): string {
-        const messageContainer = this.messages.find(x => x.messageId === message);
+    /**
+     * Gets a message from it id.
+     * @param {MessageId} messageId The message to get.
+     * @returns {MessageContainer} The message container.
+     */
+    public getMessage(messageId: MessageId): string {
+        const messageContainer = this.messages.find(x => x.messageId === messageId);
 
         return messageContainer ? messageContainer.value : '';
     } 

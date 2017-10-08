@@ -21,10 +21,53 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-export interface IAgent {
-    id: string,
-    name: string,
-    status: string;
-}
+using System.Collections.Generic;
 
-export default IAgent;
+namespace YellowJacket.Models
+{
+    /// <summary>
+    /// Represents a package.
+    /// </summary>
+    public class PackageModel
+    {
+        #region Properties
+
+        /// <summary>
+        /// Gets or sets the name.
+        /// </summary>
+        /// <value>
+        /// The name.
+        /// </value>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name of the test assembly.
+        /// </summary>
+        /// <value>
+        /// The name of the test assembly.
+        /// </value>
+        public string TestAssemblyName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the features.
+        /// </summary>
+        /// <value>
+        /// The features.
+        /// </value>
+        public List<FeatureModel> Features { get; set; }
+
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PackageModel"/> class.
+        /// </summary>
+        public PackageModel()
+        {
+            Features = new List<FeatureModel>();
+        }
+
+        #endregion
+    }
+}

@@ -27,15 +27,14 @@ using YellowJacket.Dashboard.Entities;
 
 namespace YellowJacket.Dashboard.Repositories.Interfaces
 {
-  public interface IPackageRepository
-  {
-    /// <summary>
-    /// Gets all package from the repository.
-    /// </summary>
-    /// <param name="packagesRootPath">The packages root path.</param>
-    /// <returns>
-    ///   <see cref="List{PackageEntity}" />.
-    /// </returns>
-    Task<IEnumerable<PackageEntity>> GetAll(string packagesRootPath);
-  }
+    public interface IPackageRepository
+    {
+        /// <summary>
+        /// Gets all package from the repository.
+        /// </summary>
+        /// <returns>
+        ///   <see cref="List{PackageEntity}" />.
+        /// </returns>
+        Task<IEnumerable<PackageEntity>> GetAll();
+    }
 }

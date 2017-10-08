@@ -28,9 +28,9 @@ using AutoMapper;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using YellowJacket.Dashboard.Entities;
-using YellowJacket.Dashboard.Models;
 using YellowJacket.Dashboard.Repositories.Interfaces;
 using YellowJacket.Dashboard.Validators.Job;
+using YellowJacket.Models;
 
 namespace YellowJacket.Dashboard.Controllers.Api
 {

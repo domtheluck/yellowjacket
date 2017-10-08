@@ -46,7 +46,7 @@ namespace YellowJacket.Core.Packaging
         /// The features.
         /// </value>
         [JsonProperty("features")]
-        public List<string> Features { get; set; }
+        public List<Feature> Features { get; set; }
 
         #endregion
     }

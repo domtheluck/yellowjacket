@@ -21,10 +21,28 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-export interface IAgent {
-    id: string,
-    name: string,
-    status: string;
-}
+namespace YellowJacket.Models
+{
+    public class FeatureModel
+    {
+        #region Properties
 
-export default IAgent;
+        /// <summary>
+        /// Gets or sets the identifier.
+        /// </summary>
+        /// <value>
+        /// The identifier.
+        /// </value>
+        public string Id { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name.
+        /// </summary>
+        /// <value>
+        /// The name.
+        /// </value>
+        public string Name { get; set; }
+
+        #endregion
+    }
+}

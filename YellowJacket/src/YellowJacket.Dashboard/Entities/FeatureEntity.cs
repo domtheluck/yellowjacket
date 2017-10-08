@@ -19,24 +19,30 @@
 // LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// ***********************************************************************
 
-using System.IO.Compression;
-
-namespace YellowJacket.Core.Helpers
+namespace YellowJacket.Dashboard.Entities
 {
-    /// <summary>
-    /// Helper class to handle the compression.
-    /// </summary>
-    public class CompressionHelper
+    public class FeatureEntity
     {
+        #region Properties
+
         /// <summary>
-        /// Compresses the folder.
+        /// Gets or sets the identifier.
         /// </summary>
-        /// <param name="sourcePath">The source path.</param>
-        /// <param name="destinationPath">The destination path.</param>
-        public void CompressFolder(string sourcePath, string destinationPath)
-        {
-            ZipFile.CreateFromDirectory(sourcePath, destinationPath, CompressionLevel.Optimal, false);
-        }
+        /// <value>
+        /// The identifier.
+        /// </value>
+        public string Id { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name.
+        /// </summary>
+        /// <value>
+        /// The name.
+        /// </value>
+        public string Name { get; set; }
+
+        #endregion
     }
 }

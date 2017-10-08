@@ -21,12 +21,14 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-namespace YellowJacket.Dashboard.Models
+using System;
+
+namespace YellowJacket.Models
 {
     /// <summary>
-    /// Represents a job.
+    /// Represents an agent.
     /// </summary>
-    public class JobModel
+    public class AgentModel
     {
         #region Properties
 
@@ -45,6 +47,30 @@ namespace YellowJacket.Dashboard.Models
         /// The name.
         /// </value>
         public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets the status.
+        /// </summary>
+        /// <value>
+        /// The status.
+        /// </value>
+        public string Status { get; set; }
+
+        /// <summary>
+        /// Gets or sets the last update date time.
+        /// </summary>
+        /// <value>
+        /// The last update date time.
+        /// </value>
+        public DateTime LastUpdateOn { get; set; }
+
+        /// <summary>
+        /// Gets or sets the registration date time.
+        /// </summary>
+        /// <value>
+        /// The registration date time.
+        /// </value>
+        public DateTime RegisteredOn { get; set; }
 
         #endregion
     }

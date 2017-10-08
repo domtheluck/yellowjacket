@@ -115,7 +115,7 @@ namespace YellowJacket.Core.Packaging
         /// <returns>The package full name.</returns>
         public string ExtractPackage(string packageFullName)
         {
-            string packageName = "";
+            string packageName = String.Empty;
 
             if (!string.IsNullOrEmpty(packageFullName))
                 packageName = Path.GetFileName(packageFullName);
@@ -150,9 +150,9 @@ namespace YellowJacket.Core.Packaging
         /// <param name="packageLocation">The package location.</param>
         /// <param name="packageName">Name of the package.</param>
         private void CreateConfigurationFile(
-            string deploymentFolderLocation, 
-            string testAssemblyName, 
-            string packageLocation, 
+            string deploymentFolderLocation,
+            string testAssemblyName,
+            string packageLocation,
             string packageName)
         {
             PackageConfiguration packageConfiguration =
@@ -162,13 +162,24 @@ namespace YellowJacket.Core.Packaging
 
             TypeLocatorHelper typeLocatorHelper = new TypeLocatorHelper();
 
-            List<string> features = 
+            List<string> assemblyFeatures =
                 typeLocatorHelper.GetFeatureTypes(Assembly.LoadFrom(Path.Combine(deploymentFolderLocation, testAssemblyName)))
                 .Select(x => x.Name.Substring(0, x.Name.Length - 7))
                 .ToList();
 
-            if (!features.Any())
+            if (!assemblyFeatures.Any())
                 throw new Exception($"No feature have been found in the test assembly {Path.Combine(packageLocation, testAssemblyName)}");
+
+            List<Feature> features = new List<Feature>();
+
+            foreach (string assemblyFeature in assemblyFeatures)
+            {
+                features.Add(new Feature
+                {
+                    Id = CryptographyHelper.GetMd5Hash($"{testAssemblyName} - {assemblyFeature}"),
+                    Name = assemblyFeature
+                });
+            }
 
             packageConfiguration.Features = features;
 

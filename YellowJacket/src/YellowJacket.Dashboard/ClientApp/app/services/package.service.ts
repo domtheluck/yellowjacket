@@ -30,6 +30,9 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
 
 import IPackage from '../models/package.model'
+import IFeature from '../models/feature.model'
+
+import PackageMapper from '../mapping/package.mapper'
 
 export interface IPackageService {
     getAll(): Observable<IPackage[]>
@@ -39,6 +42,7 @@ export interface IPackageService {
 export class PackageService implements IPackageService {
     private readonly http: Http;
     private readonly baseUrl: string;
+    private readonly packageMapper: PackageMapper;
 
     /**
      * Initialize a new instance of PackageService.
@@ -48,34 +52,29 @@ export class PackageService implements IPackageService {
     constructor(http: Http, @Inject('BASE_URL') baseUrl: string) {
         this.http = http;
         this.baseUrl = baseUrl;
+
+        this.packageMapper = new PackageMapper();
     }
 
+    /**
+     * Gets all packages from the repository.
+     * @returns {Observable<IJob[]>} An Angular Observable who contains an array of package.
+     */
     public getAll(): Observable<IPackage[]> {
         const package$ = this.http
             .get(`${this.baseUrl}api/v1/package`, { headers: this.getHeaders() })
-            .map(this.mapPackages);
+            .map(this.packageMapper.mapPackages);
 
         return package$;
     }
 
+    /**
+     * Get the request headers.
+     * @returns {Headers} An Augular Headers instance.
+     */
     private getHeaders() {
         const headers = new Headers();
         headers.append('Accept', 'application/json');
         return headers;
-    }
-
-    private mapPackages = (response: Response): IPackage[] => {
-        if (response.json().length === 0)
-            return [];
-
-        return response.json().map(this.toPackage);
-    }
-
-    private toPackage = (item: any): IPackage => {
-        const model = ({
-            name: item.name
-        }) as IPackage;
-
-        return model;
     }
 }
