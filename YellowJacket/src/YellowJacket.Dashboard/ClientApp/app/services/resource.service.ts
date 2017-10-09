@@ -25,17 +25,20 @@ import { Injectable } from '@angular/core';
 
 export enum MessageId {
     OperationSuccessfullyCompleted,
-    ErrorHappened
+    ErrorHappened,
+    FieldIsRequired,
+    FieldMaxCharacters
 }
 
 export type MessageContainer = { messageId: MessageId; value: string };
 
 export interface IResourceService {
+    getMessageWithArguments(message: MessageId, ...args: string[]): string;
     getMessage(message: MessageId): string;
 }
 
 @Injectable()
-export class ResourceService implements IResourceService{
+export class ResourceService implements IResourceService {
     private readonly messages: MessageContainer[];
 
     /**
@@ -45,17 +48,38 @@ export class ResourceService implements IResourceService{
         this.messages = new Array<MessageContainer>();
 
         this.messages.push({ messageId: MessageId.OperationSuccessfullyCompleted, value: 'Operation successfully completed' });
-        this.messages.push({ messageId: MessageId.ErrorHappened, value: 'An error happened. Please check the log files.' }); 
+        this.messages.push({ messageId: MessageId.ErrorHappened, value: 'An error happened. Please check the log files.' });
+        this.messages.push({ messageId: MessageId.FieldIsRequired, value: 'The field {0} is required.' });
+        this.messages.push({ messageId: MessageId.FieldMaxCharacters, value: 'The field {0} must contains a maximum of {1} characters.' });
     }
 
     /**
-     * Gets a message from it id.
+     * Gets a message by his id.
      * @param {MessageId} messageId The message to get.
-     * @returns {MessageContainer} The message container.
+     * @param {string[]} args The message arguments.
+     * @returns {string} The message.
      */
+    public getMessageWithArguments(messageId: MessageId, ...args: string[]): string {
+        let message = this.getMessage(messageId);
+
+        if (message && args && args.length > 0) {
+            for (let cpt = 0; cpt < args.length; cpt++) {
+                message = message.replace(`{${cpt}}`, args[cpt]);
+            }
+        }
+
+        return message ? message : '';
+    }
+
+    /**
+ * Gets a message by his id.
+ * @param {MessageId} messageId The message to get.
+ * @param {string[]} args The message arguments.
+ * @returns {string} The message.
+ */
     public getMessage(messageId: MessageId): string {
         const messageContainer = this.messages.find(x => x.messageId === messageId);
 
         return messageContainer ? messageContainer.value : '';
-    } 
+    }
 }

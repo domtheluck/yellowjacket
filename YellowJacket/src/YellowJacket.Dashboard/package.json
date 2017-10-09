@@ -42,6 +42,7 @@
     "jquery": "3.2.1",
     "json-loader": "0.5.4",
     "metismenu": "https://registry.npmjs.org/metismenu/-/metismenu-2.7.0.tgz",
+    "ng2-dual-list-box": "^1.0.5",
     "ngx-bootstrap": "^1.9.1",
     "npm": "https://registry.npmjs.org/npm/-/npm-5.4.0.tgz",
     "preboot": "4.5.2",

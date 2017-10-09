@@ -22,7 +22,7 @@
 // ***********************************************************************
 
 import { Injectable, Inject } from '@angular/core';
-import { Http, Response, Headers } from '@angular/http';
+import { Http, Headers } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 
 import 'rxjs/add/operator/map';
@@ -30,7 +30,6 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
 
 import IPackage from '../models/package.model'
-import IFeature from '../models/feature.model'
 
 import PackageMapper from '../mapping/package.mapper'
 
@@ -42,6 +41,7 @@ export interface IPackageService {
 export class PackageService implements IPackageService {
     private readonly http: Http;
     private readonly baseUrl: string;
+
     private readonly packageMapper: PackageMapper;
 
     /**

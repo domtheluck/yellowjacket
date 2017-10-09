@@ -21,9 +21,13 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+import IFeature from '../models/feature.model';
+
 export interface IJob {
     id?: string,
     name: string;
+    jobPackage: string;
+    jobFeatures: IFeature[];
 }
 
 export default IJob;

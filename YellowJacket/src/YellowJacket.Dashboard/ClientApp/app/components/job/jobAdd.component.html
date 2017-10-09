@@ -15,12 +15,23 @@
                             <label for="name" sr-only>Name</label>
                             <input type="text" class="form-control" id="name" formControlName="name" required>
                             <i *ngIf="name.errors && (name.dirty || name.touched)" class="glyphicon glyphicon-remove form-control-feedback"></i>
-                            <span *ngIf="name.errors && (name.dirty || name.touched) && name.errors.required" class="help-block has-error">The Name is required.</span>
-                            <span *ngIf="name.errors && (name.dirty || name.touched) && name.errors.maxlength" class="help-block has-error">The Name must contains a maximum of 25 characters.</span>
+                            <span *ngIf="name.errors && (name.dirty || name.touched) && name.errors.required" class="help-block has-error">{{validationMessages.name.fieldRequired}}</span>
+                            <span *ngIf="name.errors && (name.dirty || name.touched) && name.errors.maxlength" class="help-block has-error">{{validationMessages.name.fieldMaxCharacters}}</span>
                         </div>
-
+                        <div class="form-group has-feedback" 
+                             [ngClass]="{'has-error': selectedPackage.invalid && (selectedPackage.dirty || selectedPackage.touched),'has-success': selectedPackage.valid && (selectedPackage.dirty || selectedPackage.touched)}">
+                            <label>Package</label>
+                            <select formControlName="selectedPackage" (change)="selectedPackageChanged($event.target)" class="form-control">
+                                <option *ngFor="let package of packages" [value]="package.name">{{package.name}}</option>
+                            </select>
+                            <span *ngIf="selectedPackage.errors && (selectedPackage.dirty || selectedPackage.touched) && selectedPackage.errors.required" class="help-block has-error">{{validationMessages.selectedPackage.fieldRequired}}</span>
+                        </div>
+                        <div class="form-group has-feedback">
+                            <label>Features</label>
+                            <ng2-dual-list-box formControlName="selectedFeatures" [data]="features" valueField="id" textField="name" ></ng2-dual-list-box>
+                        </div>
                         <div class="form-group">
-                            <button type="submit" class="btn btn-primary" [disabled]="jobAddForm.pristine">Submit</button>
+                            <button type="submit" class="btn btn-primary" [disabled]="!jobAddForm.valid">Submit</button>
                         </div>
                     </form>
                 </div>
