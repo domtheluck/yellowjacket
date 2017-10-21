@@ -133,11 +133,9 @@ export class JobAddComponent implements OnInit {
 
         this.jobService.add(this.job)
             .subscribe(result => {
-                console.info(this.resourceService.getMessage(MessageId.OperationSuccessfullyCompleted));
                 this.notificationService.addSuccess(this.resourceService.getMessage(MessageId.OperationSuccessfullyCompleted), true);
             },
             error => {
-                console.log(JSON.stringify(error));
                 this.notificationService.addError(this.resourceService.getMessage(MessageId.ErrorHappened), true);
             });
 
@@ -174,7 +172,7 @@ export class JobAddComponent implements OnInit {
     }
 
     /**
-     * Prepare the job for sending to the Api.
+     * Prepare the job for the Api call.
      * @returns {IJob} An instance of IJob.
      */
     private prepareJob() {
@@ -182,8 +180,8 @@ export class JobAddComponent implements OnInit {
 
         const job: IJob = {
             name: formModel.name as string,
-            jobPackage: formModel.selectedPackage as string,
-            jobFeatures: formModel.selectedFeatures as IFeature[]
+            "package": formModel.selectedPackage as string,
+            features: formModel.selectedFeatures as IFeature[]
         };
 
         return job;

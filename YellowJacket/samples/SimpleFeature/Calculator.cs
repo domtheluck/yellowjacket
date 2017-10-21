@@ -23,65 +23,78 @@
 
 using System.Collections.Generic;
 
-namespace YellowJacket.Models
+namespace SimpleFeature
 {
-    /// <summary>
-    /// Represents a job.
-    /// </summary>
-    public class JobModel
+    internal class Calculator
     {
+        #region Private Members
+
+        private static Calculator _instance;
+
+        private readonly List<int> _numbers;
+
+        private int _result;
+
+        #endregion
+
         #region Properties
 
         /// <summary>
-        /// Gets or sets the id.
+        /// Gets the instance.
         /// </summary>
         /// <value>
-        /// The id.
+        /// The instance.
         /// </value>
-        public string Id { get; set; }
-
-        /// <summary>
-        /// Gets or sets the name.
-        /// </summary>
-        /// <value>
-        /// The name.
-        /// </value>
-        public string Name { get; set; }
-        
-        /// <summary>
-        /// Gets or sets the package.
-        /// </summary>
-        /// <value>
-        /// The package.
-        /// </value>
-        public string Package { get; set; }
-
-        /// <summary>
-        /// Gets or sets the features.
-        /// </summary>
-        /// <value>
-        /// The features.
-        /// </value>
-        public List<string> Features { get; set; }
-
-        /// <summary>
-        /// Gets or sets the serialized features.
-        /// </summary>
-        /// <value>
-        /// The serialized features.
-        /// </value>
-        public string SerializedFeatures { get; set; }
+        public static Calculator Instance => _instance ?? (_instance = new Calculator());
 
         #endregion
 
         #region Constructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="JobModel"/> class.
+        /// Prevents a default instance of the <see cref="Calculator"/> class from being created.
         /// </summary>
-        public JobModel()
+        private Calculator()
         {
-            Features = new List<string>();
+            _numbers = new List<int>();
+        }
+
+        #endregion
+
+        #region Public Methods
+
+        /// <summary>
+        /// Resets the calculator to initial state.
+        /// </summary>
+        public void Reset()
+        {
+            _result = 0;
+
+            _numbers.Clear();
+        }
+
+        /// <summary>
+        /// Enter a number in the calculator.
+        /// </summary>
+        /// <param name="number">The number.</param>
+        public void EnterNumber(int number)
+        {
+            _numbers.Add(number);
+        }
+
+        /// <summary>
+        /// Adds the numbers enterred.
+        /// </summary>
+        public void ComputeAdd()
+        {
+            _result = 0;
+
+            _numbers.ForEach(x => _result += x);
+        }
+
+        public int GetResult()
+        {
+            return _result;
         }
 
         #endregion

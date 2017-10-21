@@ -21,13 +21,37 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-import IFeature from '../models/feature.model';
+using NUnit.Framework;
+using TechTalk.SpecFlow;
 
-export interface IJob {
-    id?: string,
-    name: string;
-    package: string;
-    features: IFeature[];
+namespace SimpleFeature.Steps
+{
+    [Binding]
+    internal class MyStep
+    {
+        #region Steps
+
+        [Given(@"I have entered '(.*)' into the calculator")]
+        public void GivenIHaveEnteredIntoTheCalculator(int number)
+        {
+            Calculator.Instance.EnterNumber(number);
+        }
+
+        [When(@"I press '(.*)'")]
+        public void WhenIPress(string buttonName)
+        {
+            if (buttonName.ToLowerInvariant().Equals("add"))
+                Calculator.Instance.ComputeAdd();
+        }
+
+        [Then(@"the result should be '(.*)' on the screen")]
+        public void ThenTheResultShouldBeOnTheScreen(int expectedResult)
+        {
+            int result = Calculator.Instance.GetResult();
+
+            Assert.AreEqual(expectedResult, result);
+        }
+
+        #endregion
+    }
 }
-
-export default IJob;

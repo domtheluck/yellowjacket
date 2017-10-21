@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.15
+VisualStudioVersion = 15.0.27004.2002
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{AA56D832-3C1B-44C1-9F68-02428AE74F4A}"
 EndProject
@@ -19,9 +19,9 @@ Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-co
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YellowJacket.Api", "src\YellowJacket.Api\YellowJacket.Api.csproj", "{D0739B5D-2D5E-410B-8A44-0B5B4C5C1B87}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YellowJacket.WebApp.Automation", "samples\YellowJacket.WebApp.Automation\YellowJacket.WebApp.Automation.csproj", "{F944458C-6CFD-4958-AC3B-65FCCBAC5DF0}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YellowJacket.Dashboard", "src\YellowJacket.Dashboard\YellowJacket.Dashboard.csproj", "{405A0E31-C829-4C30-AA59-711CE2869283}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleFeature", "samples\SimpleFeature\SimpleFeature.csproj", "{381642E0-FA6C-4EAD-8050-C890EE3253AC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,19 +47,18 @@ Global
 		{7811E115-4CC8-4D4D-AFA2-6E029B1F2090}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3FB52DE6-8EBC-4F8B-900F-CC3C26E08F48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3FB52DE6-8EBC-4F8B-900F-CC3C26E08F48}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3FB52DE6-8EBC-4F8B-900F-CC3C26E08F48}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D0739B5D-2D5E-410B-8A44-0B5B4C5C1B87}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D0739B5D-2D5E-410B-8A44-0B5B4C5C1B87}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D0739B5D-2D5E-410B-8A44-0B5B4C5C1B87}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D0739B5D-2D5E-410B-8A44-0B5B4C5C1B87}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F944458C-6CFD-4958-AC3B-65FCCBAC5DF0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F944458C-6CFD-4958-AC3B-65FCCBAC5DF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F944458C-6CFD-4958-AC3B-65FCCBAC5DF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F944458C-6CFD-4958-AC3B-65FCCBAC5DF0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{405A0E31-C829-4C30-AA59-711CE2869283}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{405A0E31-C829-4C30-AA59-711CE2869283}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{405A0E31-C829-4C30-AA59-711CE2869283}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{405A0E31-C829-4C30-AA59-711CE2869283}.Release|Any CPU.Build.0 = Release|Any CPU
+		{381642E0-FA6C-4EAD-8050-C890EE3253AC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{381642E0-FA6C-4EAD-8050-C890EE3253AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{381642E0-FA6C-4EAD-8050-C890EE3253AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{381642E0-FA6C-4EAD-8050-C890EE3253AC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -70,8 +69,8 @@ Global
 		{84B31181-A6D4-4C8C-A2FF-7E5CAFF3416E} = {AA56D832-3C1B-44C1-9F68-02428AE74F4A}
 		{7811E115-4CC8-4D4D-AFA2-6E029B1F2090} = {AA56D832-3C1B-44C1-9F68-02428AE74F4A}
 		{D0739B5D-2D5E-410B-8A44-0B5B4C5C1B87} = {AA56D832-3C1B-44C1-9F68-02428AE74F4A}
-		{F944458C-6CFD-4958-AC3B-65FCCBAC5DF0} = {9B17E28E-6960-4C5F-B3D1-6C5301711854}
 		{405A0E31-C829-4C30-AA59-711CE2869283} = {AA56D832-3C1B-44C1-9F68-02428AE74F4A}
+		{381642E0-FA6C-4EAD-8050-C890EE3253AC} = {9B17E28E-6960-4C5F-B3D1-6C5301711854}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {34634A09-3B1F-4151-A9D0-B76AF2AB8973}

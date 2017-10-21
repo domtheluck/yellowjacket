@@ -27,6 +27,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using YellowJacket.Dashboard.Entities;
 using YellowJacket.Dashboard.Repositories.Interfaces;
 using YellowJacket.Dashboard.Validators.Job;
@@ -126,6 +127,8 @@ namespace YellowJacket.Dashboard.Controllers.Api
                 if (!results.IsValid)
                     return StatusCode(400, model);
 
+                PostProcessModel(model);
+
                 JobEntity entity =
                   await _jobRepository.Add(_mapper.Map<JobModel, JobEntity>(model));
 
@@ -137,6 +140,19 @@ namespace YellowJacket.Dashboard.Controllers.Api
 
                 return StatusCode(500, model);
             }
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        /// <summary>
+        /// Prepares the model before sending it to the repository.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        private void PostProcessModel(JobModel model)
+        {
+            model.SerializedFeatures = JsonConvert.SerializeObject(model.Features);
         }
 
         #endregion

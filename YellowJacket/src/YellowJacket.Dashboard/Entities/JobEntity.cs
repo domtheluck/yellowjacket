@@ -46,5 +46,22 @@ namespace YellowJacket.Dashboard.Entities
         /// </value>
         [Required]
         public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets the package.
+        /// </summary>
+        /// <value>
+        /// The package.
+        /// </value>
+        [Required]
+        public string Package { get; set; }
+
+        /// <summary>
+        /// Gets or sets the serialized features.
+        /// </summary>
+        /// <value>
+        /// The serialized features.
+        /// </value>
+        public string SerializedFeatures { get; set; }
     }
 }
