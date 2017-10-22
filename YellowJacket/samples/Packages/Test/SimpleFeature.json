@@ -1,0 +1,9 @@
+{
+  "testAssemblyName": "SimpleFeature.dll",
+  "features": [
+    {
+      "Id": "ab199f12bf39675b1028db88652c84a9",
+      "Name": "MyFeature"
+    }
+  ]
+}
