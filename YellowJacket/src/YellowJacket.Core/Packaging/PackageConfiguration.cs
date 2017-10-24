@@ -40,6 +40,15 @@ namespace YellowJacket.Core.Packaging
         public string TestAssemblyName { get; set; }
 
         /// <summary>
+        /// Gets or sets the hash.
+        /// </summary>
+        /// <value>
+        /// The hash.
+        /// </value>
+        [JsonProperty("hash")]
+        public string Hash { get; set; }
+
+        /// <summary>
         /// Gets or sets the features.
         /// </summary>
         /// <value>

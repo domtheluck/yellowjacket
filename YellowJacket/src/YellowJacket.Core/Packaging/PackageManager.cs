@@ -155,10 +155,15 @@ namespace YellowJacket.Core.Packaging
             string packageLocation,
             string packageName)
         {
-            PackageConfiguration packageConfiguration =
-                new PackageConfiguration { TestAssemblyName = testAssemblyName };
-
+            string packageFileFullName = Path.Combine(packageLocation, $"{packageName}.zip");
             string configFileFullName = Path.Combine(packageLocation, $"{packageName}.json");
+
+            PackageConfiguration packageConfiguration =
+                new PackageConfiguration
+                {
+                    TestAssemblyName = testAssemblyName,
+                    Hash = CryptographyHelper.GetMd5HashFromFile(packageFileFullName)
+                };
 
             TypeLocatorHelper typeLocatorHelper = new TypeLocatorHelper();
 
@@ -170,16 +175,12 @@ namespace YellowJacket.Core.Packaging
             if (!assemblyFeatures.Any())
                 throw new Exception($"No feature have been found in the test assembly {Path.Combine(packageLocation, testAssemblyName)}");
 
-            List<Feature> features = new List<Feature>();
-
-            foreach (string assemblyFeature in assemblyFeatures)
-            {
-                features.Add(new Feature
+            List<Feature> features = assemblyFeatures.Select(assemblyFeature => new Feature
                 {
-                    Id = CryptographyHelper.GetMd5Hash($"{testAssemblyName} - {assemblyFeature}"),
+                    Id = CryptographyHelper.GetMd5HashFromString($"{testAssemblyName} - {assemblyFeature}"),
                     Name = assemblyFeature
-                });
-            }
+                })
+                .ToList();
 
             packageConfiguration.Features = features;
 

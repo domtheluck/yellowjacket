@@ -27,7 +27,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 namespace YellowJacket.Core.Helpers
 {
     /// <summary>
-    /// Helper class for object serialization.
+    /// Helper class for object serialization operations.
     /// </summary>
     internal class SerializationHelper
     {

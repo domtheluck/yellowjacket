@@ -30,7 +30,7 @@ using System.Reflection;
 namespace YellowJacket.Core.Helpers
 {
     /// <summary>
-    /// Helper class for embeded resources manipulation.
+    /// Helper class for embeded resources operations.
     /// </summary>
     public class ResourceHelper
     {

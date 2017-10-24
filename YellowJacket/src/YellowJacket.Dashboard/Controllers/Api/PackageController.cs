@@ -33,7 +33,7 @@ using YellowJacket.Models;
 namespace YellowJacket.Dashboard.Controllers.Api
 {
     [Produces("application/json")]
-    [Route("api/v1/package")]
+    [Route("api/v1/[controller]")]
     public class PackageController : BaseController
     {
         #region Private Members
@@ -61,7 +61,27 @@ namespace YellowJacket.Dashboard.Controllers.Api
 
         #region Public Methods
 
-        [HttpGet(Name = "GetAllPackages")]
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(string id)
+        {
+            try
+            {
+                PackageEntity entity = await _packageRepository.Find(id);
+
+                if (entity == null)
+                    return StatusCode(404);
+
+                return Ok(_mapper.Map<PackageEntity, PackageModel>(entity));
+            }
+            catch (Exception ex)
+            {
+                HandleError(ex);
+
+                return StatusCode(500, id);
+            }
+        }
+
+        [HttpGet]
         public async Task<IActionResult> GetAll()
         {
             try
@@ -74,6 +94,17 @@ namespace YellowJacket.Dashboard.Controllers.Api
 
                 return StatusCode(500);
             }
+        }
+
+        [HttpGet("{id}/download")]
+        public async Task<IActionResult> Download()
+        {
+            string fileName = "SimpleFeature.zip";
+
+            string filepath = $@"D:\Projects\DEV\yellowjacket\YellowJacket\samples\Packages\Test/{fileName}";
+            byte[] fileBytes = await System.IO.File.ReadAllBytesAsync(filepath);
+
+            return File(fileBytes, "application/x-msdownload", fileName);
         }
 
         #endregion

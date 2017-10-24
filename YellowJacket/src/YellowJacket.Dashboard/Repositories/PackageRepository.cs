@@ -43,6 +43,8 @@ namespace YellowJacket.Dashboard.Repositories
         private const string PackageExtension = ".zip";
         private const string PackageConfigurationExtension = ".json";
 
+        private const string PackageFolder = "Test";
+
         #endregion
 
         #region Private Members
@@ -64,6 +66,39 @@ namespace YellowJacket.Dashboard.Repositories
 
         #endregion
 
+        #region Public Methods
+
+        /// <inheritdoc />
+        /// <summary>
+        /// Finds a package by its id.
+        /// </summary>
+        /// <param name="id">The id.</param>
+        /// <returns>
+        ///   <see cref="PackageEntity" />.
+        /// </returns>
+        public async Task<PackageEntity> Find(string id)
+        {
+            string testPackagePath = Path.Combine(_configuration.PackagesRootPath, PackageFolder);
+
+            PackageEntity entity = null;
+
+            await Task.Run(() =>
+            {
+                FileInfo package =
+                    new DirectoryInfo(testPackagePath)
+                    .GetFiles($"*{PackageExtension}")
+                    .ToList()
+                    .FirstOrDefault(x => x.Name.ToLowerInvariant().Equals($"{id}.zip"));
+
+                if (package == null)
+                    return;
+
+                entity = GetPackageInformation(package);
+            });
+
+            return entity;
+        }
+
         /// <summary>
         /// Gets all package from the repository.
         /// </summary>
@@ -72,7 +107,7 @@ namespace YellowJacket.Dashboard.Repositories
         /// </returns>
         public async Task<IEnumerable<PackageEntity>> GetAll()
         {
-            string testPackagePath = Path.Combine(_configuration.PackagesRootPath, "Test");
+            string testPackagePath = Path.Combine(_configuration.PackagesRootPath, PackageFolder);
 
             List<PackageEntity> results = new List<PackageEntity>();
 
@@ -81,24 +116,33 @@ namespace YellowJacket.Dashboard.Repositories
                 List<FileInfo> packages =
                     new DirectoryInfo(testPackagePath).GetFiles($"*{PackageExtension}").ToList();
 
-                foreach (FileInfo package in packages)
-                {
-                    string packageConfigurationPath =
-                        $"{Path.Combine(package.DirectoryName, Path.GetFileNameWithoutExtension(package.Name))}{PackageConfigurationExtension}";
-
-                    if (!File.Exists(packageConfigurationPath))
-                        continue;
-
-                    PackageEntity packageEntity =
-                        JsonConvert.DeserializeObject<PackageEntity>(File.ReadAllText(packageConfigurationPath));
-
-                    packageEntity.Name = Path.GetFileNameWithoutExtension(package.Name);
-
-                    results.Add(packageEntity);
-                }
+                results.AddRange(packages.Select(GetPackageInformation));
             });
 
             return results;
         }
+
+        #endregion
+
+        #region Private Methods
+
+        /// <summary>
+        /// Gets the package information.
+        /// </summary>
+        /// <param name="package">The package.</param>
+        /// <returns><see cref="PackageEntity"/>.</returns>
+        private static PackageEntity GetPackageInformation(FileInfo package)
+        {
+            string packageConfigurationPath =
+                $"{Path.Combine(package.DirectoryName, Path.GetFileNameWithoutExtension(package.Name))}{PackageConfigurationExtension}";
+
+            PackageEntity entity = JsonConvert.DeserializeObject<PackageEntity>(File.ReadAllText(packageConfigurationPath));
+
+            entity.Name = Path.GetFileNameWithoutExtension(package.Name);
+
+            return entity;
+        }
+
+        #endregion
     }
 }

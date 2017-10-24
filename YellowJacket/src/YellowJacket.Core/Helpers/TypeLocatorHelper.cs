@@ -27,17 +27,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using NUnit.Framework;
-using YellowJacket.Core.Interfaces;
 
 namespace YellowJacket.Core.Helpers
 {
     /// <summary>
-    /// Helper class used to find specific type in assembly.
+    /// Helper class for type location operations.
     /// </summary>
     public class TypeLocatorHelper
     {
         /// <summary>
-        /// Gets thew implemented types.
+        /// Gets the implemented type of a specified type.
         /// </summary>
         /// <param name="assembly">The assembly.</param>
         /// <returns><see cref="List{Type}"/>.</returns>

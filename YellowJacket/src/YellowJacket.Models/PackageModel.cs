@@ -41,6 +41,14 @@ namespace YellowJacket.Models
         public string Name { get; set; }
 
         /// <summary>
+        /// Gets or sets the hash.
+        /// </summary>
+        /// <value>
+        /// The hash.
+        /// </value>
+        public string Hash { get; set; }
+
+        /// <summary>
         /// Gets or sets the name of the test assembly.
         /// </summary>
         /// <value>

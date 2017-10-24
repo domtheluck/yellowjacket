@@ -30,6 +30,13 @@ namespace YellowJacket.Dashboard.Repositories.Interfaces
     public interface IPackageRepository
     {
         /// <summary>
+        /// Finds a package by its id.
+        /// </summary>
+        /// <param name="id">The id.</param>
+        /// <returns><see cref="PackageEntity"/>.</returns>
+        Task<PackageEntity> Find(string id);
+
+        /// <summary>
         /// Gets all package from the repository.
         /// </summary>
         /// <returns>
