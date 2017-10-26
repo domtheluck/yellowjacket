@@ -21,58 +21,43 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
 using System.Net.Http;
-using YellowJacket.Api.Processors;
+using System.Text;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
 
-namespace YellowJacket.Api
+namespace YellowJacket.Api.Extensions
 {
     /// <summary>
-    /// Yellow Jacker API client.
+    /// HttpClient extension methods.
     /// </summary>
-    public class ApiClient
+    public static class HttpClientExtension
     {
-        #region Constants
-
-        #endregion
-
-        #region Private Members
-
-        private readonly HttpClient _httpClient;
-
-        #endregion
-
-        #region Properties
-        public AgentProcessor AgentProcessor { get; }
-
-        #endregion
-
-        #region Constructors
+        #region Public Methods
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ApiClient" /> class.
+        /// Sends the request.
         /// </summary>
-        /// <param name="rootUri">The root URI.</param>
-        public ApiClient(string rootUri)
+        /// <param name="httpClient">The HTTP client.</param>
+        /// <param name="httpMethod">The HTTP method.</param>
+        /// <param name="uri">The URI.</param>
+        /// <param name="content">The content.</param>
+        /// <returns><see cref="HttpResponseMessage"/>.</returns>
+        public static async Task<HttpResponseMessage> SendRequestAsync(
+            this HttpClient httpClient,
+            HttpMethod httpMethod,
+            string uri,
+            object content)
         {
-            _httpClient = new HttpClient { BaseAddress = new Uri(rootUri) };
+            HttpRequestMessage httpRequestMessage = new HttpRequestMessage(HttpMethod.Put, uri);
 
-            _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json; charset=utf-8");
+            if (content != null)
+                httpRequestMessage.Content = new StringContent(
+                    JsonConvert.SerializeObject(content),
+                    Encoding.UTF8,
+                    "application/json");
 
-            AgentProcessor = new AgentProcessor(_httpClient);
-        }
-
-        #endregion
-
-        #region Private Methods
-
-        /// <summary>
-        /// Handles the error.
-        /// </summary>
-        /// <param name="ex">The ex.</param>
-        private void HandleError(Exception ex)
-        {
-            Console.WriteLine(ex);
+            return await httpClient.SendAsync(httpRequestMessage);
         }
 
         #endregion

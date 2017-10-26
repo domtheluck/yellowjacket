@@ -22,57 +22,22 @@
 // ***********************************************************************
 
 using System;
-using System.Net.Http;
-using YellowJacket.Api.Processors;
 
-namespace YellowJacket.Api
+namespace YellowJacket.Api.Processors
 {
     /// <summary>
-    /// Yellow Jacker API client.
+    /// BaseProcessor implementation.
     /// </summary>
-    public class ApiClient
+    public class BaseProcessor
     {
-        #region Constants
-
-        #endregion
-
-        #region Private Members
-
-        private readonly HttpClient _httpClient;
-
-        #endregion
-
-        #region Properties
-        public AgentProcessor AgentProcessor { get; }
-
-        #endregion
-
-        #region Constructors
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ApiClient" /> class.
-        /// </summary>
-        /// <param name="rootUri">The root URI.</param>
-        public ApiClient(string rootUri)
-        {
-            _httpClient = new HttpClient { BaseAddress = new Uri(rootUri) };
-
-            _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json; charset=utf-8");
-
-            AgentProcessor = new AgentProcessor(_httpClient);
-        }
-
-        #endregion
-
-        #region Private Methods
+        #region Internal Methods
 
         /// <summary>
         /// Handles the error.
         /// </summary>
         /// <param name="ex">The ex.</param>
-        private void HandleError(Exception ex)
+        internal void HandleError(Exception ex)
         {
-            Console.WriteLine(ex);
         }
 
         #endregion

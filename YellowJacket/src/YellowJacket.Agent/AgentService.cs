@@ -111,12 +111,13 @@ namespace YellowJacket.Agent
             {
                 _agent.LastUpdateOn = DateTime.Now;
 
-                AgentModel model = await _apiClient.UpdateAgent(_agent);
+                AgentModel model = await _apiClient.AgentProcessor.UpdateAgent(_agent);
 
                 if (model != null)
                     _agent = model;
 
                 await Task.Delay(interval, cancellationToken);
+
                 if (_cancellationToken.IsCancellationRequested)
                     break;
             }
@@ -136,7 +137,7 @@ namespace YellowJacket.Agent
 
             Task registerTask = Task.Run(async () =>
             {
-                model = await _apiClient.RegisterAgent(_agent);
+                model = await _apiClient.AgentProcessor.RegisterAgent(_agent);
             }, _cancellationToken);
 
             registerTask.Wait(_cancellationToken);

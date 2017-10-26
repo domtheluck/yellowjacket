@@ -44,6 +44,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApiClient.cs" />
+    <Compile Include="Extensions\HttpClientExtension.cs" />
+    <Compile Include="Processors\AgentProcessor.cs" />
+    <Compile Include="Processors\BaseProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
