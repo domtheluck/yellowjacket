@@ -25,10 +25,11 @@ using System;
 
 namespace YellowJacket.Core.Hook
 {
+    /// <inheritdoc />
     /// <summary>
     /// Uses for hook priority.
     /// </summary>
-    /// <seealso cref="System.Attribute" />
+    /// <seealso cref="T:System.Attribute" />
     [AttributeUsage(AttributeTargets.Class)]
     public class HookPriorityAttribute : Attribute
     {
@@ -46,8 +47,9 @@ namespace YellowJacket.Core.Hook
 
         #region Constructors
 
+        /// <inheritdoc />
         /// <summary>
-        /// Initializes a new instance of the <see cref="HookPriorityAttribute"/> class.
+        /// Initializes a new instance of the <see cref="Hook.HookPriorityAttribute" /> class.
         /// </summary>
         /// <param name="priority">The priority.</param>
         public HookPriorityAttribute(int priority)

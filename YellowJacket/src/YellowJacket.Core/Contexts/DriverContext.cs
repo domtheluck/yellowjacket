@@ -39,7 +39,7 @@ namespace YellowJacket.Core.Contexts
         /// <value>
         /// The driver.
         /// </value>
-        public static IWebDriver Driver   { get; set; }
+        public static IWebDriver Driver { get; set; }
 
         /// <summary>
         /// Gets or sets the browser.

@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
 using System.Collections.Generic;
 
 namespace YellowJacket.Core.Engine
@@ -69,6 +68,9 @@ namespace YellowJacket.Core.Engine
 
         #region Constructors
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Configuration"/> class.
+        /// </summary>
         public Configuration()
         {
             PluginAssemblies = new List<string>();

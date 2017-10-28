@@ -25,10 +25,11 @@ using System;
 
 namespace YellowJacket.Core.NUnit
 {
+    /// <inheritdoc />
     /// <summary>
     /// Contains the arguments for the TestReport event.
     /// </summary>
-    /// <seealso cref="EventArgs" />
+    /// <seealso cref="T:System.EventArgs" />
     public class TestReportEventArgs : EventArgs
     {
         #region Properties
@@ -45,8 +46,9 @@ namespace YellowJacket.Core.NUnit
 
         #region Constructors
 
+        /// <inheritdoc />
         /// <summary>
-        /// Initializes a new instance of the <see cref="TestReportEventArgs"/> class.
+        /// Initializes a new instance of the <see cref="TestReportEventArgs" /> class.
         /// </summary>
         /// <param name="report">The report.</param>
         public TestReportEventArgs(string report)

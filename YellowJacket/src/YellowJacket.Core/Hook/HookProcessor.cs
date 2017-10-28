@@ -42,7 +42,7 @@ namespace YellowJacket.Core.Hook
 
             hooks.ForEach(x =>
             {
-                x.Instance.GetType().GetMethod(hookType.ToString()).Invoke(x.Instance, null);
+                x.Instance.GetType().GetMethod(hookType.ToString())?.Invoke(x.Instance, null);
             });
         }
     }

@@ -32,6 +32,12 @@ namespace YellowJacket.Core.Engine
     {
         #region Properties
 
+        /// <summary>
+        /// Gets or sets the browser.
+        /// </summary>
+        /// <value>
+        /// The browser.
+        /// </value>
         public BrowserType Browser { get; set; }
 
         #endregion

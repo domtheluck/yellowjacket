@@ -31,7 +31,7 @@ namespace YellowJacket.Api.Extensions
     /// <summary>
     /// HttpClient extension methods.
     /// </summary>
-    public static class HttpClientExtension
+    internal static class HttpClientExtension
     {
         #region Public Methods
 

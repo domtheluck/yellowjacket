@@ -47,7 +47,7 @@ namespace YellowJacket.Core.NUnit.Models
         /// The CLR version.
         /// </value>
         [XmlAttribute(AttributeName = "clr-version")]
-        public string CLRVersion { get; set; }
+        public string ClrVersion { get; set; }
 
         /// <summary>
         /// Gets or sets the OS version.
@@ -56,7 +56,7 @@ namespace YellowJacket.Core.NUnit.Models
         /// The OS version.
         /// </value>
         [XmlAttribute(AttributeName = "os-version")]
-        public string OSVersion { get; set; }
+        public string OsVersion { get; set; }
 
         /// <summary>
         /// Gets or sets the platform.
@@ -119,7 +119,7 @@ namespace YellowJacket.Core.NUnit.Models
         /// The UI culture.
         /// </value>
         [XmlAttribute(AttributeName = "uiculture")]
-        public string UICulture { get; set; }
+        public string UiCulture { get; set; }
 
         /// <summary>
         /// Gets or sets the os architecture.
@@ -128,6 +128,6 @@ namespace YellowJacket.Core.NUnit.Models
         /// The os architecture.
         /// </value>
         [XmlAttribute(AttributeName = "os-architecture")]
-        public string OSArchitecture { get; set; }
+        public string OsArchitecture { get; set; }
     }
 }

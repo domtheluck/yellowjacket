@@ -58,50 +58,6 @@ namespace YellowJacket.Core.Helpers
             return assembly.GetManifestResourceNames();
         }
 
-        ///// <summary>
-        ///// Gets the embeded resource.
-        ///// </summary>
-        ///// <typeparam name="TAssembly">The type of the assembly.</typeparam>
-        ///// <typeparam name="TNamespace">The type of the namespace.</typeparam>
-        ///// <param name="name">The name.</param>
-        ///// <returns>The embeded resource.</returns>
-        ///// <exception cref="ArgumentNullException">name</exception>
-        //public static string GetEmbededResource<TAssembly, TNamespace>(string name)
-        //{
-        //    if (string.IsNullOrEmpty(name))
-        //        throw new ArgumentNullException(nameof(name));
-
-        //    return ReadEmbededResource(typeof(TAssembly), typeof(TNamespace), name);
-        //}
-
-        ///// <summary>
-        ///// Reads the embeded resource.
-        ///// </summary>
-        ///// <param name="assemblyType">Type of the assembly.</param>
-        ///// <param name="namespaceType">Type of the namespace.</param>
-        ///// <param name="name">The name.</param>
-        ///// <returns>The embeded resource.</returns>
-        ///// <exception cref="ArgumentNullException">
-        ///// assemblyType
-        ///// or
-        ///// namespaceType
-        ///// or
-        ///// name
-        ///// </exception>
-        //public static string ReadEmbededResource(Type assemblyType, Type namespaceType, string name)
-        //{
-        //    if (assemblyType == null)
-        //        throw new ArgumentNullException(nameof(assemblyType));
-
-        //    if (namespaceType == null)
-        //        throw new ArgumentNullException(nameof(namespaceType));
-
-        //    if (string.IsNullOrEmpty(name))
-        //        throw new ArgumentNullException(nameof(name));
-
-        //    return ReadEmbededResource(assemblyType, $"{namespaceType.Namespace}.{name}");
-        //}
-
         /// <summary>
         /// Reads the embeded resource.
         /// </summary>

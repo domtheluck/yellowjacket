@@ -25,10 +25,11 @@ using System;
 
 namespace YellowJacket.Core.Engine.Events
 {
+    /// <inheritdoc />
     /// <summary>
     /// Contains the arguments for the Execution Progress event.
     /// </summary>
-    /// <seealso cref="EventArgs" />
+    /// <seealso cref="T:System.EventArgs" />
     public class ExecutionProgressEventArgs : EventArgs
     {
         #region Properties
@@ -53,8 +54,9 @@ namespace YellowJacket.Core.Engine.Events
 
         #region Constructors
 
+        /// <inheritdoc />
         /// <summary>
-        /// Initializes a new instance of the <see cref="ExecutionProgressEventArgs"/> class.
+        /// Initializes a new instance of the <see cref="T:YellowJacket.Core.Engine.Events.ExecutionProgressEventArgs" /> class.
         /// </summary>
         /// <param name="progress">The progress.</param>
         /// <param name="currentState">The current state.</param>

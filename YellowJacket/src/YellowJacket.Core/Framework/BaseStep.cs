@@ -23,6 +23,7 @@
 
 namespace YellowJacket.Core.Framework
 {
+    /// <inheritdoc />
     /// <summary>
     /// Base step class.
     /// </summary>
@@ -30,6 +31,7 @@ namespace YellowJacket.Core.Framework
     {
         #region Public Methods
 
+        /// <inheritdoc />
         /// <summary>
         /// Navigates to the site.
         /// </summary>

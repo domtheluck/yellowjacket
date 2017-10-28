@@ -25,7 +25,10 @@ using YellowJacket.Core.Enums;
 
 namespace YellowJacket.Core.Plugins.Interfaces
 {
-    interface IWebDriverConfigurationPlugin
+    /// <summary>
+    /// Web Driver configuration plugin interface definition.
+    /// </summary>
+    internal interface IWebDriverConfigurationPlugin
     {
         IWebDriver Get(BrowserType browser);
     }

@@ -41,6 +41,7 @@ using YellowJacket.Core.Plugins.Interfaces;
 
 namespace YellowJacket.Core.Engine
 {
+    /// <inheritdoc />
     /// <summary>
     /// YellowJacket engine.
     /// </summary>
@@ -64,7 +65,7 @@ namespace YellowJacket.Core.Engine
         private TestSuite _testSuite;
         private int _testCaseCount;
 
-        private GherkinManager _gherkinManager = new GherkinManager();
+        private readonly GherkinManager _gherkinManager = new GherkinManager();
 
         private string _tempFolder;
 
@@ -93,6 +94,7 @@ namespace YellowJacket.Core.Engine
 
         #region Public Methods
 
+        /// <inheritdoc />
         /// <summary>
         /// Runs the engine with the specified configuration.
         /// </summary>
@@ -136,6 +138,9 @@ namespace YellowJacket.Core.Engine
 
         #region Private Methods
 
+        /// <summary>
+        /// Extracts the features.
+        /// </summary>
         private void ExtractFeatures()
         {
             _configuration.Features.ForEach(x =>
@@ -144,6 +149,9 @@ namespace YellowJacket.Core.Engine
             });
         }
 
+        /// <summary>
+        /// Initializes the file system.
+        /// </summary>
         private void InitializeFileSystem()
         {
             _tempFolder = Path.Combine(Path.GetTempPath(), "YellowJacket");
@@ -152,27 +160,37 @@ namespace YellowJacket.Core.Engine
                 DeleteDirectory(_tempFolder, true);
         }
 
+        /// <summary>
+        /// Deletes the directory.
+        /// </summary>
+        /// <param name="path">The path.</param>
+        /// <param name="recursive">if set to <c>true</c> [recursive].</param>
         public void DeleteDirectory(string path, bool recursive)
         {
             if (recursive)
             {
-                var subfolders = Directory.GetDirectories(path);
-                foreach (var s in subfolders)
+                string[] subfolders = Directory.GetDirectories(path);
+
+                foreach (string folder in subfolders)
                 {
-                    DeleteDirectory(s, recursive);
+                    DeleteDirectory(folder, true);
                 }
             }
-            var files = Directory.GetFiles(path);
-            foreach (var f in files)
+
+            string[] files = Directory.GetFiles(path);
+
+            foreach (string file in files)
             {
                 try
                 {
-                    var attr = File.GetAttributes(f);
+                    FileAttributes attr = File.GetAttributes(file);
+
                     if ((attr & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
                     {
-                        File.SetAttributes(f, attr ^ FileAttributes.ReadOnly);
+                        File.SetAttributes(file, attr ^ FileAttributes.ReadOnly);
                     }
-                    File.Delete(f);
+
+                    File.Delete(file);
                 }
                 catch (IOException)
                 {
@@ -180,8 +198,6 @@ namespace YellowJacket.Core.Engine
                 }
             }
 
-            // At this point, all the files and sub-folders have been deleted.
-            // So we delete the empty folder using the OOTB Directory.Delete method.
             Directory.Delete(path);
         }
 

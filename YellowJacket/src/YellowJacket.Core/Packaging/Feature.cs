@@ -23,6 +23,9 @@
 
 namespace YellowJacket.Core.Packaging
 {
+    /// <summary>
+    /// Represents a feature.
+    /// </summary>
     public class Feature
     {
         #region Properties

@@ -26,6 +26,9 @@ using Newtonsoft.Json;
 
 namespace YellowJacket.Core.Packaging
 {
+    /// <summary>
+    /// Contains the package configuration.
+    /// </summary>
     public class PackageConfiguration
     {
         #region Properties

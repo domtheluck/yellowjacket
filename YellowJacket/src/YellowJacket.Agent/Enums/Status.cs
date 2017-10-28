@@ -23,7 +23,7 @@
 
 namespace YellowJacket.Agent.Enums
 {
-    public enum Status
+    internal enum Status
     {
         Idle,
         Updating,

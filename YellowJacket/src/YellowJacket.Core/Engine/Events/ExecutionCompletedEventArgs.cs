@@ -25,10 +25,11 @@ using System;
 
 namespace YellowJacket.Core.Engine.Events
 {
+    /// <inheritdoc />
     /// <summary>
     /// Contains the arguments for the Execution Completed event.
     /// </summary>
-    /// <seealso cref="EventArgs" />
+    /// <seealso cref="T:System.EventArgs" />
     public class ExecutionCompletedEventArgs: EventArgs
     {
     }

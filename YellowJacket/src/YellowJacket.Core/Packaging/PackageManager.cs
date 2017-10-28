@@ -33,10 +33,11 @@ using YellowJacket.Core.Interfaces;
 
 namespace YellowJacket.Core.Packaging
 {
+    /// <inheritdoc />
     /// <summary>
     /// Handles the packaging operations.
     /// </summary>
-    /// <seealso cref="IPackageManager" />
+    /// <seealso cref="T:YellowJacket.Core.Interfaces.IPackageManager" />
     public class PackageManager : IPackageManager
     {
         #region Constants

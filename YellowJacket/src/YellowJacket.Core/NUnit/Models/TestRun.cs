@@ -173,7 +173,7 @@ namespace YellowJacket.Core.NUnit.Models
         /// The CLR version.
         /// </value>
         [XmlAttribute(AttributeName = "clr-version")]
-        public string CLRVersion { get; set; }
+        public string ClrVersion { get; set; }
 
         /// <summary>
         /// Gets or sets the start time.

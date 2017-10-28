@@ -6,11 +6,14 @@ using YellowJacket.Core.Helpers;
 
 namespace YellowJacket.Core.Gherkin
 {
+    /// <summary>
+    /// Handles the Gherkin operations.
+    /// </summary>
     internal class GherkinManager
     {
         #region Private Members
 
-        ResourceHelper _resourceHelper = new ResourceHelper();
+        readonly ResourceHelper _resourceHelper = new ResourceHelper();
 
         #endregion
 
@@ -29,9 +32,9 @@ namespace YellowJacket.Core.Gherkin
             if (!Directory.Exists(location))
                 Directory.CreateDirectory(location);
 
-            //Type type = assembly.GetType();
-
-            string feature = _resourceHelper.GetEmbededResourceNames(assembly).FirstOrDefault(x => x.ToLowerInvariant().Contains(featureName.ToLowerInvariant()));
+            string feature = 
+                _resourceHelper.GetEmbededResourceNames(assembly)
+                    .FirstOrDefault(x => x.ToLowerInvariant().Contains(featureName.ToLowerInvariant()));
 
             if (string.IsNullOrEmpty(feature))
                 throw new ArgumentException($"Feature {feature} not found in the assembly {assembly.FullName}");
@@ -39,6 +42,11 @@ namespace YellowJacket.Core.Gherkin
             File.AppendAllText(Path.Combine(location, feature), _resourceHelper.ReadEmbededResource(assembly, feature));
         }
 
+        /// <summary>
+        /// Parses the feature.
+        /// </summary>
+        /// <param name="fullName">The full name.</param>
+        /// <returns></returns>
         public Feature ParseFeature(string fullName)
         {
             return null;

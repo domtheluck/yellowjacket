@@ -31,7 +31,7 @@ using YellowJacket.Models;
 
 namespace YellowJacket.Agent
 {
-    public class AgentService
+    internal class AgentService
     {
         #region Private Members
 

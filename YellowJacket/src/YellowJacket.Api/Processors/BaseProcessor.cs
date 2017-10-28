@@ -30,6 +30,15 @@ namespace YellowJacket.Api.Processors
     /// </summary>
     public class BaseProcessor
     {
+        #region Constructors
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AgentProcessor"/> class.
+        /// </summary>
+        internal BaseProcessor() { }
+
+        #endregion
+
         #region Internal Methods
 
         /// <summary>

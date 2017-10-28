@@ -26,10 +26,14 @@ using YellowJacket.Core.Engine.Events;
 
 namespace YellowJacket.Core.Interfaces
 {
+    #region Delegates
+
     public delegate void ExecutionStartHandler(object sender, ExecutionStartEventArgs eventArgs);
     public delegate void ExecutionStopHandler(object sender, ExecutionStopEventArgs eventArgs);
     public delegate void ExecutionCompletedHandler(object sender, ExecutionCompletedEventArgs eventArgs);
     public delegate void ExecutionProgressHandler(object sender, ExecutionProgressEventArgs eventArgs);
+
+    #endregion
 
     /// <summary>
     /// Interface definition for the execution engine.
