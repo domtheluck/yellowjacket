@@ -27,11 +27,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using YellowJacket.Common.Helpers;
 using YellowJacket.Core.Contexts;
 using YellowJacket.Core.Engine.Events;
 using YellowJacket.Core.Enums;
 using YellowJacket.Core.Gherkin;
-using YellowJacket.Core.Helpers;
 using YellowJacket.Core.Hook;
 using YellowJacket.Core.Interfaces;
 using YellowJacket.Core.NUnit;
@@ -312,7 +312,9 @@ namespace YellowJacket.Core.Engine
             List<ILogPlugin> plugins = GetPlugins<ILogPlugin>();
 
             if (!plugins.Any())
-                plugins.Add(ClassActivatorHelper<FileLogPlugin>.CreateInstance(typeof(FileLogPlugin), @"c:\temp")); // TODO: need to have this in the input args
+                plugins.Add(
+                    ClassActivatorHelper<FileLogPlugin>
+                        .CreateInstance(typeof(FileLogPlugin), @"c:\temp")); // TODO: need to have this in the input args
 
             return plugins;
         }
@@ -340,11 +342,9 @@ namespace YellowJacket.Core.Engine
         {
             List<T> plugins = new List<T>();
 
-            TypeLocatorHelper typeLocatorHelper = new TypeLocatorHelper();
-
             foreach (Assembly assembly in _pluginAssemblies)
             {
-                List<Type> types = typeLocatorHelper.GetImplementedTypes<T>(assembly);
+                List<Type> types = TypeLocatorHelper.GetImplementedTypes<T>(assembly);
 
                 if (!types.Any())
                     continue;
@@ -403,7 +403,7 @@ namespace YellowJacket.Core.Engine
             ExecutionContext.Current.ClearHooks();
 
             // get the hook list from the test assembly
-            List<Type> hooks = _typeLocatorHelper.GetImplementedTypes<IHook>(_testAssembly);
+            List<Type> hooks = TypeLocatorHelper.GetImplementedTypes<IHook>(_testAssembly);
 
             // instantiate each hook class and register it in the execution context
             foreach (Type type in hooks)

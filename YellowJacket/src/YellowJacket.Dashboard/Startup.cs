@@ -32,6 +32,8 @@ using Swashbuckle.AspNetCore.Swagger;
 using YellowJacket.Dashboard.Entities;
 using YellowJacket.Dashboard.Repositories;
 using YellowJacket.Dashboard.Repositories.Interfaces;
+using YellowJacket.Dashboard.Services;
+using YellowJacket.Dashboard.Services.Interfaces;
 
 namespace YellowJacket.Dashboard
 {
@@ -60,7 +62,10 @@ namespace YellowJacket.Dashboard
             services.AddScoped<IConfigurationRepository, ConfigurationRepository>();
             services.AddScoped<IAgentRepository, AgentRepository>();
             services.AddScoped<IJobRepository, JobRepository>();
+            services.AddScoped<IJobInstanceRepository, JobInstanceRepository>();
             services.AddScoped<IPackageRepository, PackageRepository>();
+
+            services.AddScoped<IAgentService, AgentService>();
 
             services.Configure<ConfigurationSettings>(Configuration.GetSection("Configuration"));
         }

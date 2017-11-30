@@ -38,12 +38,38 @@ namespace YellowJacket.Api
 
         #region Private Members
 
-        private readonly HttpClient _httpClient;
-
         #endregion
 
         #region Properties
         public AgentProcessor AgentProcessor { get; }
+
+        /// <summary>
+        /// Gets the job instance processor.
+        /// </summary>
+        /// <value>
+        /// The job instance processor.
+        /// </value>
+        public JobInstanceProcessor JobInstanceProcessor { get; }
+
+        /// <summary>
+        /// Gets the package processor.
+        /// </summary>
+        /// <value>
+        /// The package processor.
+        /// </value>
+        public PackageProcessor PackageProcessor { get; }
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Gets the API base URI.
+        /// </summary>
+        /// <value>
+        /// The API base URI.
+        /// </value>
+        public string ApiBaseUri { get; }
 
         #endregion
 
@@ -52,14 +78,20 @@ namespace YellowJacket.Api
         /// <summary>
         /// Initializes a new instance of the <see cref="ApiClient" /> class.
         /// </summary>
-        /// <param name="rootUri">The root URI.</param>
-        public ApiClient(string rootUri)
+        /// <param name="apiBaseUri">The api base URI.</param>
+        public ApiClient(string apiBaseUri)
         {
-            _httpClient = new HttpClient { BaseAddress = new Uri(rootUri) };
+            HttpClient httpClient = new HttpClient { BaseAddress = new Uri(apiBaseUri) };
 
-            _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json; charset=utf-8");
+            ApiBaseUri = apiBaseUri;
 
-            AgentProcessor = new AgentProcessor(_httpClient);
+            httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json; charset=utf-8");
+
+            AgentProcessor = new AgentProcessor(httpClient);
+
+            JobInstanceProcessor = new JobInstanceProcessor(httpClient);
+
+            PackageProcessor = new PackageProcessor(httpClient);
         }
 
         #endregion

@@ -27,14 +27,14 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 
-namespace YellowJacket.Core.Helpers
+namespace YellowJacket.Common.Helpers
 {
     /// <summary>
     /// Helper class for embeded resources operations.
     /// </summary>
     public class ResourceHelper
     {
-        public IEnumerable<string> GetEmbededResources(Assembly assembly, Func<string, bool> predicate)
+        public static IEnumerable<string> GetEmbededResources(Assembly assembly, Func<string, bool> predicate)
         {
                 if (predicate == null)
                     throw new ArgumentNullException(nameof(predicate));
@@ -53,7 +53,7 @@ namespace YellowJacket.Core.Helpers
         /// <returns>
         ///   <see cref="IEnumerable{String}" />.
         /// </returns>
-        public IEnumerable<string> GetEmbededResourceNames(Assembly assembly)
+        public static IEnumerable<string> GetEmbededResourceNames(Assembly assembly)
         {
             return assembly.GetManifestResourceNames();
         }
@@ -69,7 +69,7 @@ namespace YellowJacket.Core.Helpers
         /// <exception cref="ArgumentNullException">assemblyType
         /// or
         /// name</exception>
-        public string ReadEmbededResource(Assembly assembly, string name)
+        public static string ReadEmbededResource(Assembly assembly, string name)
         {
             if (assembly == null)
                 throw new ArgumentNullException(nameof(assembly));

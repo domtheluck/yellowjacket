@@ -28,7 +28,8 @@ using System.Reflection;
 using System.Xml;
 using System.Xml.Serialization;
 using NUnit.Engine;
-using YellowJacket.Core.Helpers;
+using NUnit.Framework;
+using YellowJacket.Common.Helpers;
 using YellowJacket.Core.NUnit.Models;
 
 namespace YellowJacket.Core.NUnit
@@ -66,9 +67,9 @@ namespace YellowJacket.Core.NUnit
         {
             ITestFilterBuilder filterBuilder = new TestFilterBuilder();
 
-            TypeLocatorHelper typeLocatorHelper = new TypeLocatorHelper();
-
-            List<string> filters = features.Select(feature => $"class = {typeLocatorHelper.GetFeatureType(assembly, feature)}").ToList();
+            List<string> filters = features.Select(feature => 
+                $"class = {TypeLocatorHelper.GetTypeByAttributeAndName(assembly, typeof(DescriptionAttribute), feature)}")
+                    .ToList();
 
             filterBuilder.SelectWhere(string.Join(" || ", filters));
 

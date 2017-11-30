@@ -22,15 +22,14 @@
 // ***********************************************************************
 
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using YellowJacket.Dashboard.Entities;
 using YellowJacket.Dashboard.Repositories.Interfaces;
-using System;
 
 namespace YellowJacket.Dashboard.Repositories
 {
+    /// <inheritdoc />
     /// <summary>
     /// AgentRepository implementation.
     /// </summary>
@@ -53,49 +52,50 @@ namespace YellowJacket.Dashboard.Repositories
         {
             _context = context;
 
-            if (_context.Agents.Any())
-                return;
+            //if (_context.Agents.Any())
+            //    return;
 
-            Task.Run(async () =>
-           {
-               await Add(new AgentEntity { Id = "VM0002", Name = "Agent 2", Status = "Running", RegisteredOn = DateTime.Now, LastUpdateOn = DateTime.Now });
-               await Add(new AgentEntity { Id = "VM0003", Name = "Agent 3", Status = "Idle", RegisteredOn = DateTime.Now, LastUpdateOn = DateTime.Now });
-               await Add(new AgentEntity { Id = "VM0004", Name = "Agent 4", Status = "Running", RegisteredOn = DateTime.Now, LastUpdateOn = DateTime.Now });
-               await Add(new AgentEntity { Id = "VM0005", Name = "Agent 5", Status = "Idle", RegisteredOn = DateTime.Now, LastUpdateOn = DateTime.Now });
-               await Add(new AgentEntity { Id = "VM0006", Name = "Agent 6", Status = "Idle", RegisteredOn = DateTime.Now, LastUpdateOn = DateTime.Now });
-               await Add(new AgentEntity { Id = "VM0007", Name = "Agent 7", Status = "Running", RegisteredOn = DateTime.Now, LastUpdateOn = DateTime.Now });
-               await Add(new AgentEntity { Id = "VM0008", Name = "Agent 8", Status = "Idle", RegisteredOn = DateTime.Now, LastUpdateOn = DateTime.Now });
-               await Add(new AgentEntity { Id = "VM0009", Name = "Agent 9", Status = "Running", RegisteredOn = DateTime.Now, LastUpdateOn = DateTime.Now });
-               await Add(new AgentEntity { Id = "VM0010", Name = "Agent 10", Status = "Idle", RegisteredOn = DateTime.Now, LastUpdateOn = DateTime.Now });
-               await Add(new AgentEntity { Id = "VM0011", Name = "Agent 11", Status = "Idle", RegisteredOn = DateTime.Now, LastUpdateOn = DateTime.Now });
-               await Add(new AgentEntity { Id = "VM0012", Name = "Agent 12", Status = "Running", RegisteredOn = DateTime.Now, LastUpdateOn = DateTime.Now });
-               await Add(new AgentEntity { Id = "VM0013", Name = "Agent 13", Status = "Idle", RegisteredOn = DateTime.Now, LastUpdateOn = DateTime.Now });
-               await Add(new AgentEntity { Id = "VM0014", Name = "Agent 14", Status = "Running", RegisteredOn = DateTime.Now, LastUpdateOn = DateTime.Now });
-               await Add(new AgentEntity { Id = "VM0015", Name = "Agent 15", Status = "Idle", RegisteredOn = DateTime.Now, LastUpdateOn = DateTime.Now });
-           });
+           // Task.Run(async () =>
+           //{
+           //    await Add(new AgentEntity { Id = "VM0002", Name = "Agent 2", Status = "Running", RegisteredOn = DateTime.Now, LastUpdateOn = DateTime.Now });
+           //    await Add(new AgentEntity { Id = "VM0003", Name = "Agent 3", Status = "Idle", RegisteredOn = DateTime.Now, LastUpdateOn = DateTime.Now });
+           //    await Add(new AgentEntity { Id = "VM0004", Name = "Agent 4", Status = "Running", RegisteredOn = DateTime.Now, LastUpdateOn = DateTime.Now });
+           //    await Add(new AgentEntity { Id = "VM0005", Name = "Agent 5", Status = "Idle", RegisteredOn = DateTime.Now, LastUpdateOn = DateTime.Now });
+           //    await Add(new AgentEntity { Id = "VM0006", Name = "Agent 6", Status = "Idle", RegisteredOn = DateTime.Now, LastUpdateOn = DateTime.Now });
+           //    await Add(new AgentEntity { Id = "VM0007", Name = "Agent 7", Status = "Running", RegisteredOn = DateTime.Now, LastUpdateOn = DateTime.Now });
+           //    await Add(new AgentEntity { Id = "VM0008", Name = "Agent 8", Status = "Idle", RegisteredOn = DateTime.Now, LastUpdateOn = DateTime.Now });
+           //    await Add(new AgentEntity { Id = "VM0009", Name = "Agent 9", Status = "Running", RegisteredOn = DateTime.Now, LastUpdateOn = DateTime.Now });
+           //    await Add(new AgentEntity { Id = "VM0010", Name = "Agent 10", Status = "Idle", RegisteredOn = DateTime.Now, LastUpdateOn = DateTime.Now });
+           //    await Add(new AgentEntity { Id = "VM0011", Name = "Agent 11", Status = "Idle", RegisteredOn = DateTime.Now, LastUpdateOn = DateTime.Now });
+           //    await Add(new AgentEntity { Id = "VM0012", Name = "Agent 12", Status = "Running", RegisteredOn = DateTime.Now, LastUpdateOn = DateTime.Now });
+           //    await Add(new AgentEntity { Id = "VM0013", Name = "Agent 13", Status = "Idle", RegisteredOn = DateTime.Now, LastUpdateOn = DateTime.Now });
+           //    await Add(new AgentEntity { Id = "VM0014", Name = "Agent 14", Status = "Running", RegisteredOn = DateTime.Now, LastUpdateOn = DateTime.Now });
+           //    await Add(new AgentEntity { Id = "VM0015", Name = "Agent 15", Status = "Idle", RegisteredOn = DateTime.Now, LastUpdateOn = DateTime.Now });
+           //});
         }
 
         #endregion
 
         #region Public Methods
 
+        /// <inheritdoc />
         /// <summary>
         /// Adds the specified agent to the repository.
         /// </summary>
-        /// <param name="agent">The agent.</param>
+        /// <param name="entity">The entity to add.</param>
         /// <returns>
         ///   <see cref="AgentEntity" />.
         /// </returns>
-        public async Task<AgentEntity> Add(AgentEntity agent)
+        public async Task<AgentEntity> Add(AgentEntity entity)
         {
-            await _context.Agents.AddAsync(agent);
-            await RemoveInvalidAgents(agent.Id);
+            await _context.Agents.AddAsync(entity);
 
             await _context.SaveChangesAsync();
 
-            return agent;
+            return entity;
         }
 
+        /// <inheritdoc />
         /// <summary>
         /// Gets all agents from the repository.
         /// </summary>
@@ -107,6 +107,7 @@ namespace YellowJacket.Dashboard.Repositories
             return await _context.Agents.ToListAsync();
         }
 
+        /// <inheritdoc />
         /// <summary>
         /// Finds an agent by its id.
         /// </summary>
@@ -119,58 +120,41 @@ namespace YellowJacket.Dashboard.Repositories
             return await _context.Agents.FirstOrDefaultAsync(t => t.Id == id);
         }
 
+        /// <inheritdoc />
         /// <summary>
         /// Removes the specified agent from the repository.
         /// </summary>
         /// <param name="id">The id of the agent to remove.</param>
-        /// <returns><see cref="Task"/>.</returns>
+        /// <returns><see cref="Task" />.</returns>
         public async Task Remove(string id)
         {
-            AgentEntity entity = await _context.Agents.FirstAsync(t => t.Id == id);
+            AgentEntity entity = await _context.Agents.FirstAsync(x => x.Id.Equals(id));
 
             _context.Agents.Remove(entity);
             await _context.SaveChangesAsync();
         }
 
+        /// <inheritdoc />
         /// <summary>
         /// Updates the specified agent.
         /// </summary>
-        /// <param name="agent">The agent.</param>
-        /// <returns><see cref="AgentEntity"/>.</returns>
-        public async Task<AgentEntity> Update(AgentEntity agent)
+        /// <param name="entity">The entity to update</param>
+        /// <returns>
+        ///   <see cref="AgentEntity" />.
+        /// </returns>
+        public async Task<AgentEntity> Update(AgentEntity entity)
         {
-            AgentEntity currentEntity = await Find(agent.Id);
+            AgentEntity currentEntity = await Find(entity.Id);
 
-            currentEntity.LastUpdateOn = agent.LastUpdateOn;
-            currentEntity.RegisteredOn = agent.RegisteredOn;
-            currentEntity.Name = agent.Name;
+            currentEntity.LastUpdateOn = entity.LastUpdateOn;
+            currentEntity.RegisteredOn = entity.RegisteredOn;
+            currentEntity.Name = entity.Name;
 
             _context.Agents.Update(currentEntity);
 
-            await RemoveInvalidAgents(currentEntity.Id);
             await _context.SaveChangesAsync();
 
-            return agent;
-        }
-
-        #endregion
-
-        #region Private Methods
-
-        /// <summary>
-        /// Removes the invalid agents.
-        /// </summary>
-        /// <param name="currentAgentId">The current agent identifier.</param>
-        /// <returns><see cref="Task"/>.</returns>
-        public async Task RemoveInvalidAgents(string currentAgentId)
-        {
-            // TODO: the difference threshold need to be dynamic
-            List<AgentEntity> entities = await _context.Agents
-                .Where(x => x.Id != currentAgentId && (x.LastUpdateOn - x.RegisteredOn).TotalSeconds >= 60) // TODO: need to be dynamic
-                .ToListAsync();
-
-            foreach (AgentEntity entity in entities)
-                _context.Agents.Remove(entity);
+            return entity;
         }
 
         #endregion

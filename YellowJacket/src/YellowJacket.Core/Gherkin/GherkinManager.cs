@@ -2,7 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using YellowJacket.Core.Helpers;
+using YellowJacket.Common.Helpers;
 
 namespace YellowJacket.Core.Gherkin
 {
@@ -33,13 +33,13 @@ namespace YellowJacket.Core.Gherkin
                 Directory.CreateDirectory(location);
 
             string feature = 
-                _resourceHelper.GetEmbededResourceNames(assembly)
+                ResourceHelper.GetEmbededResourceNames(assembly)
                     .FirstOrDefault(x => x.ToLowerInvariant().Contains(featureName.ToLowerInvariant()));
 
             if (string.IsNullOrEmpty(feature))
                 throw new ArgumentException($"Feature {feature} not found in the assembly {assembly.FullName}");
 
-            File.AppendAllText(Path.Combine(location, feature), _resourceHelper.ReadEmbededResource(assembly, feature));
+            File.AppendAllText(Path.Combine(location, feature), ResourceHelper.ReadEmbededResource(assembly, feature));
         }
 
         /// <summary>

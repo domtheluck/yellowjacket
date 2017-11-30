@@ -27,11 +27,11 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Microsoft.Extensions.CommandLineUtils;
+using YellowJacket.Common.Helpers;
 using YellowJacket.Core.Builders;
 using YellowJacket.Core.Engine;
 using YellowJacket.Core.Engine.Events;
 using YellowJacket.Core.Enums;
-using YellowJacket.Core.Helpers;
 using YellowJacket.Core.Interfaces;
 using YellowJacket.Core.Packaging;
 
@@ -192,12 +192,9 @@ namespace YellowJacket.Console
                 browserOptionDescription.Append(
                     "Please note that you must specify a browser if you want to execute a Web UI feature. ");
 
-                EnumHelper enumHelper = new EnumHelper();
-
-                List<string> browsers = (
-                    Enum.GetValues(typeof(BrowserType))
-                        .Cast<BrowserType>()
-                        .Select(browserType => enumHelper.GetEnumFieldDescription(browserType))).ToList();
+                List<string> browsers = Enum.GetValues(typeof(BrowserType))
+                    .Cast<BrowserType>()
+                    .Select(browserType => EnumHelper.GetEnumFieldDescription(browserType)).ToList();
 
                 browserOptionDescription.Append(
                     $"Possible values are: {string.Join(", ", browsers)}.");
@@ -252,7 +249,7 @@ namespace YellowJacket.Console
                     if (browser != "None")
                         configuration.BrowserConfiguration = new BrowserConfiguration
                         {
-                            Browser = new EnumHelper().GetEnumTypeFromDescription<BrowserType>(browser)
+                            Browser = EnumHelper.GetEnumTypeFromDescription<BrowserType>(browser)
                         };
 
                     // TODO: Handles the plugins
@@ -269,7 +266,7 @@ namespace YellowJacket.Console
 
         private static void InitializeRunPackageCommand(CommandLineApplication app)
         {
-            app.Command(RunPackage, (command) =>
+            app.Command(RunPackage, command =>
             {
                 command.Description = "Run one or multiple features located in a package.";
                 command.HelpOption(HelpOptionText);
@@ -289,12 +286,10 @@ namespace YellowJacket.Console
                 browserOptionDescription.Append(
                     "Please note that you must specify a browser if you want to execute a Web UI feature. ");
 
-                EnumHelper enumHelper = new EnumHelper();
-
                 List<string> browsers = (
                     Enum.GetValues(typeof(BrowserType))
                         .Cast<BrowserType>()
-                        .Select(browserType => enumHelper.GetEnumFieldDescription(browserType))).ToList();
+                        .Select(browserType => EnumHelper.GetEnumFieldDescription(browserType))).ToList();
 
                 browserOptionDescription.Append(
                     $"Possible values are: {string.Join(", ", browsers)}.");
@@ -358,7 +353,7 @@ namespace YellowJacket.Console
                     if (browser != "None")
                         configuration.BrowserConfiguration = new BrowserConfiguration
                         {
-                            Browser = new EnumHelper().GetEnumTypeFromDescription<BrowserType>(browser)
+                            Browser = EnumHelper.GetEnumTypeFromDescription<BrowserType>(browser)
                         };
 
                     // TODO: Handles the plugins

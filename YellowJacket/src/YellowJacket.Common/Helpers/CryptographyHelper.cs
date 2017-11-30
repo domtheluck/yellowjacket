@@ -25,7 +25,7 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace YellowJacket.Core.Helpers
+namespace YellowJacket.Common.Helpers
 {
     /// <summary>
     /// Helper class for cryptography operations.
@@ -43,14 +43,14 @@ namespace YellowJacket.Core.Helpers
 
             byte[] data = md5Hasher.ComputeHash(Encoding.Default.GetBytes(input));
 
-            StringBuilder sBuilder = new StringBuilder();
+            StringBuilder builder = new StringBuilder();
 
             foreach (byte item in data)
             {
-                sBuilder.Append(item.ToString("x2"));
+                builder.Append(item.ToString("x2"));
             }
 
-            return sBuilder.ToString();
+            return builder.ToString();
         }
 
         /// <summary>

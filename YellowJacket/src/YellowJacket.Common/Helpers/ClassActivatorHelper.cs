@@ -21,51 +21,35 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
+using System;
 
-namespace YellowJacket.Core.Helpers
+namespace YellowJacket.Common.Helpers
 {
     /// <summary>
-    /// Helper class for object serialization operations.
+    /// Uses to create instance of a specific type.
     /// </summary>
-    internal class SerializationHelper
+    /// <typeparam name="T"></typeparam>
+    public class ClassActivatorHelper<T>
     {
         /// <summary>
-        /// Serialize and write the specified object as binary.
+        /// Creates an instance of the specified type.
         /// </summary>
-        /// <typeparam name="T">The object type.</typeparam>
-        /// <param name="filePath">The file path.</param>
-        /// <param name="objectToWrite">The object to write.</param>
-        /// <param name="append">if set to <c>true</c> [append].</param>
-        public static void WriteToBinaryFile<T>(string filePath, T objectToWrite)
+        /// <param name="type">The type.</param>
+        /// <returns>Instance of type <see cref="T"/>.</returns>
+        public static T CreateInstance(Type type)
         {
-            // TODO: probably need to pass an additional parameters for that
-            if (File.Exists(filePath))
-                File.Delete(filePath);
-
-            using (Stream stream = File.Open(filePath, FileMode.CreateNew))
-            {
-                BinaryFormatter binaryFormatter = new BinaryFormatter();
-
-                binaryFormatter.Serialize(stream, objectToWrite);
-            }
+            return (T)Activator.CreateInstance(type);
         }
 
         /// <summary>
-        /// Reads the specified binary file and deserialize it.
+        /// Uses to create instance of a specific type.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="filePath">The file path.</param>
+        /// <param name="type">The type.</param>
+        /// <param name="args">The arguments.</param>
         /// <returns></returns>
-        public static T ReadFromBinaryFile<T>(string filePath)
+        public static T CreateInstance(Type type, params object[] args)
         {
-            using (Stream stream = File.Open(filePath, FileMode.Open))
-            {
-                BinaryFormatter binaryFormatter = new BinaryFormatter();
-
-                return (T)binaryFormatter.Deserialize(stream);
-            }
+            return (T)Activator.CreateInstance(type, args);
         }
     }
 }

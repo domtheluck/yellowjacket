@@ -27,16 +27,49 @@ namespace YellowJacket.Dashboard.Entities
 {
     public class YellowJacketContext : DbContext
     {
-        public YellowJacketContext(DbContextOptions<YellowJacketContext> options)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="YellowJacketContext"/> class.
+        /// </summary>
+        /// <param name="options">The options for this context.</param>
+        public YellowJacketContext(DbContextOptions options)
             : base(options)
         {
         }
 
+        #region DBSet
+
+        /// <summary>
+        /// Gets or sets the agents.
+        /// </summary>
+        /// <value>
+        /// The agents.
+        /// </value>
         public DbSet<AgentEntity> Agents { get; set; }
 
+        /// <summary>
+        /// Gets or sets the jobs.
+        /// </summary>
+        /// <value>
+        /// The jobs.
+        /// </value>
         public DbSet<JobEntity> Jobs { get; set; }
 
+        /// <summary>
+        /// Gets or sets the job instances.
+        /// </summary>
+        /// <value>
+        /// The job instances.
+        /// </value>
+        public DbSet<JobInstanceEntity> JobInstances { get; set; }
+
+        /// <summary>
+        /// Gets or sets the configurations.
+        /// </summary>
+        /// <value>
+        /// The configurations.
+        /// </value>
         public DbSet<ConfigurationEntity> Configurations { get; set; }
 
+        #endregion
     }
 }

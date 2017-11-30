@@ -5,10 +5,11 @@
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
     <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
     <IsPackable>false</IsPackable>
+
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="6.1.1" />
+    <PackageReference Include="AutoMapper" Version="6.2.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="3.0.1" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="7.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />
@@ -36,6 +37,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\YellowJacket.Common\YellowJacket.Common.csproj" />
     <ProjectReference Include="..\YellowJacket.Models\YellowJacket.Models.csproj" />
   </ItemGroup>
 

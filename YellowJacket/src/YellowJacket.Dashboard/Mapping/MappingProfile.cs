@@ -27,6 +27,7 @@ using YellowJacket.Models;
 
 namespace YellowJacket.Dashboard.Mapping
 {
+    /// <inheritdoc />
     /// <summary>
     /// Initialize the different mapping profiles.
     /// </summary>
@@ -45,6 +46,9 @@ namespace YellowJacket.Dashboard.Mapping
 
             CreateMap<JobEntity, JobModel>();
             CreateMap<JobModel, JobEntity>();
+
+            CreateMap<JobInstanceEntity, JobInstanceModel>();
+            CreateMap<JobInstanceModel, JobInstanceEntity>();
 
             CreateMap<ConfigurationEntity, ConfigurationModel>();
             CreateMap<ConfigurationModel, ConfigurationEntity>();

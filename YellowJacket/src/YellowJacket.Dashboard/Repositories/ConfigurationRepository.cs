@@ -29,10 +29,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace YellowJacket.Dashboard.Repositories
 {
+    /// <inheritdoc />
     /// <summary>
     /// AgentRepository implementation.
     /// </summary>
-    /// <seealso cref="IConfigurationRepository" />
+    /// <seealso cref="T:YellowJacket.Dashboard.Repositories.Interfaces.IConfigurationRepository" />
     public class ConfigurationRepository : IConfigurationRepository
     {
         #region Private Members

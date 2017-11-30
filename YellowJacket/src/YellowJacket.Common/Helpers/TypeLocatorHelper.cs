@@ -24,11 +24,11 @@
 using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
-using NUnit.Framework;
 
-namespace YellowJacket.Core.Helpers
+namespace YellowJacket.Common.Helpers
 {
     /// <summary>
     /// Helper class for type location operations.
@@ -40,7 +40,7 @@ namespace YellowJacket.Core.Helpers
         /// </summary>
         /// <param name="assembly">The assembly.</param>
         /// <returns><see cref="List{Type}"/>.</returns>
-        public List<Type> GetImplementedTypes<T>(Assembly assembly)
+        public static List<Type> GetImplementedTypes<T>(Assembly assembly)
         {
             return
                 assembly.GetTypes()
@@ -55,7 +55,7 @@ namespace YellowJacket.Core.Helpers
         /// </summary>
         /// <param name="assembly">The assembly.</param>
         /// <returns><see cref="List{Type}"/></returns>
-        public List<Type> GetFeatureTypes(Assembly assembly)
+        public static List<Type> GetFeatureTypes(Assembly assembly)
         {
             return assembly.GetTypes()
                 .Where(t => t.GetCustomAttributes(typeof(GeneratedCodeAttribute))
@@ -65,39 +65,38 @@ namespace YellowJacket.Core.Helpers
         }
 
         /// <summary>
-        /// Gets the type of the feature.
+        /// Gets the type by the attribute and name.
         /// </summary>
         /// <param name="assembly">The assembly.</param>
-        /// <param name="feature">The feature.</param>
-        /// <returns></returns>
+        /// <param name="attributeType">The attribute type.</param>
+        /// <param name="name">The name.</param>
+        /// <returns>The type.</returns>
         /// <exception cref="Exception">.</exception>
-        public Type GetFeatureType(Assembly assembly, string feature)
+        public static Type GetTypeByAttributeAndName(Assembly assembly, Type attributeType, string name)
         {
-            // TODO: to rewrite
-
             List<Type> types =
                 assembly.GetTypes()
                     .Where(t => t.GetCustomAttributes(typeof(DescriptionAttribute)).Any()).ToList();
 
             if (!types.Any())
-                throw new Exception($"Cannot find any feature in assembly {assembly.FullName}");
+                throw new Exception($"Cannot find any class with the attribute type {attributeType} in assembly {assembly.FullName}");
 
             foreach (Type type in types)
             {
                 IList<CustomAttributeData> customAttributeData =
                     type.GetCustomAttributesData()
-                    .Where(x => x.AttributeType == typeof(DescriptionAttribute)).ToList();
+                    .Where(x => x.AttributeType == attributeType).ToList();
 
                 if (customAttributeData
                     .SelectMany(item => item.ConstructorArguments)
                     .Any(
                         constructorArgument =>
-                            string.Equals(constructorArgument.Value.ToString(), feature,
+                            string.Equals(constructorArgument.Value.ToString(), name,
                                 StringComparison.InvariantCultureIgnoreCase)))
                     return type;
             }
 
-            throw new Exception($"Cannot find the feature {feature} in the assembly {assembly.FullName}");
+            throw new Exception($"Cannot find the type {name} in the assembly {assembly.FullName}");
         }
     }
 }

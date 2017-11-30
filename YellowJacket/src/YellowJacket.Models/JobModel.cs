@@ -47,14 +47,14 @@ namespace YellowJacket.Models
         /// The name.
         /// </value>
         public string Name { get; set; }
-        
+
         /// <summary>
-        /// Gets or sets the package.
+        /// Gets or sets the package name.
         /// </summary>
         /// <value>
-        /// The package.
+        /// The package name.
         /// </value>
-        public string Package { get; set; }
+        public string PackageName { get; set; }
 
         /// <summary>
         /// Gets or sets the features.

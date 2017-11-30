@@ -27,6 +27,9 @@ using YellowJacket.Dashboard.Entities;
 
 namespace YellowJacket.Dashboard.Repositories.Interfaces
 {
+    /// <summary>
+    /// Agent Repository interface definition.
+    /// </summary>
     public interface IAgentRepository
     {
         #region Public Methods
@@ -34,9 +37,9 @@ namespace YellowJacket.Dashboard.Repositories.Interfaces
         /// <summary>
         /// Adds the specified agent to the repository.
         /// </summary>
-        /// <param name="agent">The agent.</param>
+        /// <param name="entity">The entity to add.</param>
         /// <returns><see cref="AgentEntity"/>.</returns>
-        Task<AgentEntity> Add(AgentEntity agent);
+        Task<AgentEntity> Add(AgentEntity entity);
 
         /// <summary>
         /// Gets all agents from the repository.
@@ -61,16 +64,9 @@ namespace YellowJacket.Dashboard.Repositories.Interfaces
         /// <summary>
         /// Updates the specified agent.
         /// </summary>
-        /// <param name="agent">The agent.</param>
+        /// <param name="entity">The entity to update</param>
         /// <returns><see cref="AgentEntity"/>.</returns>
-        Task<AgentEntity> Update(AgentEntity agent);
-
-        /// <summary>
-        /// Removes the invalid agents.
-        /// </summary>
-        /// <param name="currentAgentId">The current agent identifier.</param>
-        /// <returns><see cref="Task"/>.</returns>
-        Task RemoveInvalidAgents(string currentAgentId);
+        Task<AgentEntity> Update(AgentEntity entity);
 
         #endregion
     }

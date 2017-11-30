@@ -21,12 +21,37 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-namespace YellowJacket.Agent.Enums
+using System.Threading.Tasks;
+using YellowJacket.Dashboard.Entities;
+
+namespace YellowJacket.Dashboard.Repositories.Interfaces
 {
-    internal enum Status
+    /// <summary>
+    /// Job Instance repository interface definition.
+    /// </summary>
+    public interface IJobInstanceRepository
     {
-        Idle,
-        Updating,
-        Running  
+        /// <summary>
+        /// Adds the specified job instance to the repository.
+        /// </summary>
+        /// <param name="entity">The entity.</param>
+        /// <returns><see cref="JobInstanceEntity"/>.</returns>
+        Task<JobInstanceEntity> Add(JobInstanceEntity entity);
+
+        /// <summary>
+        /// Gets the first job instance available.
+        /// </summary>
+        /// <param name="agentId">The agent identifier.</param>
+        /// <returns>
+        ///   <see cref="JobInstanceEntity" />.
+        /// </returns>
+        Task<JobInstanceEntity> GetFirstAvailable(string agentId);
+
+        /// <summary>
+        /// Finds an job instance by its id.
+        /// </summary>
+        /// <param name="id">The id.</param>
+        /// <returns><see cref="JobInstanceEntity"/>.</returns>
+        Task<JobInstanceEntity> Find(string id);
     }
 }

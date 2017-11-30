@@ -23,10 +23,13 @@
 
 using System;
 using System.Configuration;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using YellowJacket.Agent.Enums;
+using Newtonsoft.Json;
 using YellowJacket.Api;
+using YellowJacket.Common.Enums;
+using YellowJacket.Common.Helpers;
 using YellowJacket.Models;
 
 namespace YellowJacket.Agent
@@ -35,8 +38,10 @@ namespace YellowJacket.Agent
     {
         #region Private Members
 
-        private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
-        private readonly CancellationToken _cancellationToken;
+        private readonly CancellationTokenSource _mainCancellationTokenSource = new CancellationTokenSource();
+        private readonly CancellationToken _mainCancellationToken;
+
+        private bool _isActive;
 
         private bool _isRegistered;
         private readonly ApiClient _apiClient;
@@ -45,6 +50,8 @@ namespace YellowJacket.Agent
 
         private string _apiBaseUrl;
         private string _name;
+
+        private readonly string _packageTestPath;
 
         #endregion
 
@@ -55,7 +62,7 @@ namespace YellowJacket.Agent
         {
             ReadConfiguration();
 
-            _cancellationToken = _cancellationTokenSource.Token;
+            _mainCancellationToken = _mainCancellationTokenSource.Token;
 
             _apiClient = new ApiClient(_apiBaseUrl);
 
@@ -63,8 +70,12 @@ namespace YellowJacket.Agent
             {
                 Name = _name,
                 Id = Environment.MachineName,
-                Status = Status.Idle.ToString()
+                Status = AgentStatus.Idle.ToString()
             };
+
+            string packageRootPath = Path.Combine(Path.GetTempPath(), $@"YellowJacket\{_agent.Id}\Packages");
+
+            _packageTestPath = Path.Combine(packageRootPath, "Test");
         }
 
         #region Public Methods
@@ -75,14 +86,23 @@ namespace YellowJacket.Agent
         public void Start()
         {
             while (!_isRegistered)
+            {
                 TryToRegister();
 
-            Console.WriteLine("Agent registered");
+                Thread.Sleep(5000); // TODO: need to be dynamic
+            }
 
             Task.Run(async () =>
             {
-                await UpdateHeartbeat(new TimeSpan(0, 0, 15), _cancellationToken); // TODO: need to be dynamic
-            }, _cancellationToken);
+                await UpdateHeartbeat(new TimeSpan(0, 0, 15), _mainCancellationToken); // TODO: need to be dynamic
+            }, _mainCancellationToken);
+
+            Task.Run(async () =>
+            {
+                await Process(_mainCancellationToken);
+            }, _mainCancellationToken);
+
+            Thread.Sleep(5000);  // TODO: need to be dynamic
         }
 
         /// <summary>
@@ -90,9 +110,10 @@ namespace YellowJacket.Agent
         /// </summary>
         public void Stop()
         {
-            _cancellationTokenSource.Cancel();
+            _mainCancellationTokenSource.Cancel();
 
             _isRegistered = false;
+            _isActive = false;
         }
 
         #endregion
@@ -111,16 +132,134 @@ namespace YellowJacket.Agent
             {
                 _agent.LastUpdateOn = DateTime.Now;
 
-                AgentModel model = await _apiClient.AgentProcessor.UpdateAgent(_agent);
+                AgentModel model = await _apiClient.AgentProcessor.Update(_agent);
 
                 if (model != null)
                     _agent = model;
 
                 await Task.Delay(interval, cancellationToken);
 
-                if (_cancellationToken.IsCancellationRequested)
+                if (_mainCancellationToken.IsCancellationRequested)
                     break;
             }
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        /// <summary>
+        /// Processes the job instance.
+        /// </summary>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns><see cref="Task"/>.</returns>
+        private async Task Process(CancellationToken cancellationToken)
+        {
+            while (_isActive)
+            {
+                JobInstanceModel jobInstance =
+                    await _apiClient.JobInstanceProcessor.GetFirstAvailable(_agent.Id);
+
+                if (jobInstance != null)
+                {
+                    PackageModel package = await _apiClient.PackageProcessor.Get(jobInstance.Job.PackageName);
+
+                    if (package == null)
+                        throw new Exception(""); // TODO: to modify
+
+                    if (!IsPackageValid(package))
+                        DownloadTestPackage(package);
+
+                    if (!IsPackageValid(package))
+                        throw new Exception(""); // TODO: to modify
+
+                    // TODO: Execute test
+
+                }
+
+                await Task.Delay(1000, cancellationToken); //  TODO: the delay value need to be dynamic
+            }
+        }
+
+        /// <summary>
+        /// Updates the agent status.
+        /// </summary>
+        /// <param name="agentStatus">The agent status.</param>
+        private void UpdateAgentStatus(AgentStatus agentStatus)
+        {
+            _agent.Status = agentStatus.ToString();
+
+            Task task = Task.Run(async () =>
+            {
+                await _apiClient.AgentProcessor.Update(_agent);
+            }, _mainCancellationToken);
+
+            task.Wait(_mainCancellationToken);
+        }
+
+        /// <summary>
+        /// Determines whether the specified package is valid or not.
+        /// </summary>
+        /// <param name="package">The package.</param>
+        /// <returns>
+        ///   <c>true</c> if the specified package is valid; otherwise, <c>false</c>.
+        /// </returns>
+        private bool IsPackageValid(PackageModel package)
+        {
+            string packageConfigurationFileFullName =
+                Path.Combine(_packageTestPath, $"{package.Name}.json");
+
+            string packageFileFullName =
+                Path.Combine(_packageTestPath, $"{package.Name}.zip");
+
+            if (!File.Exists(packageConfigurationFileFullName) || !File.Exists(packageFileFullName))
+                return false;
+
+            return CryptographyHelper.GetMd5HashFromFile(packageFileFullName).Equals(package.Hash);
+        }
+
+        /// <summary>
+        /// Downloads the test package.
+        /// </summary>
+        /// <param name="package">The package.</param>
+        /// <exception cref="Exception"></exception>
+        private void DownloadTestPackage(PackageModel package)
+        {
+            UpdateAgentStatus(AgentStatus.DownloadPackage);
+
+            string packageConfigurationFileFullName =
+                Path.Combine(_packageTestPath, $"{package.Name}.json");
+
+            string packageFileFullName =
+                Path.Combine(_packageTestPath, $"{package.Name}.zip");
+
+            if (File.Exists(packageConfigurationFileFullName))
+                File.Delete(packageConfigurationFileFullName);
+
+            if (File.Exists(packageFileFullName))
+                File.Delete(packageFileFullName);
+
+            File.WriteAllText(
+                packageConfigurationFileFullName,
+                JsonConvert.SerializeObject(package));
+
+            byte[] result = null;
+
+            Task downloadPackageTask = Task.Run(async () =>
+            {
+                result = await _apiClient.PackageProcessor.Download(package.Name);
+            }, _mainCancellationToken);
+
+            downloadPackageTask.Wait(_mainCancellationToken);
+
+            if (result == null)
+            {
+                throw new IOException($"Unable to download the package {package.Name} at {_apiClient.ApiBaseUri}");
+            }
+
+            File.WriteAllBytes(packageFileFullName, result);
+
+            UpdateAgentStatus(AgentStatus.Idle);
         }
 
         /// <summary>
@@ -137,11 +276,12 @@ namespace YellowJacket.Agent
 
             Task registerTask = Task.Run(async () =>
             {
-                model = await _apiClient.AgentProcessor.RegisterAgent(_agent);
-            }, _cancellationToken);
+                model = await _apiClient.AgentProcessor.Register(_agent);
+            }, _mainCancellationToken);
 
-            registerTask.Wait(_cancellationToken);
+            registerTask.Wait(_mainCancellationToken);
             _isRegistered = true;
+            _isActive = true;
 
             _agent = model ?? throw new NullReferenceException();
         }
@@ -153,7 +293,7 @@ namespace YellowJacket.Agent
         private void ReadConfiguration()
         {
             if (string.IsNullOrEmpty(ConfigurationManager.AppSettings["ApiBaseUri"]))
-                throw new ConfigurationErrorsException("The apiBaseUri configuration key is required");
+                throw new ConfigurationErrorsException("The ApiBaseUri configuration key is required");
 
             _apiBaseUrl = ConfigurationManager.AppSettings["ApiBaseUri"];
 

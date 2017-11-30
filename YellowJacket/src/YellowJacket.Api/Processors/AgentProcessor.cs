@@ -64,7 +64,7 @@ namespace YellowJacket.Api.Processors
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns><see cref="AgentModel"/>.</returns>
-        public async Task<AgentModel> UpdateAgent(AgentModel model)
+        public async Task<AgentModel> Update(AgentModel model)
         {
             try
             {
@@ -87,7 +87,7 @@ namespace YellowJacket.Api.Processors
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns><see cref="AgentModel"/>.</returns>
-        public async Task<AgentModel> RegisterAgent(AgentModel model)
+        public async Task<AgentModel> Register(AgentModel model)
         {
             try
             {
@@ -106,10 +106,10 @@ namespace YellowJacket.Api.Processors
         }
 
         /// <summary>
-        /// Gets the agents.
+        /// Gets all agents.
         /// </summary>
         /// <returns><see cref="IEnumerable{AgentModel}"/>.</returns>
-        public async Task<IEnumerable<AgentModel>> GetAgents()
+        public async Task<IEnumerable<AgentModel>> GetAll()
         {
             try
             {

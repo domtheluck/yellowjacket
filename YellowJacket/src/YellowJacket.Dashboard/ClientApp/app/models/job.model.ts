@@ -26,7 +26,7 @@ import IFeature from '../models/feature.model';
 export interface IJob {
     id?: string,
     name: string;
-    package: string;
+    packageName: string;
     features: IFeature[];
 }
 

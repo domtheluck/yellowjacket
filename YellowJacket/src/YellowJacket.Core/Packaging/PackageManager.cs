@@ -28,7 +28,7 @@ using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
 using Newtonsoft.Json;
-using YellowJacket.Core.Helpers;
+using YellowJacket.Common.Helpers;
 using YellowJacket.Core.Interfaces;
 
 namespace YellowJacket.Core.Packaging
@@ -37,7 +37,7 @@ namespace YellowJacket.Core.Packaging
     /// <summary>
     /// Handles the packaging operations.
     /// </summary>
-    /// <seealso cref="T:YellowJacket.Core.Interfaces.IPackageManager" />
+    /// <seealso cref="IPackageManager" />
     public class PackageManager : IPackageManager
     {
         #region Constants
@@ -166,10 +166,8 @@ namespace YellowJacket.Core.Packaging
                     Hash = CryptographyHelper.GetMd5HashFromFile(packageFileFullName)
                 };
 
-            TypeLocatorHelper typeLocatorHelper = new TypeLocatorHelper();
-
             List<string> assemblyFeatures =
-                typeLocatorHelper.GetFeatureTypes(Assembly.LoadFrom(Path.Combine(deploymentFolderLocation, testAssemblyName)))
+                TypeLocatorHelper.GetFeatureTypes(Assembly.LoadFrom(Path.Combine(deploymentFolderLocation, testAssemblyName)))
                 .Select(x => x.Name.Substring(0, x.Name.Length - 7))
                 .ToList();
 

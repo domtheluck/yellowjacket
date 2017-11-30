@@ -32,6 +32,7 @@ using YellowJacket.Dashboard.Repositories.Interfaces;
 
 namespace YellowJacket.Dashboard.Repositories
 {
+    /// <inheritdoc />
     /// <summary>
     /// PackageRepository implementation.
     /// </summary>

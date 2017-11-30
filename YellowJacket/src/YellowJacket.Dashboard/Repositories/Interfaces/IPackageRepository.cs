@@ -27,6 +27,9 @@ using YellowJacket.Dashboard.Entities;
 
 namespace YellowJacket.Dashboard.Repositories.Interfaces
 {
+    /// <summary>
+    /// PAckage repository interface definition.
+    /// </summary>
     public interface IPackageRepository
     {
         /// <summary>
@@ -37,7 +40,7 @@ namespace YellowJacket.Dashboard.Repositories.Interfaces
         Task<PackageEntity> Find(string id);
 
         /// <summary>
-        /// Gets all package from the repository.
+        /// Gets all packages from the repository.
         /// </summary>
         /// <returns>
         ///   <see cref="List{PackageEntity}" />.

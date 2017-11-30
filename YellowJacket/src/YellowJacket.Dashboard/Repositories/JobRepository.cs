@@ -29,6 +29,7 @@ using YellowJacket.Dashboard.Repositories.Interfaces;
 
 namespace YellowJacket.Dashboard.Repositories
 {
+    /// <inheritdoc />
     /// <summary>
     /// JobRepository implementation.
     /// </summary>
@@ -83,6 +84,7 @@ namespace YellowJacket.Dashboard.Repositories
             return await _context.Jobs.ToListAsync();
         }
 
+        /// <inheritdoc />
         /// <summary>
         /// Finds a job by its id.
         /// </summary>
@@ -92,19 +94,21 @@ namespace YellowJacket.Dashboard.Repositories
         /// </returns>
         public async Task<JobEntity> Find(string id)
         {
-            return await _context.Jobs.FirstOrDefaultAsync(t => t.Id == id);
+            return await _context.Jobs.FirstOrDefaultAsync(t => t.Id.Equals(id));
         }
 
+        /// <inheritdoc />
         /// <summary>
         /// Removes the specified job from the repository.
         /// </summary>
         /// <param name="id">The id of the job to remove.</param>
-        /// <returns><see cref="Task"/>.</returns>
+        /// <returns><see cref="Task" />.</returns>
         public async Task Remove(string id)
         {
-            JobEntity entity = await _context.Jobs.FirstAsync(t => t.Id == id);
+            JobEntity entity = await _context.Jobs.FirstAsync(t => t.Id.Equals(id));
 
             _context.Jobs.Remove(entity);
+
             await _context.SaveChangesAsync();
         }
 

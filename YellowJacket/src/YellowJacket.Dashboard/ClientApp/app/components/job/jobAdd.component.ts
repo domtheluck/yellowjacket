@@ -180,7 +180,7 @@ export class JobAddComponent implements OnInit {
 
         const job: IJob = {
             name: formModel.name as string,
-            "package": formModel.selectedPackage as string,
+            "packageName": formModel.selectedPackage as string,
             features: formModel.selectedFeatures as IFeature[]
         };
 

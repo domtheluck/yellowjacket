@@ -27,6 +27,9 @@ using YellowJacket.Dashboard.Entities;
 
 namespace YellowJacket.Dashboard.Repositories.Interfaces
 {
+    /// <summary>
+    /// Job repository interface definition.
+    /// </summary>
     public interface IJobRepository
     {
         #region Public Methods

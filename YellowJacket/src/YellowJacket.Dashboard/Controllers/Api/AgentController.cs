@@ -22,12 +22,9 @@
 // ***********************************************************************
 
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using YellowJacket.Dashboard.Entities;
-using YellowJacket.Dashboard.Repositories.Interfaces;
+using YellowJacket.Dashboard.Services.Interfaces;
 using YellowJacket.Models;
 
 namespace YellowJacket.Dashboard.Controllers.Api
@@ -38,9 +35,7 @@ namespace YellowJacket.Dashboard.Controllers.Api
     {
         #region Private Members
 
-        private readonly IAgentRepository _agentRepository;
-
-        private readonly IMapper _mapper;
+        private readonly IAgentService _agentService;
 
         #endregion
 
@@ -49,12 +44,10 @@ namespace YellowJacket.Dashboard.Controllers.Api
         /// <summary>
         /// Initializes a new instance of the <see cref="AgentController"/> class.
         /// </summary>
-        /// <param name="mapper">The mapper.</param>
-        /// <param name="agentRepository">The agent repository.</param>
-        public AgentController(IMapper mapper, IAgentRepository agentRepository)
+        /// <param name="agentService">The agent service.</param>
+        public AgentController(IAgentService agentService)
         {
-            _mapper = mapper;
-            _agentRepository = agentRepository;
+            _agentService = agentService;
         }
 
         #endregion
@@ -66,12 +59,12 @@ namespace YellowJacket.Dashboard.Controllers.Api
         {
             try
             {
-                AgentEntity entity = await _agentRepository.Find(id);
+                AgentModel model = await _agentService.Find(id);
 
-                if (entity == null)
+                if (model == null)
                     return StatusCode(404);
 
-                return Ok(_mapper.Map<AgentEntity, AgentModel>(entity));
+                return Ok(model);
             }
             catch (Exception ex)
             {
@@ -86,7 +79,7 @@ namespace YellowJacket.Dashboard.Controllers.Api
         {
             try
             {
-                return Ok(_mapper.Map<IEnumerable<AgentEntity>, IEnumerable<AgentModel>>(await _agentRepository.GetAll()));
+                return Ok(await _agentService.GetAll());
             }
             catch (Exception ex)
             {
@@ -101,9 +94,9 @@ namespace YellowJacket.Dashboard.Controllers.Api
         {
             try
             {
-                AgentEntity entity = await _agentRepository.Update(_mapper.Map<AgentModel, AgentEntity>(model));
+                model = await _agentService.Update(model);
 
-                return Ok(_mapper.Map<AgentEntity, AgentModel>(entity));
+                return Ok(model);
             }
             catch (Exception ex)
             {
@@ -118,17 +111,17 @@ namespace YellowJacket.Dashboard.Controllers.Api
         {
             try
             {
-                AgentEntity entity = await _agentRepository.Find(model.Id);
+                model = await _agentService.Find(model.Id);
 
-                if (entity != null)
-                    await _agentRepository.Remove(entity.Id);
+                if (model != null)
+                    await _agentService.Remove(model.Id);
 
-                entity = await _agentRepository.Add(_mapper.Map<AgentModel, AgentEntity>(model));
+                model = await _agentService.Add(model);
 
                 return CreatedAtRoute(
                     "GetAgentById",
-                    new { id = entity.Id },
-                    _mapper.Map<AgentEntity, AgentModel>(entity));
+                    new { id = model.Id },
+                    model);
             }
             catch (Exception ex)
             {

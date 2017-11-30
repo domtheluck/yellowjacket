@@ -66,7 +66,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AgentService.cs" />
-    <Compile Include="Enums\Status.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -80,6 +79,10 @@
     <ProjectReference Include="..\YellowJacket.Api\YellowJacket.Api.csproj">
       <Project>{d0739b5d-2d5e-410b-8a44-0b5b4c5c1b87}</Project>
       <Name>YellowJacket.Api</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\YellowJacket.Common\YellowJacket.Common.csproj">
+      <Project>{d1347d40-6d49-4ca6-9d2c-c64ed082f167}</Project>
+      <Name>YellowJacket.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\YellowJacket.Core\YellowJacket.Core.csproj">
       <Project>{4f02b61b-241a-48ef-a6d8-fdb94700202f}</Project>

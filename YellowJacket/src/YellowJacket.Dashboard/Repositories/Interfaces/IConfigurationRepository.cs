@@ -26,6 +26,9 @@ using YellowJacket.Dashboard.Entities;
 
 namespace YellowJacket.Dashboard.Repositories.Interfaces
 {
+    /// <summary>
+    /// Configuration repository interface definition.
+    /// </summary>
     public interface IConfigurationRepository
     {
         /// <summary>
@@ -37,8 +40,8 @@ namespace YellowJacket.Dashboard.Repositories.Interfaces
         /// <summary>
         /// Updates the specified configuration.
         /// </summary>
-        /// <param name="configuration">The configuration.</param>
+        /// <param name="entity">The entity to update.</param>
         /// <returns><see cref="ConfigurationEntity"/>.</returns>
-        Task<ConfigurationEntity> Update(ConfigurationEntity configuration);
+        Task<ConfigurationEntity> Update(ConfigurationEntity entity);
     }
 }

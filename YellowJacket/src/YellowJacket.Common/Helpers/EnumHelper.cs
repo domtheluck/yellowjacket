@@ -28,7 +28,7 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 
-namespace YellowJacket.Core.Helpers
+namespace YellowJacket.Common.Helpers
 {
     /// <summary>
     /// Enumerate the possible members of an enum.
@@ -80,7 +80,7 @@ namespace YellowJacket.Core.Helpers
         /// <summary>
         /// Convert enum to enum.
         /// </summary>
-        public T EnumToEnum<T, TU>(TU enumArg)
+        public static T EnumToEnum<T, TU>(TU enumArg)
         {
             if (!typeof(T).IsEnum)
                 throw new InvalidCastException("This method only takes enumerations.");
@@ -95,7 +95,7 @@ namespace YellowJacket.Core.Helpers
         /// Converts a definition list from an enum.
         /// </summary>
         /// <returns><see cref="List{EnumDefinition}"/> object.</returns>
-        public List<EnumDefinition> GetDefinitionListFromEnum<T>()
+        public static List<EnumDefinition> GetDefinitionListFromEnum<T>()
         {
             if (!typeof(T).IsEnum)
                 throw new InvalidCastException("This method only takes enumeration.");
@@ -115,7 +115,7 @@ namespace YellowJacket.Core.Helpers
         /// <summary>
         /// Reads the description attribute for the given enum field and returns it's string representation.
         /// </summary>
-        public string GetEnumFieldDescription(Enum value)
+        public static string GetEnumFieldDescription(Enum value)
         {
             FieldInfo fieldInfo = value.GetType().GetField(value.ToString());
             DescriptionAttribute[] attributes =
@@ -132,7 +132,7 @@ namespace YellowJacket.Core.Helpers
         /// <summary>
         /// Returns a strongly typed enumeration field for given enum type.
         /// </summary>
-        public T GetEnumType<T>(int value)
+        public static T GetEnumType<T>(int value)
         {
             return (T)Enum.Parse(typeof(T), value.ToString(CultureInfo.InvariantCulture));
         }
@@ -140,7 +140,7 @@ namespace YellowJacket.Core.Helpers
         /// <summary>
         /// Returns a strongly typed enumeration field for given enum type.
         /// </summary>
-        public T GetEnumType<T>(string value)
+        public static T GetEnumType<T>(string value)
         {
             return (T)Enum.Parse(typeof(T), value);
         }
@@ -148,7 +148,7 @@ namespace YellowJacket.Core.Helpers
         /// <summary>
         /// Returns an enum filed for the given enum description.
         /// </summary>
-        public T GetEnumTypeFromDescription<T>(string description)
+        public static T GetEnumTypeFromDescription<T>(string description)
         {
             Type enumType = typeof(T);
             string[] names = Enum.GetNames(enumType);
@@ -162,14 +162,14 @@ namespace YellowJacket.Core.Helpers
         /// <summary>
         /// Returns an integer value corresponding to the given enumeration field for a given enum type.
         /// </summary>
-        public int GetEnumValue<T>(T enumField)
+        public static int GetEnumValue<T>(T enumField)
         {
             return Convert.ToInt32(enumField);
         }
         /// <summary>
         /// Gets list of enum fields for the given enum type.
         /// </summary>
-        public List<string> GetFieldsFromEnum<T>()
+        public static List<string> GetFieldsFromEnum<T>()
         {
             return Enum.GetNames(typeof(T)).ToList();
         }
