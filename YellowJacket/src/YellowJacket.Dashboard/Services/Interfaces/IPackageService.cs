@@ -23,35 +23,28 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using YellowJacket.Dashboard.Entities;
+using YellowJacket.Models;
 
-namespace YellowJacket.Dashboard.Repositories.Interfaces
+namespace YellowJacket.Dashboard.Services.Interfaces
 {
     /// <summary>
     /// PAckage repository interface definition.
     /// </summary>
-    public interface IPackageRepository
+    public interface IPackageService
     {
         /// <summary>
         /// Finds a package by its id.
         /// </summary>
         /// <param name="id">The id.</param>
-        /// <returns><see cref="PackageEntity"/>.</returns>
-        Task<PackageEntity> Find(string id);
+        /// <returns><see cref="PackageModel"/>.</returns>
+        Task<PackageModel> Find(string id);
 
         /// <summary>
         /// Gets all packages from the repository.
         /// </summary>
         /// <returns>
-        ///   <see cref="List{PackageEntity}" />.
+        ///   <see cref="List{PackageModel}" />.
         /// </returns>
-        Task<List<PackageEntity>> GetAll();
-
-        /// <summary>
-        /// Downloads the specified package.
-        /// </summary>
-        /// <param name="id">The identifier.</param>
-        /// <returns><see cref="T:byte[]"/>.</returns>
-        Task<byte[]> Download(string id);
+        Task<List<PackageModel>> GetAll();
     }
 }

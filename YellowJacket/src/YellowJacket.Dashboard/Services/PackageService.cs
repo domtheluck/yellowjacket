@@ -21,37 +21,65 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using AutoMapper;
 using YellowJacket.Dashboard.Entities;
+using YellowJacket.Dashboard.Repositories.Interfaces;
+using YellowJacket.Dashboard.Services.Interfaces;
+using YellowJacket.Models;
 
-namespace YellowJacket.Dashboard.Repositories.Interfaces
+namespace YellowJacket.Dashboard.Services
 {
-    /// <summary>
-    /// PAckage repository interface definition.
-    /// </summary>
-    public interface IPackageRepository
+    public class PackageService : IPackageService
     {
+        #region Private Members
+
+        private readonly IPackageRepository _packageRepository;
+        private readonly IMapper _mapper;
+
+        #endregion
+
+        #region Constructors
+
+        public PackageService(IPackageRepository repository, IMapper mapper)
+        {
+            _packageRepository = repository;
+            _mapper = mapper;
+        }
+
+        #endregion
+
+        #region Public Methods
+
+        /// <inheritdoc />
         /// <summary>
         /// Finds a package by its id.
         /// </summary>
         /// <param name="id">The id.</param>
-        /// <returns><see cref="PackageEntity"/>.</returns>
-        Task<PackageEntity> Find(string id);
+        /// <returns>
+        ///   <see cref="PackageModel" />.
+        /// </returns>
+        public async Task<PackageModel> Find(string id)
+        {
+            return _mapper.Map<PackageEntity, PackageModel>(
+                await _packageRepository.Find(id));
+        }
 
         /// <summary>
         /// Gets all packages from the repository.
         /// </summary>
         /// <returns>
-        ///   <see cref="List{PackageEntity}" />.
+        /// <see cref="List{PackageModel}" />.
         /// </returns>
-        Task<List<PackageEntity>> GetAll();
+        public async Task<List<PackageModel>> GetAll()
+        {
+            List<PackageEntity> entities = await _packageRepository.GetAll();
 
-        /// <summary>
-        /// Downloads the specified package.
-        /// </summary>
-        /// <param name="id">The identifier.</param>
-        /// <returns><see cref="T:byte[]"/>.</returns>
-        Task<byte[]> Download(string id);
+            return _mapper.Map<List<PackageEntity>, List<PackageModel>>(entities);
+        }
+
+        #endregion
     }
 }

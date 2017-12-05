@@ -55,14 +55,16 @@ namespace YellowJacket.Dashboard.Test.Services
         }
 
         [Test]
-        public void AddAgent_NameNotExist_NoError()
+        public async Task AddAgent_NameNotExist_NoError()
         {
+            // Arrange
             DbContextOptions<YellowJacketContext> options = new DbContextOptionsBuilder<YellowJacketContext>()
                 .UseInMemoryDatabase("AddAgent_NameNotExist_NoError")
                 .Options;
 
             const string agentName = "MyAgent";
 
+            // Act
             using (YellowJacketContext context = new YellowJacketContext(options))
             {
                 IAgentRepository agentRepository = new AgentRepository(context);
@@ -85,14 +87,10 @@ namespace YellowJacket.Dashboard.Test.Services
 
                 };
 
-                Task task = Task.Run(async () =>
-                {
-                    model = await service.Add(model);
-                });
-
-                task.Wait();
+                await service.Add(model);
             }
 
+            // Assert
             using (YellowJacketContext context = new YellowJacketContext(options))
             {
                 const int expectedCount = 1;
@@ -100,21 +98,23 @@ namespace YellowJacket.Dashboard.Test.Services
                 Assert.AreEqual(expectedCount, Convert.ToInt32(context.Agents.Count()), $"The agents count should be {expectedCount}.");
 
                 Assert.AreEqual(
-                    agentName, 
-                    context.Agents.Single().Name, 
+                    agentName,
+                    context.Agents.Single().Name,
                     $"The expected agent name {agentName} doesn't match the actual one {context.Agents.Single().Name}");
             }
         }
 
         [Test]
-        public void UpdateAgent_ExistingAgent_NoError()
+        public async Task UpdateAgent_ExistingAgent_NoError()
         {
+            // Arrange
             DbContextOptions<YellowJacketContext> options = new DbContextOptionsBuilder<YellowJacketContext>()
                 .UseInMemoryDatabase("UpdateAgent_ExistingAgent_NoError")
                 .Options;
 
             const string agentName = "MyAgent";
 
+            // Act
             using (YellowJacketContext context = new YellowJacketContext(options))
             {
                 context.Agents.Add(new AgentEntity
@@ -127,6 +127,8 @@ namespace YellowJacket.Dashboard.Test.Services
 
                 context.SaveChanges();
             }
+
+            List<AgentModel> models;
 
             using (YellowJacketContext context = new YellowJacketContext(options))
             {
@@ -141,30 +143,164 @@ namespace YellowJacket.Dashboard.Test.Services
 
                 AgentService service = new AgentService(agentRepository, mapper);
 
-                List<AgentModel> models = null;
+                models = await service.GetAll();
+            }
 
-                Task task = Task.Run(async () =>
+            AgentModel model = models.First();
+
+            string expectedStatus = AgentStatus.Running.ToString();
+
+            // Assert
+            using (YellowJacketContext context = new YellowJacketContext(options))
+            {
+                model.Status = AgentStatus.Running.ToString();
+
+                IAgentRepository agentRepository = new AgentRepository(context);
+
+                MapperConfiguration config = new MapperConfiguration(cfg =>
                 {
-                    models = await service.GetAll();
+                    cfg.AddProfile(new MappingProfile());
                 });
 
-                task.Wait();
+                Mapper mapper = new Mapper(config);
 
-                const int expectedCount = 0;
+                AgentService service = new AgentService(agentRepository, mapper);
 
-                Assert.NotNull(models, "The agent model list shouldn't be empty.");
+                model.Status = expectedStatus;
 
-                Assert.Greater(
-                    models.Count, 
-                    0, 
-                    $"The agent model list count {models.Count} must be greater than the expected value {expectedCount}.");
+                model = await service.Update(model);
+
+                Assert.AreEqual(model.Status, expectedStatus, $"The actual agent status {model.Status}  should be equal to the expected status {expectedStatus}");
             }
+        }
+
+        [Test]
+        public async Task RemoveAgent_ExistingAgent_NoError()
+        {
+            // Arrange
+            DbContextOptions<YellowJacketContext> options = new DbContextOptionsBuilder<YellowJacketContext>()
+                .UseInMemoryDatabase("RemoveAgent_ExistingAgent_NoError")
+                .Options;
+
+            const string agentName = "MyAgent";
+
+            // Act
+            using (YellowJacketContext context = new YellowJacketContext(options))
+            {
+                context.Agents.Add(new AgentEntity
+                {
+                    Name = agentName,
+                    LastUpdateOn = DateTime.Now,
+                    RegisteredOn = DateTime.Now,
+                    Status = AgentStatus.Idle.ToString()
+                });
+
+                context.SaveChanges();
+            }
+
+            List<AgentModel> models;
 
             using (YellowJacketContext context = new YellowJacketContext(options))
             {
+                IAgentRepository agentRepository = new AgentRepository(context);
 
-                Assert.AreEqual(1, context.Agents.Count());
-                Assert.AreEqual(agentName, context.Agents.Single().Name);
+                MapperConfiguration config = new MapperConfiguration(cfg =>
+                {
+                    cfg.AddProfile(new MappingProfile());
+                });
+
+                Mapper mapper = new Mapper(config);
+
+                AgentService service = new AgentService(agentRepository, mapper);
+
+                models = await service.GetAll();
+            }
+
+            AgentModel model = models.First();
+
+            // Assert
+            using (YellowJacketContext context = new YellowJacketContext(options))
+            {
+                IAgentRepository agentRepository = new AgentRepository(context);
+
+                MapperConfiguration config = new MapperConfiguration(cfg =>
+                {
+                    cfg.AddProfile(new MappingProfile());
+                });
+
+                Mapper mapper = new Mapper(config);
+
+                AgentService service = new AgentService(agentRepository, mapper);
+
+                await service.Remove(model.Id);
+
+                const int expectedCount = 0;
+
+                Assert.AreEqual(expectedCount, Convert.ToInt32(context.Agents.Count()), $"The agents count should be {expectedCount}.");
+            }
+        }
+
+        [Test]
+        public async Task FindAgent_ExistingAgent_NoError()
+        {
+            // Arrange
+            DbContextOptions<YellowJacketContext> options = new DbContextOptionsBuilder<YellowJacketContext>()
+                .UseInMemoryDatabase("FindAgent_ExistingAgent_NoError")
+                .Options;
+
+            const string agentName = "MyAgent";
+
+            // Act
+            using (YellowJacketContext context = new YellowJacketContext(options))
+            {
+                context.Agents.Add(new AgentEntity
+                {
+                    Name = agentName,
+                    LastUpdateOn = DateTime.Now,
+                    RegisteredOn = DateTime.Now,
+                    Status = AgentStatus.Idle.ToString()
+                });
+
+                context.SaveChanges();
+            }
+
+            List<AgentModel> models;
+
+            using (YellowJacketContext context = new YellowJacketContext(options))
+            {
+                IAgentRepository agentRepository = new AgentRepository(context);
+
+                MapperConfiguration config = new MapperConfiguration(cfg =>
+                {
+                    cfg.AddProfile(new MappingProfile());
+                });
+
+                Mapper mapper = new Mapper(config);
+
+                AgentService service = new AgentService(agentRepository, mapper);
+
+                models = await service.GetAll();
+            }
+
+            AgentModel model = models.First();
+
+            // Assert
+            using (YellowJacketContext context = new YellowJacketContext(options))
+            {
+                IAgentRepository agentRepository = new AgentRepository(context);
+
+                MapperConfiguration config = new MapperConfiguration(cfg =>
+                {
+                    cfg.AddProfile(new MappingProfile());
+                });
+
+                Mapper mapper = new Mapper(config);
+
+                AgentService service = new AgentService(agentRepository, mapper);
+
+                model = await service.Find(model.Id);
+
+                Assert.NotNull(model, "The agent shouldn't be null.");
             }
         }
     }

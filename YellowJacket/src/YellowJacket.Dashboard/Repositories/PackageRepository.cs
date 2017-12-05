@@ -100,13 +100,14 @@ namespace YellowJacket.Dashboard.Repositories
             return entity;
         }
 
+        /// <inheritdoc />
         /// <summary>
         /// Gets all package from the repository.
         /// </summary>
         /// <returns>
-        /// <see cref="IEnumerable{PackageEntity}"/>.
+        /// <see cref="List{PackageEntity}"/>.
         /// </returns>
-        public async Task<IEnumerable<PackageEntity>> GetAll()
+        public async Task<List<PackageEntity>> GetAll()
         {
             string testPackagePath = Path.Combine(_configuration.PackagesRootPath, PackageFolder);
 
@@ -121,6 +122,21 @@ namespace YellowJacket.Dashboard.Repositories
             });
 
             return results;
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// Downloads the specified package.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns>
+        ///   <see cref="T:byte[]" />.
+        /// </returns>
+        public async Task<byte[]> Download(string id)
+        {
+            string testPackagePath = Path.Combine(_configuration.PackagesRootPath, PackageFolder);
+
+            return await File.ReadAllBytesAsync(Path.Combine(testPackagePath, $"{id}.zip"));
         }
 
         #endregion

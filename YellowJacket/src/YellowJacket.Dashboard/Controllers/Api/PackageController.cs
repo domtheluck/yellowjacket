@@ -22,12 +22,10 @@
 // ***********************************************************************
 
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using YellowJacket.Dashboard.Entities;
-using YellowJacket.Dashboard.Repositories.Interfaces;
+using YellowJacket.Dashboard.Services.Interfaces;
 using YellowJacket.Models;
 
 namespace YellowJacket.Dashboard.Controllers.Api
@@ -38,7 +36,7 @@ namespace YellowJacket.Dashboard.Controllers.Api
     {
         #region Private Members
 
-        private readonly IPackageRepository _packageRepository;
+        private readonly IPackageService _packageService;
 
         private readonly IMapper _mapper;
 
@@ -50,11 +48,11 @@ namespace YellowJacket.Dashboard.Controllers.Api
         /// Initializes a new instance of the <see cref="PackageController"/> class.
         /// </summary>
         /// <param name="mapper">The mapper.</param>
-        /// <param name="packageRepository">The package repository.</param>
-        public PackageController(IMapper mapper, IPackageRepository packageRepository)
+        /// <param name="packageService">The package service.</param>
+        public PackageController(IMapper mapper, IPackageService packageService)
         {
             _mapper = mapper;
-            _packageRepository = packageRepository;
+            _packageService = packageService;
         }
 
         #endregion
@@ -66,12 +64,12 @@ namespace YellowJacket.Dashboard.Controllers.Api
         {
             try
             {
-                PackageEntity entity = await _packageRepository.Find(id);
+                PackageModel model = await _packageService.Find(id);
 
-                if (entity == null)
+                if (model == null)
                     return StatusCode(404);
 
-                return Ok(_mapper.Map<PackageEntity, PackageModel>(entity));
+                return Ok(model);
             }
             catch (Exception ex)
             {
@@ -86,7 +84,7 @@ namespace YellowJacket.Dashboard.Controllers.Api
         {
             try
             {
-                return Ok(_mapper.Map<IEnumerable<PackageEntity>, IEnumerable<PackageModel>>(await _packageRepository.GetAll()));
+                return Ok(await _packageService.GetAll());
             }
             catch (Exception ex)
             {
@@ -99,6 +97,7 @@ namespace YellowJacket.Dashboard.Controllers.Api
         [HttpGet("{id}/download")]
         public async Task<IActionResult> Download()
         {
+            // TODO: To modify to have a dynamic root path read in the config file
             string fileName = "SimpleFeature.zip";
 
             string filepath = $@"D:\Projects\DEV\yellowjacket\YellowJacket\samples\Packages\Test/{fileName}";

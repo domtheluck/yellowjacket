@@ -66,6 +66,7 @@ namespace YellowJacket.Dashboard
             services.AddScoped<IPackageRepository, PackageRepository>();
 
             services.AddScoped<IAgentService, AgentService>();
+            services.AddScoped<IPackageService, PackageService>();
 
             services.Configure<ConfigurationSettings>(Configuration.GetSection("Configuration"));
         }
