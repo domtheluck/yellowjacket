@@ -54,6 +54,8 @@ namespace YellowJacket.Dashboard.Test.Services
 
         }
 
+        #region Test Methods
+
         [Test]
         public async Task AddAgent_NameNotExist_NoError()
         {
@@ -69,14 +71,7 @@ namespace YellowJacket.Dashboard.Test.Services
             {
                 IAgentRepository agentRepository = new AgentRepository(context);
 
-                MapperConfiguration config = new MapperConfiguration(cfg =>
-                {
-                    cfg.AddProfile(new MappingProfile());
-                });
-
-                Mapper mapper = new Mapper(config);
-
-                AgentService service = new AgentService(agentRepository, mapper);
+                AgentService service = new AgentService(agentRepository, GetMapper());
 
                 AgentModel model = new AgentModel
                 {
@@ -84,7 +79,6 @@ namespace YellowJacket.Dashboard.Test.Services
                     LastUpdateOn = DateTime.Now,
                     RegisteredOn = DateTime.Now,
                     Status = AgentStatus.Idle.ToString()
-
                 };
 
                 await service.Add(model);
@@ -95,7 +89,10 @@ namespace YellowJacket.Dashboard.Test.Services
             {
                 const int expectedCount = 1;
 
-                Assert.AreEqual(expectedCount, Convert.ToInt32(context.Agents.Count()), $"The agents count should be {expectedCount}.");
+                Assert.AreEqual(
+                    expectedCount, 
+                    Convert.ToInt32(context.Agents.Count()), 
+                    $"The agents count should be {expectedCount}.");
 
                 Assert.AreEqual(
                     agentName,
@@ -134,14 +131,7 @@ namespace YellowJacket.Dashboard.Test.Services
             {
                 IAgentRepository agentRepository = new AgentRepository(context);
 
-                MapperConfiguration config = new MapperConfiguration(cfg =>
-                {
-                    cfg.AddProfile(new MappingProfile());
-                });
-
-                Mapper mapper = new Mapper(config);
-
-                AgentService service = new AgentService(agentRepository, mapper);
+                AgentService service = new AgentService(agentRepository, GetMapper());
 
                 models = await service.GetAll();
             }
@@ -157,20 +147,16 @@ namespace YellowJacket.Dashboard.Test.Services
 
                 IAgentRepository agentRepository = new AgentRepository(context);
 
-                MapperConfiguration config = new MapperConfiguration(cfg =>
-                {
-                    cfg.AddProfile(new MappingProfile());
-                });
-
-                Mapper mapper = new Mapper(config);
-
-                AgentService service = new AgentService(agentRepository, mapper);
+                AgentService service = new AgentService(agentRepository, GetMapper());
 
                 model.Status = expectedStatus;
 
                 model = await service.Update(model);
 
-                Assert.AreEqual(model.Status, expectedStatus, $"The actual agent status {model.Status}  should be equal to the expected status {expectedStatus}");
+                Assert.AreEqual(
+                    model.Status, 
+                    expectedStatus, 
+                    $"The actual agent status {model.Status}  should be equal to the expected status {expectedStatus}");
             }
         }
 
@@ -204,14 +190,7 @@ namespace YellowJacket.Dashboard.Test.Services
             {
                 IAgentRepository agentRepository = new AgentRepository(context);
 
-                MapperConfiguration config = new MapperConfiguration(cfg =>
-                {
-                    cfg.AddProfile(new MappingProfile());
-                });
-
-                Mapper mapper = new Mapper(config);
-
-                AgentService service = new AgentService(agentRepository, mapper);
+                AgentService service = new AgentService(agentRepository, GetMapper());
 
                 models = await service.GetAll();
             }
@@ -223,14 +202,7 @@ namespace YellowJacket.Dashboard.Test.Services
             {
                 IAgentRepository agentRepository = new AgentRepository(context);
 
-                MapperConfiguration config = new MapperConfiguration(cfg =>
-                {
-                    cfg.AddProfile(new MappingProfile());
-                });
-
-                Mapper mapper = new Mapper(config);
-
-                AgentService service = new AgentService(agentRepository, mapper);
+                AgentService service = new AgentService(agentRepository, GetMapper());
 
                 await service.Remove(model.Id);
 
@@ -270,14 +242,7 @@ namespace YellowJacket.Dashboard.Test.Services
             {
                 IAgentRepository agentRepository = new AgentRepository(context);
 
-                MapperConfiguration config = new MapperConfiguration(cfg =>
-                {
-                    cfg.AddProfile(new MappingProfile());
-                });
-
-                Mapper mapper = new Mapper(config);
-
-                AgentService service = new AgentService(agentRepository, mapper);
+                AgentService service = new AgentService(agentRepository, GetMapper());
 
                 models = await service.GetAll();
             }
@@ -289,19 +254,32 @@ namespace YellowJacket.Dashboard.Test.Services
             {
                 IAgentRepository agentRepository = new AgentRepository(context);
 
-                MapperConfiguration config = new MapperConfiguration(cfg =>
-                {
-                    cfg.AddProfile(new MappingProfile());
-                });
-
-                Mapper mapper = new Mapper(config);
-
-                AgentService service = new AgentService(agentRepository, mapper);
+                AgentService service = new AgentService(agentRepository, GetMapper());
 
                 model = await service.Find(model.Id);
 
                 Assert.NotNull(model, "The agent shouldn't be null.");
             }
         }
+
+        #endregion
+
+        #region Private Methods
+
+        /// <summary>
+        /// Gets the mapper.
+        /// </summary>
+        /// <returns><see cref="Mapper"/>.</returns>
+        private Mapper GetMapper()
+        {
+            MapperConfiguration config = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(new MappingProfile());
+            });
+
+            return new Mapper(config);
+        }
+
+        #endregion
     }
 }

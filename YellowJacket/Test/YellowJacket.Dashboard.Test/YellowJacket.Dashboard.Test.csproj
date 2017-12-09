@@ -23,4 +23,13 @@
     </ProjectReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="TestData\Packages\Test\SimpleFeature.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\Packages\Test\SimpleFeature.zip">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

@@ -89,7 +89,7 @@ namespace YellowJacket.Dashboard.Repositories
                     new DirectoryInfo(testPackagePath)
                     .GetFiles($"*{PackageExtension}")
                     .ToList()
-                    .FirstOrDefault(x => x.Name.ToLowerInvariant().Equals($"{id}.zip"));
+                    .FirstOrDefault(x => x.Name.ToLowerInvariant().Equals($"{id.ToLowerInvariant()}.zip"));
 
                 if (package == null)
                     return;
