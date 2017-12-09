@@ -50,6 +50,8 @@ namespace YellowJacket.Dashboard.Services
 
         #endregion
 
+        #region Public Methods
+
         /// <inheritdoc />
         /// <summary>
         /// Adds the specified agent to the repository.
@@ -120,5 +122,7 @@ namespace YellowJacket.Dashboard.Services
                 await _agentRepository.Update(
                     _mapper.Map<AgentModel, AgentEntity>(model)));
         }
+
+        #endregion
     }
 }
