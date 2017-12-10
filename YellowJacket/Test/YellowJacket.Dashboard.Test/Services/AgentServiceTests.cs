@@ -40,7 +40,7 @@ namespace YellowJacket.Dashboard.Test.Services
 {
     [TestFixture]
     [Parallelizable(ParallelScope.All)]
-    public class AgentServiceTests
+    public class AgentServiceTests: TestBase
     {
         [SetUp]
         public void Setup()
@@ -260,24 +260,6 @@ namespace YellowJacket.Dashboard.Test.Services
 
                 Assert.NotNull(model, "The agent shouldn't be null.");
             }
-        }
-
-        #endregion
-
-        #region Private Methods
-
-        /// <summary>
-        /// Gets the mapper.
-        /// </summary>
-        /// <returns><see cref="Mapper"/>.</returns>
-        private Mapper GetMapper()
-        {
-            MapperConfiguration config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new MappingProfile());
-            });
-
-            return new Mapper(config);
         }
 
         #endregion

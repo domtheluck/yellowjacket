@@ -25,10 +25,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using AutoMapper;
 using Microsoft.Extensions.Options;
 using NUnit.Framework;
-using YellowJacket.Dashboard.Mapping;
 using YellowJacket.Dashboard.Repositories;
 using YellowJacket.Dashboard.Repositories.Interfaces;
 using YellowJacket.Dashboard.Services;
@@ -38,7 +36,7 @@ namespace YellowJacket.Dashboard.Test.Services
 {
     [TestFixture]
     [Parallelizable(ParallelScope.All)]
-    public class PackageServiceTests
+    public class PackageServiceTests: TestBase
     {
         #region Private Members
 
@@ -112,24 +110,6 @@ namespace YellowJacket.Dashboard.Test.Services
                 package.Name,
                 packageName,
                 $"The actual package name {package.Name} is not equal to the expected one {packageName}.");
-        }
-
-        #endregion
-
-        #region Private Methods
-
-        /// <summary>
-        /// Gets the mapper.
-        /// </summary>
-        /// <returns><see cref="Mapper"/>.</returns>
-        private Mapper GetMapper()
-        {
-            MapperConfiguration config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new MappingProfile());
-            });
-
-            return new Mapper(config);
         }
 
         #endregion
