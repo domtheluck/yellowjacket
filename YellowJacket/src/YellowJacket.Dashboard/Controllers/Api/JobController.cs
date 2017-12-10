@@ -30,6 +30,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using YellowJacket.Dashboard.Entities;
 using YellowJacket.Dashboard.Repositories.Interfaces;
+using YellowJacket.Dashboard.Services.Interfaces;
 using YellowJacket.Dashboard.Validators.Job;
 using YellowJacket.Models;
 
@@ -41,7 +42,7 @@ namespace YellowJacket.Dashboard.Controllers.Api
     {
         #region Private Members
 
-        private readonly IJobRepository _jobRepository;
+        private readonly IJobService _jobService;
 
         private readonly IMapper _mapper;
 
@@ -53,11 +54,11 @@ namespace YellowJacket.Dashboard.Controllers.Api
         /// Initializes a new instance of the <see cref="JobController"/> class.
         /// </summary>
         /// <param name="mapper">The mapper.</param>
-        /// <param name="jobRepository">The job repository.</param>
-        public JobController(IMapper mapper, IJobRepository jobRepository)
+        /// <param name="jobService">The job service.</param>
+        public JobController(IMapper mapper, IJobService jobService)
         {
             _mapper = mapper;
-            _jobRepository = jobRepository;
+            _jobService = jobService;
         }
 
         #endregion
@@ -69,12 +70,12 @@ namespace YellowJacket.Dashboard.Controllers.Api
         {
             try
             {
-                JobEntity entity = await _jobRepository.Find(id);
+                JobModel model = await _jobService.Find(id);
 
-                if (entity == null)
+                if (model == null)
                     return StatusCode(404);
 
-                return Ok(_mapper.Map<JobEntity, JobModel>(entity));
+                return Ok(model);
             }
             catch (Exception ex)
             {
@@ -89,7 +90,7 @@ namespace YellowJacket.Dashboard.Controllers.Api
         {
             try
             {
-                return Ok(_mapper.Map<IEnumerable<JobEntity>, IEnumerable<JobModel>>(await _jobRepository.GetAll()));
+                return Ok(await _jobService.GetAll());
             }
             catch (Exception ex)
             {
@@ -104,9 +105,9 @@ namespace YellowJacket.Dashboard.Controllers.Api
         {
             try
             {
-                JobEntity entity = await _jobRepository.Update(_mapper.Map<JobModel, JobEntity>(model));
+                model = await _jobService.Update(model);
 
-                return Ok(_mapper.Map<JobEntity, JobModel>(entity));
+                return Ok(model);
             }
             catch (Exception ex)
             {
@@ -121,18 +122,14 @@ namespace YellowJacket.Dashboard.Controllers.Api
         {
             try
             {
-                JobValidator validator = new JobValidator();
-                ValidationResult results = validator.Validate(model);
-
-                if (!results.IsValid)
+                if (!_jobService.Validate(model).IsValid)
                     return StatusCode(400, model);
 
                 PostProcessModel(model);
 
-                JobEntity entity =
-                  await _jobRepository.Add(_mapper.Map<JobModel, JobEntity>(model));
+                model = await _jobService.Add(model);
 
-                return StatusCode(200, _mapper.Map<JobEntity, JobModel>(entity));
+                return StatusCode(200, model);
             }
             catch (Exception ex)
             {

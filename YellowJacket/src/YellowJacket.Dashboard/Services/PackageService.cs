@@ -42,6 +42,11 @@ namespace YellowJacket.Dashboard.Services
 
         #region Constructors
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PackageService"/> class.
+        /// </summary>
+        /// <param name="repository">The repository.</param>
+        /// <param name="mapper">The mapper.</param>
         public PackageService(IPackageRepository repository, IMapper mapper)
         {
             _packageRepository = repository;
@@ -51,14 +56,14 @@ namespace YellowJacket.Dashboard.Services
         #endregion
 
         #region Public Methods
-
+        
         /// <inheritdoc />
         /// <summary>
         /// Finds a package by its id.
         /// </summary>
         /// <param name="id">The id.</param>
         /// <returns>
-        ///   <see cref="PackageModel" />.
+        ///   <see cref="T:YellowJacket.Models.PackageModel" />.
         /// </returns>
         public async Task<PackageModel> Find(string id)
         {
@@ -66,11 +71,12 @@ namespace YellowJacket.Dashboard.Services
                 await _packageRepository.Find(id));
         }
 
+        /// <inheritdoc />
         /// <summary>
         /// Gets all packages from the repository.
         /// </summary>
         /// <returns>
-        /// <see cref="List{PackageModel}" />.
+        /// <see cref="T:System.Collections.Generic.List`1" />.
         /// </returns>
         public async Task<List<PackageModel>> GetAll()
         {

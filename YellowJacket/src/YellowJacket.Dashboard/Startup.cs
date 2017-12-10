@@ -37,16 +37,42 @@ using YellowJacket.Dashboard.Services.Interfaces;
 
 namespace YellowJacket.Dashboard
 {
+    /// <summary>
+    /// Used when the application is starting up.
+    /// </summary>
     public class Startup
     {
+        #region Properties
+
+        /// <summary>
+        /// Gets the configuration.
+        /// </summary>
+        /// <value>
+        /// The configuration.
+        /// </value>
+        public IConfiguration Configuration { get; }
+
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Startup"/> class.
+        /// </summary>
+        /// <param name="configuration">The configuration.</param>
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
+        #endregion
 
-        // This method gets called by the runtime. Use this method to add services to the container.
+        #region Public Methods
+
+        /// <summary>
+        /// Configures the services. This method gets called by the runtime.Use this method to add services to the container.
+        /// </summary>
+        /// <param name="services">The services.</param>
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<YellowJacketContext>(opt => opt.UseInMemoryDatabase("InMemoryDatabase"));
@@ -67,11 +93,16 @@ namespace YellowJacket.Dashboard
 
             services.AddScoped<IAgentService, AgentService>();
             services.AddScoped<IPackageService, PackageService>();
+            services.AddScoped<IJobService, JobService>();
 
             services.Configure<ConfigurationSettings>(Configuration.GetSection("Configuration"));
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        /// <summary>
+        /// Configures the specified application. This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        /// </summary>
+        /// <param name="app">The application.</param>
+        /// <param name="env">The env.</param>
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
@@ -91,7 +122,7 @@ namespace YellowJacket.Dashboard
 
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Yellow Jacket API V1");
             });
 
             app.UseStaticFiles();
@@ -111,5 +142,7 @@ namespace YellowJacket.Dashboard
                     defaults: new { controller = "Home", action = "Index" });
             });
         }
+
+        #endregion
     }
 }

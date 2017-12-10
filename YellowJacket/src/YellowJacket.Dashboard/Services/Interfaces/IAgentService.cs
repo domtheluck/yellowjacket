@@ -59,7 +59,7 @@ namespace YellowJacket.Dashboard.Services.Interfaces
         /// <summary>
         /// Updates the specified agent.
         /// </summary>
-        /// <param name="model">The entity to update</param>
+        /// <param name="model">The model to update.</param>
         /// <returns><see cref="AgentModel"/>.</returns>
         Task<AgentModel> Update(AgentModel model);
     }

@@ -77,9 +77,9 @@ namespace YellowJacket.Dashboard.Repositories
         /// Gets all jobs from the repository.
         /// </summary>
         /// <returns>
-        ///   <see cref="IEnumerable{JobEntity}" />.
+        ///   <see cref="List{JobEntity}" />.
         /// </returns>
-        public async Task<IEnumerable<JobEntity>> GetAll()
+        public async Task<List<JobEntity>> GetAll()
         {
             return await _context.Jobs.ToListAsync();
         }

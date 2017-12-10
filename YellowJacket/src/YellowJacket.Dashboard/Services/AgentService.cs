@@ -42,6 +42,11 @@ namespace YellowJacket.Dashboard.Services
 
         #region Constructors
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AgentService"/> class.
+        /// </summary>
+        /// <param name="repository">The repository.</param>
+        /// <param name="mapper">The mapper.</param>
         public AgentService(IAgentRepository repository, IMapper mapper)
         {
             _agentRepository = repository;
@@ -80,7 +85,7 @@ namespace YellowJacket.Dashboard.Services
 
             return _mapper.Map<List<AgentEntity>, List<AgentModel>>(entities);
         }
-
+        
         /// <inheritdoc />
         /// <summary>
         /// Finds an agent by its id.
@@ -112,7 +117,7 @@ namespace YellowJacket.Dashboard.Services
         /// <summary>
         /// Updates the specified agent.
         /// </summary>
-        /// <param name="model">The entity to update</param>
+        /// <param name="model">The model to update.</param>
         /// <returns>
         ///   <see cref="AgentModel" />.
         /// </returns>

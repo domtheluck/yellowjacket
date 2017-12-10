@@ -21,30 +21,38 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using FluentValidation.Results;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using YellowJacket.Models;
 
 namespace YellowJacket.Dashboard.Services.Interfaces
 {
-    internal interface IJobService
+    public interface IJobService
     {
+        /// <summary>
+        /// Validates the specified model.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns><see cref="ValidationResult"/>.</returns>
+        ValidationResult Validate(JobModel model);
+
         /// <summary>
         /// Adds the specified job to the repository.
         /// </summary>
-        /// <param name="job">The job.</param>
+        /// <param name="model">The model.</param>
         /// <returns>
         ///   <see cref="JobModel" />.
         /// </returns>
-        Task<JobModel> Add(JobModel job);
+        Task<JobModel> Add(JobModel model);
 
         /// <summary>
         /// Gets all jobs from the repository.
         /// </summary>
         /// <returns>
-        ///   <see cref="IEnumerable{JobModel}" />.
+        ///   <see cref="List{JobModel}" />.
         /// </returns>
-        Task<IEnumerable<JobModel>> GetAll();
+        Task<List<JobModel>> GetAll();
 
         /// <summary>
         /// Finds a job by its id.
@@ -65,8 +73,8 @@ namespace YellowJacket.Dashboard.Services.Interfaces
         /// <summary>
         /// Updates the specified job.
         /// </summary>
-        /// <param name="job">The job.</param>
+        /// <param name="model">The model.</param>
         /// <returns><see cref="JobModel"/>.</returns>
-        Task<JobModel> Update(JobModel job);
+        Task<JobModel> Update(JobModel model);
     }
 }

@@ -45,7 +45,7 @@ namespace YellowJacket.Dashboard.Repositories.Interfaces
         /// Gets all jobs from the repository.
         /// </summary>
         /// <returns><see cref="List{JobEntity}"/>.</returns>
-        Task<IEnumerable<JobEntity>> GetAll();
+        Task<List<JobEntity>> GetAll();
 
         /// <summary>
         /// Finds an job by its id.
