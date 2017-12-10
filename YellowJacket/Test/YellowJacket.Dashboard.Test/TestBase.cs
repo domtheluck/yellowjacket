@@ -31,7 +31,7 @@ namespace YellowJacket.Dashboard.Test
     /// </summary>
     public class TestBase
     {
-        #region Public Methods
+        #region Protected Methods
 
         /// <summary>
         /// Gets the mapper.
