@@ -86,16 +86,15 @@ namespace YellowJacket.Dashboard.Test.Services
             using (YellowJacketContext context = new YellowJacketContext(options))
             {
                 const int expectedCount = 1;
-
-                Assert.AreEqual(
-                    expectedCount, 
-                    Convert.ToInt32(context.Agents.Count()), 
+                
+                Assert.That(
+                    expectedCount, Is.EqualTo(Convert.ToInt32(context.Agents.Count())),
                     $"The agents count should be {expectedCount}.");
 
-                Assert.AreEqual(
+                Assert.That(
                     agentName,
-                    context.Agents.Single().Name,
-                    $"The expected agent name {agentName} doesn't match the actual one {context.Agents.Single().Name}");
+                    Is.EqualTo(context.Agents.Single().Name),
+                    $"The expected agent name {agentName} doesn't match the actual value {context.Agents.Single().Name}");
             }
         }
 
@@ -151,10 +150,10 @@ namespace YellowJacket.Dashboard.Test.Services
 
                 model = await service.Update(model);
 
-                Assert.AreEqual(
+                Assert.That(
                     model.Status, 
-                    expectedStatus, 
-                    $"The actual agent status {model.Status}  should be equal to the expected status {expectedStatus}");
+                    Is.EqualTo(expectedStatus), 
+                    $"The actual agent status {model.Status} should be equal to the expected value {expectedStatus}");
             }
         }
 
@@ -206,7 +205,10 @@ namespace YellowJacket.Dashboard.Test.Services
 
                 const int expectedCount = 0;
 
-                Assert.AreEqual(expectedCount, Convert.ToInt32(context.Agents.Count()), $"The agents count should be {expectedCount}.");
+                Assert.That(
+                    expectedCount, 
+                    Is.EqualTo( Convert.ToInt32(context.Agents.Count())), 
+                    $"The agents count should be {expectedCount}.");
             }
         }
 
@@ -256,7 +258,7 @@ namespace YellowJacket.Dashboard.Test.Services
 
                 model = await service.Find(model.Id);
 
-                Assert.NotNull(model, "The agent shouldn't be null.");
+                Assert.That(model, !Is.Null, "The agent shouldn't be null.");
             }
         }
 

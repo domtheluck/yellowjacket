@@ -77,12 +77,12 @@ namespace YellowJacket.Dashboard.Test.Services
             List<PackageModel> packages = await service.GetAll();
 
             // Assert
-            Assert.NotNull(packages, "The package list shouldn't be null.");
+            Assert.That(packages, !Is.Null, "The package list shouldn't be null.");
 
-            Assert.AreEqual(
+            Assert.That(
                 packages.Count,
-                expectedPackageCount,
-                $"The actual package count {packages.Count} is not equal to the expected one {expectedPackageCount}.");
+                Is.EqualTo(expectedPackageCount),
+                $"The actual package count {packages.Count} is not equal to the expected value {expectedPackageCount}.");
         }
 
         [Test]
@@ -104,12 +104,12 @@ namespace YellowJacket.Dashboard.Test.Services
             PackageModel package = await service.Find(packageName);
 
             // Assert
-            Assert.NotNull(package, "The package shouldn't be null.");
+            Assert.That(package, !Is.Null, "The package shouldn't be null.");
 
-            Assert.AreEqual(
+            Assert.That(
                 package.Name,
-                packageName,
-                $"The actual package name {package.Name} is not equal to the expected one {packageName}.");
+                Is.EqualTo(packageName),
+                $"The actual package name {package.Name} is not equal to the expected value {packageName}.");
         }
 
         #endregion
