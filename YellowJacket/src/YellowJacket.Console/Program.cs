@@ -91,6 +91,8 @@ namespace YellowJacket.Console
                 System.Console.WriteLine(ex);
                 Environment.Exit(-1);
             }
+
+            System.Console.ReadLine();
         }
 
         /// <summary>
@@ -99,7 +101,7 @@ namespace YellowJacket.Console
         /// <param name="app">The application.</param>
         private static void InitializeCreatePackageCommand(CommandLineApplication app)
         {
-            app.Command(CreatePackage, (command) =>
+            app.Command(CreatePackage, command =>
             {
                 command.Description = "Create a test package from a deployment folder.";
                 command.HelpOption(HelpOptionText);
@@ -172,7 +174,7 @@ namespace YellowJacket.Console
         /// <param name="app">The application.</param>
         private static void InitializeRunCommand(CommandLineApplication app)
         {
-            app.Command(Run, (command) =>
+            app.Command(Run, command =>
             {
                 command.Description = "Run one or multiple features located in a test assembly.";
                 command.HelpOption(HelpOptionText);
@@ -214,7 +216,7 @@ namespace YellowJacket.Console
                         return -1;
                     }
 
-                    if (!(featuresArgument.Values.Any()))
+                    if (!featuresArgument.Values.Any())
                     {
                         System.Console.WriteLine("The argument [features] is required.");
                         command.ShowHelp();
@@ -233,7 +235,7 @@ namespace YellowJacket.Console
                     }
 
                     List<string> features = featuresArgument.Values;
-                    string browser = browserOption.HasValue() ? browserOption.Value() : "None";
+                    //string browser = browserOption.HasValue() ? browserOption.Value() : "None";
 
                     IEngine executionEngine = GetExecutionEngine();
 
@@ -246,11 +248,11 @@ namespace YellowJacket.Console
                             Features = features
                         };
 
-                    if (browser != "None")
-                        configuration.BrowserConfiguration = new BrowserConfiguration
-                        {
-                            Browser = EnumHelper.GetEnumTypeFromDescription<BrowserType>(browser)
-                        };
+                    //if (browser != "None")
+                    //    configuration.BrowserConfiguration = new BrowserConfiguration
+                    //    {
+                    //        Browser = EnumHelper.GetEnumTypeFromDescription<BrowserType>(browser)
+                    //    };
 
                     // TODO: Handles the plugins
                     //executionConfiguration.PluginAssemblies
@@ -278,27 +280,27 @@ namespace YellowJacket.Console
 
                 featuresArgument.MultipleValues = true;
 
-                StringBuilder browserOptionDescription = new StringBuilder();
+                //StringBuilder browserOptionDescription = new StringBuilder();
 
-                browserOptionDescription.Append(
-                    "The browser used to execute the test. ");
+                //browserOptionDescription.Append(
+                //    "The browser used to execute the test. ");
 
-                browserOptionDescription.Append(
-                    "Please note that you must specify a browser if you want to execute a Web UI feature. ");
+                //browserOptionDescription.Append(
+                //    "Please note that you must specify a browser if you want to execute a Web UI feature. ");
 
-                List<string> browsers = (
-                    Enum.GetValues(typeof(BrowserType))
-                        .Cast<BrowserType>()
-                        .Select(browserType => EnumHelper.GetEnumFieldDescription(browserType))).ToList();
+                //List<string> browsers = (
+                //    Enum.GetValues(typeof(BrowserType))
+                //        .Cast<BrowserType>()
+                //        .Select(browserType => EnumHelper.GetEnumFieldDescription(browserType))).ToList();
 
-                browserOptionDescription.Append(
-                    $"Possible values are: {string.Join(", ", browsers)}.");
+                //browserOptionDescription.Append(
+                //    $"Possible values are: {string.Join(", ", browsers)}.");
 
-                CommandOption browserOption =
-                    command.Option(
-                        "-b|--browser <browser>",
-                        browserOptionDescription.ToString(),
-                        CommandOptionType.SingleValue);
+                //CommandOption browserOption =
+                //    command.Option(
+                //        "-b|--browser <browser>",
+                //        browserOptionDescription.ToString(),
+                //        CommandOptionType.SingleValue);
 
                 command.OnExecute(() =>
                 {
@@ -309,27 +311,27 @@ namespace YellowJacket.Console
                         return -1;
                     }
 
-                    if (!(featuresArgument.Values.Any()))
+                    if (!featuresArgument.Values.Any())
                     {
                         System.Console.WriteLine("The argument [features] is required.");
                         command.ShowHelp();
                         return -1;
                     }
 
-                    if (!string.IsNullOrEmpty(browserOption.Value()))
-                    {
-                        if (browsers.All(
-                            x => !string.Equals(x, browserOption.Value(), StringComparison.CurrentCultureIgnoreCase)))
-                        {
-                            System.Console.WriteLine($"The specified browser value {browserOption.Value()} is not valid.");
-                            command.ShowHelp();
-                            return -1;
-                        }
-                    }
+                    //if (!string.IsNullOrEmpty(browserOption.Value()))
+                    //{
+                    //    if (browsers.All(
+                    //        x => !string.Equals(x, browserOption.Value(), StringComparison.CurrentCultureIgnoreCase)))
+                    //    {
+                    //        System.Console.WriteLine($"The specified browser value {browserOption.Value()} is not valid.");
+                    //        command.ShowHelp();
+                    //        return -1;
+                    //    }
+                    //}
 
                     string testPackageLocation = testPackageLocationArgument.Value;
                     List<string> features = featuresArgument.Values;
-                    string browser = browserOption.HasValue() ? browserOption.Value() : "None";
+                    //string browser = browserOption.HasValue() ? browserOption.Value() : "None";
 
                     IEngine executionEngine = GetExecutionEngine();
 
@@ -350,11 +352,11 @@ namespace YellowJacket.Console
                             Features = features
                         };
 
-                    if (browser != "None")
-                        configuration.BrowserConfiguration = new BrowserConfiguration
-                        {
-                            Browser = EnumHelper.GetEnumTypeFromDescription<BrowserType>(browser)
-                        };
+                    //if (browser != "None")
+                    //    configuration.BrowserConfiguration = new BrowserConfiguration
+                    //    {
+                    //        Browser = EnumHelper.GetEnumTypeFromDescription<BrowserType>(browser)
+                    //    };
 
                     // TODO: Handles the plugins
                     //executionConfiguration.PluginAssemblies

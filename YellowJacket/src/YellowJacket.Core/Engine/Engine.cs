@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Gherkin.Ast;
 using YellowJacket.Common.Helpers;
 using YellowJacket.Core.Contexts;
 using YellowJacket.Core.Engine.Events;
@@ -67,6 +68,8 @@ namespace YellowJacket.Core.Engine
 
         private readonly GherkinManager _gherkinManager = new GherkinManager();
 
+        private List<GherkinDocument> _gherkinDocuments = new List<GherkinDocument>();
+
         private string _tempFolder;
 
         #endregion Private Members
@@ -103,9 +106,9 @@ namespace YellowJacket.Core.Engine
         {
             Cleanup();
 
-            _configuration = configuration;
+            ValidateConfiguration(configuration);
 
-            ValidateConfiguration();
+            _configuration = configuration;
 
             InitializeFileSystem();
 
@@ -117,9 +120,12 @@ namespace YellowJacket.Core.Engine
 
                 LoadTestAssembly();
 
-                ExtractFeatures();
+                RegisterHooks();
 
-                InitializeWebDriver();
+                GetFeaturesFromFiles();
+
+                // TODO: not sure if we need to keep this
+                //InitializeWebDriver();
 
                 ExecuteFeatures();
             }
@@ -138,14 +144,12 @@ namespace YellowJacket.Core.Engine
 
         #region Private Methods
 
-        /// <summary>
-        /// Extracts the features.
-        /// </summary>
-        private void ExtractFeatures()
+        private void GetFeaturesFromFiles()
         {
             _configuration.Features.ForEach(x =>
             {
-                _gherkinManager.ExtractFeature(_testAssembly, x, Path.Combine(_tempFolder, "Features"));
+                _gherkinDocuments
+                    .Add(_gherkinManager.ParseFeature(_testAssembly, x, Path.Combine(_tempFolder, "Features")));
             });
         }
 
@@ -201,15 +205,15 @@ namespace YellowJacket.Core.Engine
             Directory.Delete(path);
         }
 
-        private void InitializeWebDriver()
-        {
-            if (_configuration.BrowserConfiguration.Browser == BrowserType.None)
-                return;
+        //private void InitializeWebDriver()
+        //{
+        //    if (_configuration.BrowserConfiguration.Browser == BrowserType.None)
+        //        return;
 
-            ExecutionContext.Current.WebDriver = ExecutionContext.Current
-                .GetWebDriverConfigurationPlugin()
-                .Get(_configuration.BrowserConfiguration.Browser);
-        }
+        //    ExecutionContext.Current.WebDriver = ExecutionContext.Current
+        //        .GetWebDriverConfigurationPlugin()
+        //        .Get(_configuration.BrowserConfiguration.Browser);
+        //}
 
         /// <summary>
         /// Updates the execution progress.
@@ -228,18 +232,22 @@ namespace YellowJacket.Core.Engine
                 $"Execution of {_testCases.Last().ClassName.Split('.').Last().Substring(0, _testCases.Last().ClassName.Split('.').Last().Length - 7)} - {_testCases.Last().Name}: {_testCases.Last().Result}");
         }
 
-        private void ValidateConfiguration()
+        /// <summary>
+        /// Validates the configuration.
+        /// </summary>
+        /// <param name="configuration">The configuration.</param>
+        private void ValidateConfiguration(Configuration configuration)
         {
-            if (string.IsNullOrEmpty(_configuration.TestAssemblyFullName))
-                throw new ArgumentException("You must provide a value for the Test Assembly");
+            if (string.IsNullOrEmpty(configuration.TestAssemblyFullName))
+                throw new ArgumentException("You must provide a value for the Test assembly");
 
-            string location = Path.GetDirectoryName(_configuration.TestAssemblyFullName);
+            string location = Path.GetDirectoryName(configuration.TestAssemblyFullName);
 
             if (string.IsNullOrEmpty(location))
                 throw new IOException("The test assembly location is invalid");
 
-            if (!File.Exists(_configuration.TestAssemblyFullName))
-                throw new IOException($"Cannot found the The Test Assembly {_configuration.TestAssemblyFullName}");
+            if (!File.Exists(configuration.TestAssemblyFullName))
+                throw new IOException($"Cannot found the Test assembly {configuration.TestAssemblyFullName}");
         }
 
         /// <summary>
@@ -252,6 +260,7 @@ namespace YellowJacket.Core.Engine
             _pluginAssemblies.Clear();
             _testSuite = null;
             _testCases = new List<TestCase>();
+            _gherkinDocuments = new List<GherkinDocument>();
         }
 
         /// <summary>
@@ -259,10 +268,6 @@ namespace YellowJacket.Core.Engine
         /// </summary>
         private void ExecuteFeatures()
         {
-            //GherkinManager gherkinManager = new GherkinManager();
-
-            //gherkinManager.ExtractFeature();
-
             TestPackage testPackage = NUnitEngineHelper.CreateTestPackage(new List<string> { _configuration.TestAssemblyFullName });
 
             TestFilter testFilter = NUnitEngineHelper.CreateTestFilter(_testAssembly, _configuration.Features);

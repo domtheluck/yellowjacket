@@ -76,7 +76,7 @@ namespace YellowJacket.Common.Helpers
         {
             List<Type> types =
                 assembly.GetTypes()
-                    .Where(t => t.GetCustomAttributes(typeof(DescriptionAttribute)).Any()).ToList();
+                    .Where(t => t.GetCustomAttributes(attributeType).Any()).ToList();
 
             if (!types.Any())
                 throw new Exception($"Cannot find any class with the attribute type {attributeType} in assembly {assembly.FullName}");
