@@ -42,7 +42,6 @@ namespace YellowJacket.Core.Plugins
                     InternetExplorerOptions options = new InternetExplorerOptions
                     {
                         IntroduceInstabilityByIgnoringProtectedModeSettings = true,
-                        UnexpectedAlertBehavior = InternetExplorerUnexpectedAlertBehavior.Ignore,
                         EnableNativeEvents = false,
                         IgnoreZoomLevel = true
                     };

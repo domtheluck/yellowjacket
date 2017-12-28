@@ -28,10 +28,10 @@ using System.Linq;
 using System.Text;
 using Microsoft.Extensions.CommandLineUtils;
 using YellowJacket.Common.Helpers;
-using YellowJacket.Core.Builders;
 using YellowJacket.Core.Engine;
 using YellowJacket.Core.Engine.Events;
 using YellowJacket.Core.Enums;
+using YellowJacket.Core.Factories;
 using YellowJacket.Core.Interfaces;
 using YellowJacket.Core.Packaging;
 
@@ -376,7 +376,7 @@ namespace YellowJacket.Console
         /// <returns><see cref="IEngine"/>.</returns>
         private static IEngine GetExecutionEngine()
         {
-            IEngine executionEngine = ExecutionEngineBuilder.CreateEngine();
+            IEngine executionEngine = EngineFactory.Create();
 
             executionEngine.ExecutionStart += Engine_OnExecutionStart;
             executionEngine.ExecutionCompleted += Engine_OnExecutionCompleted;

@@ -21,32 +21,35 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System.Collections.Generic;
-using System.Linq;
-using YellowJacket.Core.Contexts;
-using YellowJacket.Core.Enums;
+using YellowJacket.Core.Gherkin;
 
-namespace YellowJacket.Core.Hook
+namespace YellowJacket.Core.Contexts
 {
     /// <summary>
-    /// Uses to process the hooks.
+    /// Contains current run information.
     /// </summary>
-    internal class HookProcessor
+    public class Run
     {
-        /// <summary>
-        /// Processes the hooks.
-        /// </summary>
-        /// <param name="hookType">Type of the hook.</param>
-        public static void Process(HookType hookType)
-        {
-            List<HookInstance> hooks = 
-                ExecutionContext.Instance.Hooks.OrderBy(x => x.Priority).ToList();
+        #region Properties
 
-            hooks.ForEach(x =>
-            {
-                x.Instance.GetType().GetMethod(hookType.ToString())?.Invoke(x.Instance, null);
-            });
-        }
+        public GherkinFeature LastFeature { get; internal set; }
+
+        public GherkinFeature CurrentFeature { get; internal set; }
+
+        public GherkinFeature NextFeature { get; internal set; }
+
+        public GherkinScenario LastScenario { get; internal set; }
+
+        public GherkinScenario CurrentScenario { get; internal set; }
+
+        public GherkinScenario NextScenario { get; internal set; }
+
+        public double StepExecutionPercentage { get; internal set; }
+
+        public double FeatureExecutionPercentage { get; internal set; }
+
+        public double ScenarioExecutionPercentage { get; internal set; }
+
+        #endregion
     }
 }
-

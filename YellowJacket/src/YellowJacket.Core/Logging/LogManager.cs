@@ -37,7 +37,7 @@ namespace YellowJacket.Core.Logging
         /// <param name="content">The content to write.</param>
         public static void Write(string content)
         {
-            ExecutionContext.Current.GetLogPlugins().ForEach(x =>
+            ExecutionContext.Instance.Plugins.LogPlugins.ForEach(x =>
             {
                 x.Write(content);
             });
@@ -49,7 +49,7 @@ namespace YellowJacket.Core.Logging
         /// <param name="content">The line to write.</param>
         public static void WriteLine(string content)
         {
-            ExecutionContext.Current.GetLogPlugins().ForEach(x =>
+            ExecutionContext.Instance.Plugins.LogPlugins.ForEach(x =>
             {
                 x.WriteLine(content);
             });
@@ -61,7 +61,7 @@ namespace YellowJacket.Core.Logging
         /// <param name="content">The lines to write.</param>
         public static void WriteAllLine(IEnumerable<string> content)
         {
-            ExecutionContext.Current.GetLogPlugins().ForEach(x =>
+            ExecutionContext.Instance.Plugins.LogPlugins.ForEach(x =>
             {
                 x.WriteAllLine(content);
             });

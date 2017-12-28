@@ -21,32 +21,23 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System.Collections.Generic;
-using System.Linq;
-using YellowJacket.Core.Contexts;
-using YellowJacket.Core.Enums;
-
-namespace YellowJacket.Core.Hook
+namespace YellowJacket.Core.Gherkin
 {
     /// <summary>
-    /// Uses to process the hooks.
+    /// Represents a Gherkin scenario step.
     /// </summary>
-    internal class HookProcessor
+    public class GherkinStep
     {
-        /// <summary>
-        /// Processes the hooks.
-        /// </summary>
-        /// <param name="hookType">Type of the hook.</param>
-        public static void Process(HookType hookType)
-        {
-            List<HookInstance> hooks = 
-                ExecutionContext.Instance.Hooks.OrderBy(x => x.Priority).ToList();
+        #region Properties
 
-            hooks.ForEach(x =>
-            {
-                x.Instance.GetType().GetMethod(hookType.ToString())?.Invoke(x.Instance, null);
-            });
-        }
+        /// <summary>
+        /// Gets or sets the name.
+        /// </summary>
+        /// <value>
+        /// The name.
+        /// </value>
+        public string Text { get; set; }
+
+        #endregion
     }
 }
-

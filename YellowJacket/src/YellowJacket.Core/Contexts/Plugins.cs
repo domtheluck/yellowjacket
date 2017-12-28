@@ -21,22 +21,13 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using YellowJacket.Core.Interfaces;
+using System.Collections.Generic;
+using YellowJacket.Core.Plugins.Interfaces;
 
-namespace YellowJacket.Core.Builders
+namespace YellowJacket.Core.Contexts
 {
-    /// <summary>
-    /// Handles the creation of the execution engine.
-    /// </summary>
-    public class ExecutionEngineBuilder
+    public class Plugins
     {
-        /// <summary>
-        /// Creates a new instance of IExecutionEngine.
-        /// </summary>
-        /// <returns><see cref="IEngine"/>.</returns>
-        public static IEngine CreateEngine()
-        {
-            return new Engine.Engine();
-        }
+        public List<ILogPlugin> LogPlugins { get; } = new List<ILogPlugin>();
     }
 }

@@ -21,32 +21,22 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System.Collections.Generic;
-using System.Linq;
-using YellowJacket.Core.Contexts;
-using YellowJacket.Core.Enums;
+using YellowJacket.Core.Interfaces;
 
-namespace YellowJacket.Core.Hook
+namespace YellowJacket.Core.Factories
 {
     /// <summary>
-    /// Uses to process the hooks.
+    /// Engine factory.
     /// </summary>
-    internal class HookProcessor
+    public class EngineFactory
     {
         /// <summary>
-        /// Processes the hooks.
+        /// Creates an IEngine instance.
         /// </summary>
-        /// <param name="hookType">Type of the hook.</param>
-        public static void Process(HookType hookType)
+        /// <returns><see cref="IEngine"/>.</returns>
+        public static IEngine Create()
         {
-            List<HookInstance> hooks = 
-                ExecutionContext.Instance.Hooks.OrderBy(x => x.Priority).ToList();
-
-            hooks.ForEach(x =>
-            {
-                x.Instance.GetType().GetMethod(hookType.ToString())?.Invoke(x.Instance, null);
-            });
+            return new Engine.Engine();
         }
     }
 }
-

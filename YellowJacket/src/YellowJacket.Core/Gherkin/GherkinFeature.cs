@@ -22,31 +22,55 @@
 // ***********************************************************************
 
 using System.Collections.Generic;
-using System.Linq;
-using YellowJacket.Core.Contexts;
-using YellowJacket.Core.Enums;
 
-namespace YellowJacket.Core.Hook
+namespace YellowJacket.Core.Gherkin
 {
     /// <summary>
-    /// Uses to process the hooks.
+    /// Represents a Gherkin feature.
     /// </summary>
-    internal class HookProcessor
+    public class GherkinFeature
     {
-        /// <summary>
-        /// Processes the hooks.
-        /// </summary>
-        /// <param name="hookType">Type of the hook.</param>
-        public static void Process(HookType hookType)
-        {
-            List<HookInstance> hooks = 
-                ExecutionContext.Instance.Hooks.OrderBy(x => x.Priority).ToList();
+        #region Properties
 
-            hooks.ForEach(x =>
-            {
-                x.Instance.GetType().GetMethod(hookType.ToString())?.Invoke(x.Instance, null);
-            });
+        /// <summary>
+        /// Gets or sets the name.
+        /// </summary>
+        /// <value>
+        /// The name.
+        /// </value>
+        public string Name { get; internal set; }
+
+        /// <summary>
+        /// Gets or sets the description.
+        /// </summary>
+        /// <value>
+        /// The description.
+        /// </value>
+        public string Description { get; internal set; }
+
+        public IEnumerable<GherkinTag> Tags { get; internal set; }
+
+        /// <summary>
+        /// Gets or sets the scenarios.
+        /// </summary>
+        /// <value>
+        /// The scenarios.
+        /// </value>
+        public IEnumerable<GherkinScenario> Scenarios { get; internal set; }
+
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GherkinFeature"/> class.
+        /// </summary>
+        internal GherkinFeature()
+        {
+            Scenarios = new List<GherkinScenario>();
+            Tags = new List<GherkinTag>();
         }
+
+        #endregion
     }
 }
-

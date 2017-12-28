@@ -22,31 +22,44 @@
 // ***********************************************************************
 
 using System.Collections.Generic;
-using System.Linq;
-using YellowJacket.Core.Contexts;
-using YellowJacket.Core.Enums;
 
-namespace YellowJacket.Core.Hook
+namespace YellowJacket.Core.Gherkin
 {
     /// <summary>
-    /// Uses to process the hooks.
+    /// Represents a Gherkin feature scenario.
     /// </summary>
-    internal class HookProcessor
+    public class GherkinScenario
     {
-        /// <summary>
-        /// Processes the hooks.
-        /// </summary>
-        /// <param name="hookType">Type of the hook.</param>
-        public static void Process(HookType hookType)
-        {
-            List<HookInstance> hooks = 
-                ExecutionContext.Instance.Hooks.OrderBy(x => x.Priority).ToList();
+        #region Properties
 
-            hooks.ForEach(x =>
-            {
-                x.Instance.GetType().GetMethod(hookType.ToString())?.Invoke(x.Instance, null);
-            });
+        /// <summary>
+        /// Gets or sets the name.
+        /// </summary>
+        /// <value>
+        /// The name.
+        /// </value>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets the steps.
+        /// </summary>
+        /// <value>
+        /// The steps.
+        /// </value>
+        public IEnumerable<GherkinStep> Steps { get; set; }
+
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GherkinScenario"/> class.
+        /// </summary>
+        internal GherkinScenario()
+        {
+            Steps = new List<GherkinStep>();
         }
+
+        #endregion
     }
 }
-

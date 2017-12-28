@@ -27,11 +27,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using Gherkin.Ast;
 using YellowJacket.Common.Helpers;
 using YellowJacket.Core.Contexts;
 using YellowJacket.Core.Engine.Events;
-using YellowJacket.Core.Enums;
 using YellowJacket.Core.Gherkin;
 using YellowJacket.Core.Hook;
 using YellowJacket.Core.Interfaces;
@@ -50,13 +48,12 @@ namespace YellowJacket.Core.Engine
     {
         #region Constants
 
-        private const string BrowserNone = "None"; // TODO: move that somewhere else
+        //private const string BrowserNone = "None"; // TODO: move that somewhere else
 
         #endregion Constants
 
         #region Private Members
 
-        private readonly TypeLocatorHelper _typeLocatorHelper = new TypeLocatorHelper();
         private Assembly _testAssembly;
         private Configuration _configuration;
         private readonly List<Assembly> _pluginAssemblies = new List<Assembly>();
@@ -64,11 +61,13 @@ namespace YellowJacket.Core.Engine
         private List<TestCase> _testCases = new List<TestCase>();
         private ITestEngine _testEngine;
         private TestSuite _testSuite;
-        private int _testCaseCount;
+        //private int _testCaseCount;
 
         private readonly GherkinManager _gherkinManager = new GherkinManager();
 
-        private List<GherkinDocument> _gherkinDocuments = new List<GherkinDocument>();
+        //private List<GherkinDocument> _gherkinDocuments = new List<GherkinDocument>();
+
+        private List<GherkinFeature> _features = new List<GherkinFeature>();
 
         private string _tempFolder;
 
@@ -148,7 +147,7 @@ namespace YellowJacket.Core.Engine
         {
             _configuration.Features.ForEach(x =>
             {
-                _gherkinDocuments
+                _features
                     .Add(_gherkinManager.ParseFeature(_testAssembly, x, Path.Combine(_tempFolder, "Features")));
             });
         }
@@ -260,7 +259,7 @@ namespace YellowJacket.Core.Engine
             _pluginAssemblies.Clear();
             _testSuite = null;
             _testCases = new List<TestCase>();
-            _gherkinDocuments = new List<GherkinDocument>();
+            _features = new List<GherkinFeature>();
         }
 
         /// <summary>
@@ -288,8 +287,6 @@ namespace YellowJacket.Core.Engine
         /// </summary>
         private void Initialize()
         {
-            _testCaseCount = 0;
-
             // initialize the NUnit test engine
             _testEngine = TestEngineActivator.CreateInstance();
 
@@ -385,14 +382,14 @@ namespace YellowJacket.Core.Engine
         private void RegisterPlugins()
         {
             // cleanup the existing plugins
-            ExecutionContext.Current.ClearPlugins();
+            ExecutionContext.Instance.ClearPlugins();
 
             GetLogPlugins().ForEach(x =>
             {
-                ExecutionContext.Current.RegisterLogPlugin(x);
+                ExecutionContext.Instance.RegisterLogPlugin(x);
             });
 
-            ExecutionContext.Current.RegisterWebDriverConfigurationPlugin(GetWebDriverConfigurationPlugin());
+            //ExecutionContext.Current.RegisterWebDriverConfigurationPlugin(GetWebDriverConfigurationPlugin());
         }
 
         #endregion Plugins
@@ -405,7 +402,7 @@ namespace YellowJacket.Core.Engine
         private void RegisterHooks()
         {
             // cleanup the existing hooks
-            ExecutionContext.Current.ClearHooks();
+            ExecutionContext.Instance.ClearHooks();
 
             // get the hook list from the test assembly
             List<Type> hooks = TypeLocatorHelper.GetImplementedTypes<IHook>(_testAssembly);
@@ -421,7 +418,7 @@ namespace YellowJacket.Core.Engine
                 if (hookPriorityAttribute != null)
                     priority = hookPriorityAttribute.Priority;
 
-                ExecutionContext.Current.RegisterHook(
+                ExecutionContext.Instance.RegisterHook(
                     new HookInstance
                     {
                         Instance = ClassActivatorHelper<IHook>.CreateInstance(type),

@@ -76,14 +76,16 @@
     <Reference Include="TechTalk.SpecFlow, Version=2.2.0.0, Culture=neutral, PublicKeyToken=0778194805d6db41, processorArchitecture=MSIL">
       <HintPath>..\..\packages\SpecFlow.2.2.1\lib\net45\TechTalk.SpecFlow.dll</HintPath>
     </Reference>
-    <Reference Include="WebDriver, Version=3.5.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Selenium.WebDriver.3.5.1\lib\net40\WebDriver.dll</HintPath>
+    <Reference Include="WebDriver, Version=3.8.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Selenium.WebDriver.3.8.0\lib\net45\WebDriver.dll</HintPath>
     </Reference>
-    <Reference Include="WebDriver.Support, Version=3.5.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Selenium.Support.3.5.1\lib\net40\WebDriver.Support.dll</HintPath>
+    <Reference Include="WebDriver.Support, Version=3.8.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Selenium.Support.3.8.0\lib\net45\WebDriver.Support.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Contexts\Plugins.cs" />
+    <Compile Include="Contexts\Run.cs" />
     <Compile Include="Engine\BrowserConfiguration.cs" />
     <Compile Include="Engine\Engine.cs" />
     <Compile Include="Engine\Configuration.cs" />
@@ -92,10 +94,12 @@
     <Compile Include="Engine\Events\ExecutionCompletedEventArgs.cs" />
     <Compile Include="Engine\Events\ExecutionStartEventArgs.cs" />
     <Compile Include="Enums\HookType.cs" />
-    <Compile Include="Gherkin\Feature.cs" />
+    <Compile Include="Factories\EngineFactory.cs" />
+    <Compile Include="Gherkin\GherkinFeature.cs" />
     <Compile Include="Gherkin\GherkinManager.cs" />
-    <Compile Include="Gherkin\Scenario.cs" />
-    <Compile Include="Gherkin\Step.cs" />
+    <Compile Include="Gherkin\GherkinScenario.cs" />
+    <Compile Include="Gherkin\GherkinStep.cs" />
+    <Compile Include="Gherkin\GherkinTag.cs" />
     <Compile Include="Hook\HookProcessor.cs" />
     <Compile Include="Interfaces\IEngine.cs" />
     <Compile Include="Framework\Base.cs" />
@@ -106,7 +110,6 @@
     <Compile Include="Framework\BaseHook.cs" />
     <Compile Include="Contexts\ExecutionContext.cs" />
     <Compile Include="Enums\BrowserType.cs" />
-    <Compile Include="Builders\ExecutionEngineBuilder.cs" />
     <Compile Include="Interfaces\IPackageManager.cs" />
     <Compile Include="Packaging\Feature.cs" />
     <Compile Include="Plugins\FileLogPlugin.cs" />

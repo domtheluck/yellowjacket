@@ -23,8 +23,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using OpenQA.Selenium;
 using YellowJacket.Core.Hook;
 using YellowJacket.Core.Plugins.Interfaces;
 
@@ -33,20 +31,14 @@ namespace YellowJacket.Core.Contexts
     /// <summary>
     /// Represents the execution context.
     /// </summary>
-    internal sealed class ExecutionContext
+    public sealed class ExecutionContext
     {
         #region Private Members
 
         private static readonly Lazy<ExecutionContext> Context =
             new Lazy<ExecutionContext>(() => new ExecutionContext());
 
-        private static readonly List<HookInstance> HookInstances =
-            new List<HookInstance>();
-
-        private static readonly List<ILogPlugin> LogPlugins =
-            new List<ILogPlugin>();
-
-        private static IWebDriverConfigurationPlugin _webDriverConfigurationPlugin;
+        //private static IWebDriverConfigurationPlugin _webDriverConfigurationPlugin;
 
         #endregion
 
@@ -58,15 +50,27 @@ namespace YellowJacket.Core.Contexts
         /// <value>
         /// The current context.
         /// </value>
-        public static ExecutionContext Current => Context.Value;
+        public static ExecutionContext Instance => Context.Value;
 
         /// <summary>
-        /// Gets or sets the driver.
+        /// Gets the hook instances.
         /// </summary>
         /// <value>
-        /// The driver.
+        /// The hook instances.
         /// </value>
-        public IWebDriver WebDriver { get; set; }
+        public List<HookInstance> Hooks { get; } = new List<HookInstance>();
+
+        public Run Run { get; } = new Run();
+
+        public Plugins Plugins { get; } = new Plugins();
+
+        ///// <summary>
+        ///// Gets or sets the driver.
+        ///// </summary>
+        ///// <value>
+        ///// The driver.
+        ///// </value>
+        //public IWebDriver WebDriver { get; set; }
 
         #endregion
 
@@ -87,27 +91,12 @@ namespace YellowJacket.Core.Contexts
         /// Registers the hook in the context.
         /// </summary>
         /// <param name="hook">The hook to register.</param>
-        internal void RegisterHook(HookInstance hook)
-        {
-            HookInstances.Add(hook);
-        }
+        internal void RegisterHook(HookInstance hook) => Hooks.Add(hook);
 
         /// <summary>
         /// Clears the hook.
         /// </summary>
-        internal void ClearHooks()
-        {
-            HookInstances.Clear();
-        }
-
-        /// <summary>
-        /// Gets the hooks ordered by priority.
-        /// </summary>
-        /// <returns></returns>
-        internal List<HookInstance> GetHooks()
-        {
-            return HookInstances.OrderBy(x => x.Priority).ToList();
-        }
+        internal void ClearHooks() => Hooks.Clear();
 
         #endregion
 
@@ -116,47 +105,31 @@ namespace YellowJacket.Core.Contexts
         /// <summary>
         /// Clears the registered plugins.
         /// </summary>
-        internal void ClearPlugins()
-        {
-            LogPlugins.Clear();
-            _webDriverConfigurationPlugin = null;
-        }
+        internal void ClearPlugins() => Plugins.LogPlugins.Clear();//_webDriverConfigurationPlugin = null;
 
         /// <summary>
         /// Registers the Log plugin.
         /// </summary>
         /// <param name="logPlugin">The plugin.</param>
-        internal void RegisterLogPlugin(ILogPlugin logPlugin)
-        {
-            LogPlugins.Add(logPlugin);
-        }
-        
-        /// <summary>
-        /// Gets the log plugins.
-        /// </summary>
-        /// <returns></returns>
-        internal List<ILogPlugin> GetLogPlugins()
-        {
-            return LogPlugins;
-        }
+        internal void RegisterLogPlugin(ILogPlugin logPlugin) => Plugins.LogPlugins.Add(logPlugin);
 
-        /// <summary>
-        /// Registers the web driver configuration plugin.
-        /// </summary>
-        /// <param name="webDriverConfigurationPlugin">The web driver configuration plugin.</param>
-        internal void RegisterWebDriverConfigurationPlugin(IWebDriverConfigurationPlugin webDriverConfigurationPlugin)
-        {
-            _webDriverConfigurationPlugin = webDriverConfigurationPlugin;
-        }
+        ///// <summary>
+        ///// Registers the web driver configuration plugin.
+        ///// </summary>
+        ///// <param name="webDriverConfigurationPlugin">The web driver configuration plugin.</param>
+        //internal void RegisterWebDriverConfigurationPlugin(IWebDriverConfigurationPlugin webDriverConfigurationPlugin)
+        //{
+        //    _webDriverConfigurationPlugin = webDriverConfigurationPlugin;
+        //}
 
-        /// <summary>
-        /// Gets the web driver configuration plugin.
-        /// </summary>
-        /// <returns><see cref="IWebDriverConfigurationPlugin"/>.</returns>
-        internal IWebDriverConfigurationPlugin GetWebDriverConfigurationPlugin()
-        {
-            return _webDriverConfigurationPlugin;
-        }
+        ///// <summary>
+        ///// Gets the web driver configuration plugin.
+        ///// </summary>
+        ///// <returns><see cref="IWebDriverConfigurationPlugin"/>.</returns>
+        //internal IWebDriverConfigurationPlugin GetWebDriverConfigurationPlugin()
+        //{
+        //    return _webDriverConfigurationPlugin;
+        //}
 
         #endregion
 

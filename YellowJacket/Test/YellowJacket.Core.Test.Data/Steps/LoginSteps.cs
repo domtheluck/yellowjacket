@@ -21,32 +21,40 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System.Collections.Generic;
-using System.Linq;
-using YellowJacket.Core.Contexts;
-using YellowJacket.Core.Enums;
+using TechTalk.SpecFlow;
 
-namespace YellowJacket.Core.Hook
+namespace YellowJacket.Core.Test.Data.Steps
 {
-    /// <summary>
-    /// Uses to process the hooks.
-    /// </summary>
-    internal class HookProcessor
+    [Binding]
+    public class LoginSteps
     {
-        /// <summary>
-        /// Processes the hooks.
-        /// </summary>
-        /// <param name="hookType">Type of the hook.</param>
-        public static void Process(HookType hookType)
-        {
-            List<HookInstance> hooks = 
-                ExecutionContext.Instance.Hooks.OrderBy(x => x.Priority).ToList();
+        #region Public Methods
 
-            hooks.ForEach(x =>
-            {
-                x.Instance.GetType().GetMethod(hookType.ToString())?.Invoke(x.Instance, null);
-            });
+        [Given(@"I enter '(.*)' in '(.*)' textbox")]
+        public void GivenIEnterInTextbox(string p0, string p1)
+        {
+            ScenarioContext.Current.Pending();
         }
+
+        [When(@"I click on '(.*)' button")]
+        public void WhenIClickOnButton(string p0)
+        {
+            ScenarioContext.Current.Pending();
+        }
+
+        [Then(@"I see my profile page")]
+        public void ThenISeeMyProfilePage()
+        {
+            ScenarioContext.Current.Pending();
+        }
+
+        [Then(@"I see invalid password message")]
+        public void ThenISeeInvalidPasswordMessage()
+        {
+            ScenarioContext.Current.Pending();
+        }
+
+
+        #endregion
     }
 }
-
