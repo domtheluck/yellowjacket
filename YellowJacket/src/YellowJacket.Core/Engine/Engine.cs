@@ -710,7 +710,7 @@ namespace YellowJacket.Core.Engine
         {
             // TODO: Add logging
 
-            UpdateProgress(State.AfterFeature);
+            UpdateProgress(HookType.AfterFeature);
         }
 
         /// <summary>
@@ -732,7 +732,7 @@ namespace YellowJacket.Core.Engine
         {
             // TODO: Add logging
 
-            UpdateProgress(State.AfterScenario);
+            UpdateProgress(HookType.AfterScenario);
         }
 
         /// <summary>
@@ -752,7 +752,7 @@ namespace YellowJacket.Core.Engine
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void OnExecutionAfterStep(object sender, System.EventArgs e)
         {
-            UpdateProgress(State.AfterStep);
+            UpdateProgress(HookType.AfterStep);
         }
 
         ///// <summary>
