@@ -22,7 +22,8 @@
 // ***********************************************************************
 
 using YellowJacket.Core.Engine;
-using YellowJacket.Core.Engine.Events;
+using YellowJacket.Core.Engine.EventArgs;
+using YellowJacket.Core.Enums;
 
 namespace YellowJacket.Core.Interfaces
 {
@@ -49,6 +50,14 @@ namespace YellowJacket.Core.Interfaces
         event ExecutionCompletedHandler ExecutionCompleted;
 
         event ExecutionProgressHandler ExecutionProgress;
+
+        #endregion
+
+        #region Properties
+
+        EngineStatus Status { get; }
+
+        RunSummary RunSummary { get; }
 
         #endregion
 

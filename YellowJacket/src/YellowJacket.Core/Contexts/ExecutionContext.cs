@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using YellowJacket.Core.Hook;
 using YellowJacket.Core.Plugins.Interfaces;
 
@@ -38,6 +39,7 @@ namespace YellowJacket.Core.Contexts
         private static readonly Lazy<ExecutionContext> Context =
             new Lazy<ExecutionContext>(() => new ExecutionContext());
 
+        // TODO: Commented for now
         //private static IWebDriverConfigurationPlugin _webDriverConfigurationPlugin;
 
         #endregion
@@ -60,10 +62,15 @@ namespace YellowJacket.Core.Contexts
         /// </value>
         public List<HookInstance> Hooks { get; } = new List<HookInstance>();
 
-        public Run Run { get; } = new Run();
-
+        /// <summary>
+        /// Gets the plugins.
+        /// </summary>
+        /// <value>
+        /// The plugins.
+        /// </value>
         public Plugins Plugins { get; } = new Plugins();
 
+        // TODO: Commented for now
         ///// <summary>
         ///// Gets or sets the driver.
         ///// </summary>
@@ -83,9 +90,89 @@ namespace YellowJacket.Core.Contexts
 
         #endregion
 
+        #region Events
+
+        internal event EventHandler<EventArgs> BeforeExecution;
+        internal event EventHandler<EventArgs> AfterExecution;
+
+        internal event EventHandler<EventArgs> ExecutionBeforeFeature;
+        internal event EventHandler<EventArgs> ExecutionAfterFeature;
+
+        internal event EventHandler<EventArgs> ExecutionBeforeScenario;
+        internal event EventHandler<EventArgs> ExecutionAfterScenario;
+
+        internal event EventHandler<EventArgs> ExecutionBeforeStep;
+        internal event EventHandler<EventArgs> ExecutionAfterStep;
+
+        #endregion
+
         #region Internal Methods
 
-        #region Hooks
+        /// <summary>
+        /// Fires the before execution event.
+        /// </summary>
+        internal void FireBeforeExecutionEvent()
+        {
+            File.AppendAllText(@"d:\temp.log", $"{DateTime.Now} FireBeforeExecutionEvent" + Environment.NewLine);
+
+            BeforeExecution?.Invoke(this, new EventArgs());
+        }
+
+        /// <summary>
+        /// Fires the after execution event.
+        /// </summary>
+        internal void FireAfterExecutionEvent()
+        {
+            AfterExecution?.Invoke(this, new EventArgs());
+        }
+
+        /// <summary>
+        /// Fires the execution before feature event.
+        /// </summary>
+        internal void FireExecutionBeforeFeatureEvent()
+        {
+            ExecutionBeforeFeature?.Invoke(this, new EventArgs());
+        }
+
+        /// <summary>
+        /// Fires the execution after feature event.
+        /// </summary>
+        internal void FireExecutionAfterFeatureEvent()
+        {
+            ExecutionAfterFeature?.Invoke(this, new EventArgs());
+        }
+
+        /// <summary>
+        /// Fires the execution before scenario event.
+        /// </summary>
+        internal void FireExecutionBeforeScenarioEvent()
+        {
+            ExecutionBeforeScenario?.Invoke(this, new EventArgs());
+        }
+
+        /// <summary>
+        /// Fires the execution after scenario event.
+        /// </summary>
+        internal void FireExecutionAfterScenarioEvent()
+        {
+            ExecutionAfterScenario?.Invoke(this, new EventArgs());
+        }
+
+        /// <summary>
+        /// Fires the execution before step event.
+        /// </summary>
+        internal void FireExecutionBeforeStepEvent()
+        {
+            ExecutionBeforeStep?.Invoke(this, new EventArgs());
+        }
+
+        /// <summary>
+        /// Fires the execution after step event.
+        /// </summary>
+        internal void FireExecutionAfterStepEvent()
+        {
+            ExecutionAfterStep?.Invoke(this, new EventArgs());
+        }
 
         /// <summary>
         /// Registers the hook in the context.
@@ -98,21 +185,24 @@ namespace YellowJacket.Core.Contexts
         /// </summary>
         internal void ClearHooks() => Hooks.Clear();
 
-        #endregion
-
-        #region Plugins
-
         /// <summary>
         /// Clears the registered plugins.
         /// </summary>
-        internal void ClearPlugins() => Plugins.LogPlugins.Clear();//_webDriverConfigurationPlugin = null;
+        internal void ClearPlugins()
+        {
+            Plugins.LogPlugins.Clear();
+        }
 
         /// <summary>
         /// Registers the Log plugin.
         /// </summary>
         /// <param name="logPlugin">The plugin.</param>
-        internal void RegisterLogPlugin(ILogPlugin logPlugin) => Plugins.LogPlugins.Add(logPlugin);
+        internal void RegisterLogPlugin(ILogPlugin logPlugin)
+        {
+            Plugins.LogPlugins.Add(logPlugin);
+        }
 
+        // TODO: Commented for now
         ///// <summary>
         ///// Registers the web driver configuration plugin.
         ///// </summary>
@@ -122,6 +212,7 @@ namespace YellowJacket.Core.Contexts
         //    _webDriverConfigurationPlugin = webDriverConfigurationPlugin;
         //}
 
+        // TODO: Commented for now
         ///// <summary>
         ///// Gets the web driver configuration plugin.
         ///// </summary>
@@ -130,8 +221,6 @@ namespace YellowJacket.Core.Contexts
         //{
         //    return _webDriverConfigurationPlugin;
         //}
-
-        #endregion
 
         #endregion
     }

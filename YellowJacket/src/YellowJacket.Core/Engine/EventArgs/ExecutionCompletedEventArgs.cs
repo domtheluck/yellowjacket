@@ -21,23 +21,14 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-namespace YellowJacket.Core.Gherkin
+namespace YellowJacket.Core.Engine.EventArgs
 {
+    /// <inheritdoc />
     /// <summary>
-    /// Represents a Gherkin Tag.
+    /// Contains the arguments for the Execution Completed event.
     /// </summary>
-    public class GherkinTag
+    /// <seealso cref="T:System.EventArgs" />
+    public class ExecutionCompletedEventArgs: System.EventArgs
     {
-        #region Properties
-
-        /// <summary>
-        /// Gets the name.
-        /// </summary>
-        /// <value>
-        /// The name.
-        /// </value>
-        public string Name { get; internal set; }
-
-        #endregion
     }
 }

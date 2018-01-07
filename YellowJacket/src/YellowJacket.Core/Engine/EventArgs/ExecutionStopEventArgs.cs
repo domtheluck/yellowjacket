@@ -21,34 +21,40 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using YellowJacket.Core.Gherkin;
+using System;
 
-namespace YellowJacket.Core.Contexts
+namespace YellowJacket.Core.Engine.EventArgs
 {
+    /// <inheritdoc />
     /// <summary>
-    /// Contains current run information.
+    /// Contains the arguments for the Execution Stop event.
     /// </summary>
-    public class Run
+    /// <seealso cref="T:System.EventArgs" />
+    public class ExecutionStopEventArgs: System.EventArgs
     {
         #region Properties
 
-        public GherkinFeature LastFeature { get; internal set; }
+        /// <summary>
+        /// Gets the exception.
+        /// </summary>
+        /// <value>
+        /// The exception.
+        /// </value>
+        public Exception Exception { get; }
 
-        public GherkinFeature CurrentFeature { get; internal set; }
+        #endregion
 
-        public GherkinFeature NextFeature { get; internal set; }
+        #region Constructors
 
-        public GherkinScenario LastScenario { get; internal set; }
-
-        public GherkinScenario CurrentScenario { get; internal set; }
-
-        public GherkinScenario NextScenario { get; internal set; }
-
-        public double StepExecutionPercentage { get; internal set; }
-
-        public double FeatureExecutionPercentage { get; internal set; }
-
-        public double ScenarioExecutionPercentage { get; internal set; }
+        /// <inheritdoc />
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:YellowJacket.Core.Engine.EventArgs.ExecutionStopEventArgs" /> class.
+        /// </summary>
+        /// <param name="exception">The exception.</param>
+        public ExecutionStopEventArgs(Exception exception)
+        {
+            Exception = exception;
+        }
 
         #endregion
     }

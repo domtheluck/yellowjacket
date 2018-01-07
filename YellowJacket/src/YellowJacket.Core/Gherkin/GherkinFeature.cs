@@ -48,15 +48,13 @@ namespace YellowJacket.Core.Gherkin
         /// </value>
         public string Description { get; internal set; }
 
-        public IEnumerable<GherkinTag> Tags { get; internal set; }
-
         /// <summary>
         /// Gets or sets the scenarios.
         /// </summary>
         /// <value>
         /// The scenarios.
         /// </value>
-        public IEnumerable<GherkinScenario> Scenarios { get; internal set; }
+        public List<GherkinScenario> Scenarios { get; internal set; }
 
         #endregion
 
@@ -68,7 +66,6 @@ namespace YellowJacket.Core.Gherkin
         internal GherkinFeature()
         {
             Scenarios = new List<GherkinScenario>();
-            Tags = new List<GherkinTag>();
         }
 
         #endregion

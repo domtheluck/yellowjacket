@@ -21,16 +21,14 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
-
-namespace YellowJacket.Core.Engine.Events
+namespace YellowJacket.Core.Engine.EventArgs
 {
     /// <inheritdoc />
     /// <summary>
-    /// Contains the arguments for the Execution Completed event.
+    /// Contains the arguments for the Execution Start event.
     /// </summary>
     /// <seealso cref="T:System.EventArgs" />
-    public class ExecutionCompletedEventArgs: EventArgs
+    public class ExecutionStartEventArgs: System.EventArgs
     {
     }
 }

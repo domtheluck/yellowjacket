@@ -21,13 +21,12 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
 using TechTalk.SpecFlow;
+using YellowJacket.Core.Contexts;
 using YellowJacket.Core.Enums;
 using YellowJacket.Core.Hook;
-using YellowJacket.Core.Logging;
 
-namespace YellowJacket.Core.Framework
+namespace YellowJacket.Core.Engine
 {
     /// <summary>
     /// Base class to handle SpecFlow binding hooks.
@@ -37,40 +36,18 @@ namespace YellowJacket.Core.Framework
     {
         #region Public Methods
 
-        /// <summary>
-        /// Hook used after executing a feature.
-        /// </summary>
-        [AfterFeature]
-        public static void AfterFeature()
+        [BeforeTestRun]
+        public static void BeforeTestRun()
         {
-            HookProcessor.Process(HookType.AfterFeature);
-        }
+            ExecutionContext.Instance.FireBeforeExecutionEvent();
 
-        /// <summary>
-        /// Hook used after executing a scenario.
-        /// </summary>
-        [AfterScenario]
-        public static void AfterScenario()
-        {
-            // TODO: need to check if an error happened
-            LogManager.WriteLine($"Scenario {ScenarioContext.Current.ScenarioInfo.Title} completed");
-
-            HookProcessor.Process(HookType.AfterScenario);
-        }
-
-        /// <summary>
-        /// Hook used after executing a step.
-        /// </summary>
-        [AfterStep]
-        public static void AfterStep()
-        {
-            HookProcessor.Process(HookType.AfterStep);
+            HookProcessor.Process(HookType.BeforeExecution);
         }
 
         [AfterTestRun]
         public static void AfterTestRun()
         {
-            LogManager.WriteLine($"Execution completed at {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
+            ExecutionContext.Instance.FireAfterExecutionEvent();
 
             HookProcessor.Process(HookType.AfterExecution);
         }
@@ -81,9 +58,18 @@ namespace YellowJacket.Core.Framework
         [BeforeFeature]
         public static void BeforeFeature()
         {
-            LogManager.WriteLine($"Feature {FeatureContext.Current.FeatureInfo.Title}");
-
             HookProcessor.Process(HookType.BeforeFeature);
+        }
+
+        /// <summary>
+        /// Hook used after executing a feature.
+        /// </summary>
+        [AfterFeature]
+        public static void AfterFeature()
+        {
+            ExecutionContext.Instance.FireExecutionAfterFeatureEvent();
+
+            HookProcessor.Process(HookType.AfterFeature);
         }
 
         /// <summary>
@@ -92,9 +78,18 @@ namespace YellowJacket.Core.Framework
         [BeforeScenario]
         public static void BeforeScenario()
         {
-            LogManager.WriteLine($"Starting scenario {ScenarioContext.Current.ScenarioInfo.Title}");
-
             HookProcessor.Process(HookType.BeforeScenario);
+        }
+
+        /// <summary>
+        /// Hook used after executing a scenario.
+        /// </summary>
+        [AfterScenario]
+        public static void AfterScenario()
+        {
+            ExecutionContext.Instance.FireExecutionAfterScenarioEvent();
+
+            HookProcessor.Process(HookType.AfterScenario);
         }
 
         /// <summary>
@@ -103,39 +98,22 @@ namespace YellowJacket.Core.Framework
         [BeforeStep]
         public static void BeforeStep()
         {
+            ExecutionContext.Instance.FireExecutionBeforeStepEvent();
+
             HookProcessor.Process(HookType.BeforeStep);
         }
 
-        [BeforeTestRun]
-        public static void BeforeTestRun()
+        /// <summary>
+        /// Hook used after executing a step.
+        /// </summary>
+        [AfterStep]
+        public static void AfterStep()
         {
-            Initialize();
+            ExecutionContext.Instance.FireExecutionAfterStepEvent();
 
-            LogManager.WriteLine($"Execution start at {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
-
-            HookProcessor.Process(HookType.BeforeExecution);
-        }
-
-        [BeforeScenarioBlock]
-        public static void BeforeScenarioBlock()
-        {
-            
-        }
-
-        [AfterScenarioBlock]
-        public static void AfterScenarioBlock()
-        {
-
+            HookProcessor.Process(HookType.AfterStep);
         }
 
         #endregion
-
-        /// <summary>
-        /// Initializes the HookBase.
-        /// </summary>
-        private static void Initialize()
-        {
-
-        }
     }
 }

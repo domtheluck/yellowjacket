@@ -45,9 +45,6 @@
     <Reference Include="nunit-agent, Version=3.7.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\NUnit.Engine.3.7.0\lib\nunit-agent.exe</HintPath>
     </Reference>
-    <Reference Include="nunit-agent-x86, Version=3.7.0.0, Culture=neutral, processorArchitecture=x86">
-      <HintPath>..\..\packages\NUnit.Engine.3.7.0\lib\nunit-agent-x86.exe</HintPath>
-    </Reference>
     <Reference Include="nunit.engine, Version=3.7.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
       <HintPath>..\..\packages\NUnit.Engine.3.7.0\lib\nunit.engine.dll</HintPath>
     </Reference>
@@ -85,21 +82,21 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Contexts\Plugins.cs" />
-    <Compile Include="Contexts\Run.cs" />
+    <Compile Include="Engine\RunSummary.cs" />
     <Compile Include="Engine\BrowserConfiguration.cs" />
     <Compile Include="Engine\Engine.cs" />
     <Compile Include="Engine\Configuration.cs" />
-    <Compile Include="Engine\Events\ExecutionProgressEventArgs.cs" />
-    <Compile Include="Engine\Events\ExecutionStopEventArgs.cs" />
-    <Compile Include="Engine\Events\ExecutionCompletedEventArgs.cs" />
-    <Compile Include="Engine\Events\ExecutionStartEventArgs.cs" />
+    <Compile Include="Engine\EventArgs\ExecutionProgressEventArgs.cs" />
+    <Compile Include="Engine\EventArgs\ExecutionStopEventArgs.cs" />
+    <Compile Include="Engine\EventArgs\ExecutionCompletedEventArgs.cs" />
+    <Compile Include="Engine\EventArgs\ExecutionStartEventArgs.cs" />
     <Compile Include="Enums\HookType.cs" />
+    <Compile Include="Enums\EngineStatus.cs" />
     <Compile Include="Factories\EngineFactory.cs" />
     <Compile Include="Gherkin\GherkinFeature.cs" />
     <Compile Include="Gherkin\GherkinManager.cs" />
     <Compile Include="Gherkin\GherkinScenario.cs" />
     <Compile Include="Gherkin\GherkinStep.cs" />
-    <Compile Include="Gherkin\GherkinTag.cs" />
     <Compile Include="Hook\HookProcessor.cs" />
     <Compile Include="Interfaces\IEngine.cs" />
     <Compile Include="Framework\Base.cs" />
@@ -107,11 +104,12 @@
     <Compile Include="Framework\BaseStep.cs" />
     <Compile Include="Framework\Browser.cs" />
     <Compile Include="Contexts\DriverContext.cs" />
-    <Compile Include="Framework\BaseHook.cs" />
+    <Compile Include="Engine\BaseHook.cs" />
     <Compile Include="Contexts\ExecutionContext.cs" />
     <Compile Include="Enums\BrowserType.cs" />
     <Compile Include="Interfaces\IPackageManager.cs" />
     <Compile Include="Packaging\Feature.cs" />
+    <Compile Include="Plugins\ConsoleLogPlugin.cs" />
     <Compile Include="Plugins\FileLogPlugin.cs" />
     <Compile Include="Logging\LogManager.cs" />
     <Compile Include="NUnit\CustomTestEventListener.cs" />

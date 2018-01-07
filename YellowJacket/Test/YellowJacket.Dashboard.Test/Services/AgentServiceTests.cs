@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -36,6 +37,7 @@ using YellowJacket.Models;
 
 namespace YellowJacket.Dashboard.Test.Services
 {
+    [ExcludeFromCodeCoverage]
     [TestFixture]
     [Parallelizable(ParallelScope.All)]
     public class AgentServiceTests: TestBase

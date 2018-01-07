@@ -21,29 +21,46 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System.Diagnostics.CodeAnalysis;
-using System.Threading;
-using TechTalk.SpecFlow;
+using YellowJacket.Core.Gherkin;
 
-namespace YellowJacket.Core.Test.Data.Steps
+namespace YellowJacket.Core.Engine
 {
-    [ExcludeFromCodeCoverage]
-    [Binding]
-    public class LoginSteps
+    /// <summary>
+    /// Contains the run summary.
+    /// </summary>
+    public class RunSummary
     {
-        #region Public Methods
+        #region Public Properties
 
-        [Then(@"I see my profile page")]
-        public void ThenISeeMyProfilePage()
-        {
-            Thread.Sleep(100);
-        }
+        public GherkinFeature PreviousFeature { get; internal set; }
 
-        [Then(@"I see invalid password message")]
-        public void ThenISeeInvalidPasswordMessage()
-        {
-            Thread.Sleep(100);
-        }
+        public GherkinFeature CurrentFeature { get; internal set; }
+
+        public GherkinFeature NextFeature { get; internal set; }
+
+        public GherkinScenario PreviousScenario { get; internal set; }
+
+        public GherkinScenario CurrentScenario { get; internal set; }
+
+        public GherkinScenario NextScenario { get; internal set; }
+
+        public GherkinStep PreviousStep { get; internal set; }
+
+        public GherkinStep CurrentStep { get; internal set; }
+
+        public GherkinStep NextStep { get; internal set; }
+
+        public double StepExecutionPercentage { get; internal set; }
+
+        public double FeatureExecutionPercentage { get; internal set; }
+
+        public double ScenarioExecutionPercentage { get; internal set; }
+
+        public int FeatureCount { get; internal set; }
+
+        public int ScenarioCount { get; internal set; }
+
+        public int StepCount { get; internal set; }
 
         #endregion
     }

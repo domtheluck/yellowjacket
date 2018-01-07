@@ -4,5 +4,5 @@ services:
   yellowjacket.dashboard:
     image: yellowjacket.dashboard
     build:
-      context: ./src/YellowJacket.Dashboard
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: src/YellowJacket.Dashboard/Dockerfile

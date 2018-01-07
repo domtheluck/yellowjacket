@@ -15,8 +15,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YellowJacket.Agent", "src\Y
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YellowJacket.Models", "src\YellowJacket.Models\YellowJacket.Models.csproj", "{7811E115-4CC8-4D4D-AFA2-6E029B1F2090}"
 EndProject
-Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{3FB52DE6-8EBC-4F8B-900F-CC3C26E08F48}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YellowJacket.Api", "src\YellowJacket.Api\YellowJacket.Api.csproj", "{D0739B5D-2D5E-410B-8A44-0B5B4C5C1B87}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YellowJacket.Dashboard", "src\YellowJacket.Dashboard\YellowJacket.Dashboard.csproj", "{405A0E31-C829-4C30-AA59-711CE2869283}"
@@ -32,6 +30,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YellowJacket.Core.Test", "Test\YellowJacket.Core.Test\YellowJacket.Core.Test.csproj", "{FE412D0F-BE3A-4217-A4AB-7CA7F244CEC7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YellowJacket.Core.Test.Data", "Test\YellowJacket.Core.Test.Data\YellowJacket.Core.Test.Data.csproj", "{1034A0FF-C8BD-4F23-B7B8-B7FC0DB01D68}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{90CF9580-55C5-4665-A9E6-16FD1A9DE5EE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -55,8 +55,6 @@ Global
 		{7811E115-4CC8-4D4D-AFA2-6E029B1F2090}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7811E115-4CC8-4D4D-AFA2-6E029B1F2090}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7811E115-4CC8-4D4D-AFA2-6E029B1F2090}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3FB52DE6-8EBC-4F8B-900F-CC3C26E08F48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3FB52DE6-8EBC-4F8B-900F-CC3C26E08F48}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D0739B5D-2D5E-410B-8A44-0B5B4C5C1B87}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D0739B5D-2D5E-410B-8A44-0B5B4C5C1B87}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D0739B5D-2D5E-410B-8A44-0B5B4C5C1B87}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -85,6 +83,10 @@ Global
 		{1034A0FF-C8BD-4F23-B7B8-B7FC0DB01D68}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1034A0FF-C8BD-4F23-B7B8-B7FC0DB01D68}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1034A0FF-C8BD-4F23-B7B8-B7FC0DB01D68}.Release|Any CPU.Build.0 = Release|Any CPU
+		{90CF9580-55C5-4665-A9E6-16FD1A9DE5EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90CF9580-55C5-4665-A9E6-16FD1A9DE5EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90CF9580-55C5-4665-A9E6-16FD1A9DE5EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90CF9580-55C5-4665-A9E6-16FD1A9DE5EE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -22,9 +22,12 @@
 // ***********************************************************************
 
 using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using NUnit.Framework;
 using YellowJacket.Core.Engine;
+using YellowJacket.Core.Enums;
 using YellowJacket.Core.Factories;
 using YellowJacket.Core.Interfaces;
 
@@ -32,7 +35,7 @@ namespace YellowJacket.Core.Test.Engine
 {
     [TestFixture]
     [Parallelizable(ParallelScope.All)]
-    public class EngineTests
+    public class EngineInputTests
     {
         [SetUp]
         public void Setup()
@@ -111,6 +114,30 @@ namespace YellowJacket.Core.Test.Engine
             // Assert
             Assert.Throws<IOException>(()
                 => engine.Run(configuration), $"The TestAssemblyFullName {testAssemblyFullName} is invalid.");
+        }
+
+        [Test]
+        public void Run_ValidConfigurationSingleFeature_NoError()
+        {
+            // Arrange
+            IEngine engine = EngineFactory.Create();
+
+            string testAssemblyFullName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "YellowJacket.Core.Test.Data.dll");
+
+            List<string> features = new List<string> {"Login"};
+
+            // Act
+            Configuration configuration =
+                new Configuration
+                {
+                    TestAssemblyFullName = testAssemblyFullName,
+                    Features = features
+                };
+
+            engine.Run(configuration);
+
+            // Assert
+            Assert.That(engine.Status, Is.EqualTo(EngineStatus.Completed));
         }
 
         #endregion

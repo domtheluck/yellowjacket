@@ -25,12 +25,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using Microsoft.Extensions.CommandLineUtils;
-using YellowJacket.Common.Helpers;
 using YellowJacket.Core.Engine;
-using YellowJacket.Core.Engine.Events;
-using YellowJacket.Core.Enums;
+using YellowJacket.Core.Engine.EventArgs;
 using YellowJacket.Core.Factories;
 using YellowJacket.Core.Interfaces;
 using YellowJacket.Core.Packaging;
@@ -64,6 +61,10 @@ namespace YellowJacket.Console
 
         #region Private Methods
 
+        /// <summary>
+        /// Main entry point.
+        /// </summary>
+        /// <param name="args">The arguments.</param>
         private static void Main(string[] args)
         {
             CommandLineApplication app = new CommandLineApplication { Name = ApplicationName };
@@ -91,8 +92,6 @@ namespace YellowJacket.Console
                 System.Console.WriteLine(ex);
                 Environment.Exit(-1);
             }
-
-            System.Console.ReadLine();
         }
 
         /// <summary>
@@ -186,26 +185,27 @@ namespace YellowJacket.Console
 
                 featuresArgument.MultipleValues = true;
 
-                StringBuilder browserOptionDescription = new StringBuilder();
+                // TODO: Remove the browser part for now. 
+                //StringBuilder browserOptionDescription = new StringBuilder();
 
-                browserOptionDescription.Append(
-                    "The browser used to execute the test. ");
+                //browserOptionDescription.Append(
+                //    "The browser used to execute the test. ");
 
-                browserOptionDescription.Append(
-                    "Please note that you must specify a browser if you want to execute a Web UI feature. ");
+                //browserOptionDescription.Append(
+                //    "Please note that you must specify a browser if you want to execute a Web UI feature. ");
 
-                List<string> browsers = Enum.GetValues(typeof(BrowserType))
-                    .Cast<BrowserType>()
-                    .Select(browserType => EnumHelper.GetEnumFieldDescription(browserType)).ToList();
+                //List<string> browsers = Enum.GetValues(typeof(BrowserType))
+                //    .Cast<BrowserType>()
+                //    .Select(browserType => EnumHelper.GetEnumFieldDescription(browserType)).ToList();
 
-                browserOptionDescription.Append(
-                    $"Possible values are: {string.Join(", ", browsers)}.");
+                //browserOptionDescription.Append(
+                //    $"Possible values are: {string.Join(", ", browsers)}.");
 
-                CommandOption browserOption =
-                    command.Option(
-                        "-b|--browser <browser>",
-                        browserOptionDescription.ToString(),
-                        CommandOptionType.SingleValue);
+                //CommandOption browserOption =
+                //    command.Option(
+                //        "-b|--browser <browser>",
+                //        browserOptionDescription.ToString(),
+                //        CommandOptionType.SingleValue);
 
                 command.OnExecute(() =>
                 {
@@ -223,18 +223,21 @@ namespace YellowJacket.Console
                         return -1;
                     }
 
-                    if (!string.IsNullOrEmpty(browserOption.Value()))
-                    {
-                        if (browsers.All(
-                            x => !string.Equals(x, browserOption.Value(), StringComparison.CurrentCultureIgnoreCase)))
-                        {
-                            System.Console.WriteLine($"The specified browser value {browserOption.Value()} is not valid.");
-                            command.ShowHelp();
-                            return -1;
-                        }
-                    }
+                    // TODO: Remove the browser part for now. 
+                    //if (!string.IsNullOrEmpty(browserOption.Value()))
+                    //{
+                    //    if (browsers.All(
+                    //        x => !string.Equals(x, browserOption.Value(), StringComparison.CurrentCultureIgnoreCase)))
+                    //    {
+                    //        System.Console.WriteLine($"The specified browser value {browserOption.Value()} is not valid.");
+                    //        command.ShowHelp();
+                    //        return -1;
+                    //    }
+                    //}
 
                     List<string> features = featuresArgument.Values;
+
+                    // TODO: Remove the browser part for now. 
                     //string browser = browserOption.HasValue() ? browserOption.Value() : "None";
 
                     IEngine executionEngine = GetExecutionEngine();
@@ -248,6 +251,7 @@ namespace YellowJacket.Console
                             Features = features
                         };
 
+                    // TODO: Remove the browser part for now. 
                     //if (browser != "None")
                     //    configuration.BrowserConfiguration = new BrowserConfiguration
                     //    {
@@ -266,6 +270,10 @@ namespace YellowJacket.Console
             });
         }
 
+        /// <summary>
+        /// Initializes the run package command.
+        /// </summary>
+        /// <param name="app">The application.</param>
         private static void InitializeRunPackageCommand(CommandLineApplication app)
         {
             app.Command(RunPackage, command =>
@@ -280,6 +288,7 @@ namespace YellowJacket.Console
 
                 featuresArgument.MultipleValues = true;
 
+                // TODO: Remove the browser part for now. 
                 //StringBuilder browserOptionDescription = new StringBuilder();
 
                 //browserOptionDescription.Append(
@@ -318,6 +327,7 @@ namespace YellowJacket.Console
                         return -1;
                     }
 
+                    // TODO: Remove the browser part for now. 
                     //if (!string.IsNullOrEmpty(browserOption.Value()))
                     //{
                     //    if (browsers.All(
@@ -331,19 +341,18 @@ namespace YellowJacket.Console
 
                     string testPackageLocation = testPackageLocationArgument.Value;
                     List<string> features = featuresArgument.Values;
+
+                    // TODO: Remove the browser part for now. 
                     //string browser = browserOption.HasValue() ? browserOption.Value() : "None";
 
                     IEngine executionEngine = GetExecutionEngine();
 
-                    // TODO: Read the package configuration + extract the package to a temp folder + get the test assembly full name
                     PackageManager packageManager = new PackageManager();
 
                     PackageConfiguration packageConfiguration = packageManager.GetPackageConfiguration(testPackageLocation);
 
                     string extractedPackageLocation = packageManager.ExtractPackage(testPackageLocation);
                     string testAssemblyFullName = Path.Combine(extractedPackageLocation, packageConfiguration.TestAssemblyName);
-
-                    // TODO: Validate the specified features vs what's inside the test assembly (package configuration)
 
                     Configuration configuration =
                         new Configuration
@@ -352,6 +361,7 @@ namespace YellowJacket.Console
                             Features = features
                         };
 
+                    // TODO: Remove the browser part for now. 
                     //if (browser != "None")
                     //    configuration.BrowserConfiguration = new BrowserConfiguration
                     //    {
@@ -362,8 +372,6 @@ namespace YellowJacket.Console
                     //executionConfiguration.PluginAssemblies
 
                     executionEngine.Run(configuration);
-
-                    System.Console.ReadLine();
 
                     return 0;
                 });
@@ -391,28 +399,43 @@ namespace YellowJacket.Console
         #region Event Handlers
 
         /// <summary>
-        /// Handles the OnExecutionStart event of the Engine.
+        /// Handles the engine OnExecutionStart event.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="eventArgs">The <see cref="ExecutionStartEventArgs"/> instance containing the event data.</param>
         private static void Engine_OnExecutionStart(object sender, ExecutionStartEventArgs eventArgs)
         {
-            System.Console.WriteLine("Execution Start...");
+            // TODO: To implements
         }
 
+        /// <summary>
+        /// Handles the engine OnExecutionCompleted event.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="eventArgs">The <see cref="ExecutionCompletedEventArgs"/> instance containing the event data.</param>
         private static void Engine_OnExecutionCompleted(object sender, ExecutionCompletedEventArgs eventArgs)
         {
-            System.Console.WriteLine("Execution Completed...");
+            // TODO: To implements
         }
 
+        /// <summary>
+        /// Handles the engine OnExecutionStop event.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="eventArgs">The <see cref="ExecutionStopEventArgs"/> instance containing the event data.</param>
         private static void Engine_OnExecutionStop(object sender, ExecutionStopEventArgs eventArgs)
         {
-            System.Console.WriteLine($"Execution Stop... {eventArgs.Exception}");
+            // TODO: To implements
         }
 
+        /// <summary>
+        /// Handles the engine OnExecutionProgress event.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="eventArgs">The <see cref="ExecutionProgressEventArgs"/> instance containing the event data.</param>
         private static void Engine_OnExecutionProgress(object sender, ExecutionProgressEventArgs eventArgs)
         {
-            System.Console.WriteLine($"Execution progress {eventArgs.Progress / 100:P}: {eventArgs.CurrentState}");
+            // TODO: To implements
         }
 
         #endregion

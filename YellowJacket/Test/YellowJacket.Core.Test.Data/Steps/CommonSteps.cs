@@ -21,40 +21,36 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
+using System.Threading;
+using TechTalk.SpecFlow;
 
-namespace YellowJacket.Core.Engine.Events
+namespace YellowJacket.Core.Test.Data.Steps
 {
-    /// <inheritdoc />
-    /// <summary>
-    /// Contains the arguments for the Execution Stop event.
-    /// </summary>
-    /// <seealso cref="T:System.EventArgs" />
-    public class ExecutionStopEventArgs: EventArgs
+    [Binding]
+    public class CommonSteps
     {
-        #region Properties
-
-        /// <summary>
-        /// Gets the exception.
-        /// </summary>
-        /// <value>
-        /// The exception.
-        /// </value>
-        public Exception Exception { get; }
-
-        #endregion
-
-        #region Constructors
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ExecutionStopEventArgs"/> class.
-        /// </summary>
-        /// <param name="exception">The exception.</param>
-        public ExecutionStopEventArgs(Exception exception)
+        [Given(@"I enter '(.*)' in '(.*)' textbox")]
+        public void GivenIEnterInTextbox(string value, string textboxName)
         {
-            Exception = exception;
+            Thread.Sleep(100);
         }
 
-        #endregion
+        [When(@"I click '(.*)' button")]
+        public void WhenIClickButton(string buttonName)
+        {
+            Thread.Sleep(100);
+        }
+
+        [Given(@"I enter '(.*)'")]
+        public void GivenIEnter(string uri)
+        {
+            Thread.Sleep(100);
+        }
+
+        [Then(@"I see the '(.*)' page")]
+        public void ThenISeeThePage(string pageName)
+        {
+            Thread.Sleep(100);
+        }
     }
 }

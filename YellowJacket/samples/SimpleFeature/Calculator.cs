@@ -22,9 +22,11 @@
 // ***********************************************************************
 
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace SimpleFeature
 {
+    [ExcludeFromCodeCoverage]
     internal class Calculator
     {
         #region Private Members

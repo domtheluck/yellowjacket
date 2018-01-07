@@ -31,21 +31,21 @@ namespace YellowJacket.Core.Plugins.Interfaces
     public interface ILogPlugin
     {
         /// <summary>
-        /// Writes the specified content to the log plugin.
+        /// Writes the value content to the log.
         /// </summary>
-        /// <param name="content">The content.</param>
-        void Write(string content);
+        /// <param name="value">The value.</param>
+        void Write(string value);
 
         /// <summary>
-        /// Writes the specified line to the log plugin.
+        /// Writes the specified line to the log.
         /// </summary>
-        /// <param name="content">The line to write.</param>
-        void WriteLine(string content);
+        /// <param name="line">The line to write.</param>
+        void WriteLine(string line);
 
         /// <summary>
-        /// Writes the specified lines to the log plugin.
+        /// Writes the specified lines to the log.
         /// </summary>
-        /// <param name="content">The lines to write.</param>
-        void WriteAllLine(IEnumerable<string> content);
+        /// <param name="lines">The lines to write.</param>
+        void WriteAllLine(IEnumerable<string> lines);
     }
 }

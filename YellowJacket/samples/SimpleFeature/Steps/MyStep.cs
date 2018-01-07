@@ -21,11 +21,13 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System.Diagnostics.CodeAnalysis;
 using NUnit.Framework;
 using TechTalk.SpecFlow;
 
 namespace SimpleFeature.Steps
 {
+    [ExcludeFromCodeCoverage]
     [Binding]
     internal class MyStep
     {

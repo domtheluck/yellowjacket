@@ -24,19 +24,23 @@
 using NUnit.Engine;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using NUnit.Engine.Services;
 using YellowJacket.Common.Helpers;
-using YellowJacket.Core.Contexts;
-using YellowJacket.Core.Engine.Events;
+using YellowJacket.Core.Engine.EventArgs;
+using YellowJacket.Core.Enums;
 using YellowJacket.Core.Gherkin;
 using YellowJacket.Core.Hook;
 using YellowJacket.Core.Interfaces;
 using YellowJacket.Core.NUnit;
-using YellowJacket.Core.NUnit.Models;
 using YellowJacket.Core.Plugins;
 using YellowJacket.Core.Plugins.Interfaces;
+using ExecutionContext = YellowJacket.Core.Contexts.ExecutionContext;
+using ITestRunner = NUnit.Engine.ITestRunner;
+
 
 namespace YellowJacket.Core.Engine
 {
@@ -46,11 +50,12 @@ namespace YellowJacket.Core.Engine
     /// </summary>
     public sealed class Engine : IEngine
     {
-        #region Constants
+        //#region Constants
 
-        //private const string BrowserNone = "None"; // TODO: move that somewhere else
+        //// TODO: Commented for now
+        ////private const string BrowserNone = "None";
 
-        #endregion Constants
+        //#endregion Constants
 
         #region Private Members
 
@@ -58,20 +63,21 @@ namespace YellowJacket.Core.Engine
         private Configuration _configuration;
         private readonly List<Assembly> _pluginAssemblies = new List<Assembly>();
 
-        private List<TestCase> _testCases = new List<TestCase>();
-        private ITestEngine _testEngine;
-        private TestSuite _testSuite;
-        //private int _testCaseCount;
+        private TestEngine _testEngine;
 
         private readonly GherkinManager _gherkinManager = new GherkinManager();
 
-        //private List<GherkinDocument> _gherkinDocuments = new List<GherkinDocument>();
-
         private List<GherkinFeature> _features = new List<GherkinFeature>();
 
-        private string _tempFolder;
+        private string _workingFolder;
 
-        #endregion Private Members
+        private int _executedFeatureCount;
+        private int _executedScenarioCount;
+        private int _executedStepCount;
+
+        private readonly object _updateProgressLock = new object();
+
+        #endregion
 
         #region Events
 
@@ -81,6 +87,26 @@ namespace YellowJacket.Core.Engine
         public event ExecutionStopHandler ExecutionStop;
 
         #endregion Events
+
+        #region Properties
+
+        /// <summary>
+        /// Gets the status.
+        /// </summary>
+        /// <value>
+        /// The status.
+        /// </value>
+        public EngineStatus Status { get; internal set; }
+
+        /// <summary>
+        /// Gets the run summary.
+        /// </summary>
+        /// <value>
+        /// The run summary.
+        /// </value>
+        public RunSummary RunSummary { get; internal set; }
+
+        #endregion
 
         #region Constructors
 
@@ -103,8 +129,6 @@ namespace YellowJacket.Core.Engine
         /// <param name="configuration">The engine configuration.</param>
         public void Run(Configuration configuration)
         {
-            Cleanup();
-
             ValidateConfiguration(configuration);
 
             _configuration = configuration;
@@ -123,33 +147,66 @@ namespace YellowJacket.Core.Engine
 
                 GetFeaturesFromFiles();
 
-                // TODO: not sure if we need to keep this
+                // TODO: Commented for now
                 //InitializeWebDriver();
+
+                RegisterEventHandlers();
 
                 ExecuteFeatures();
             }
             catch (Exception ex)
             {
                 // if an exception is raised, we are raising a specific event to inform the caller.
+                Debugger.Launch();
+
                 FireExecutionStopEvent(ex);
+
+                throw;
             }
             finally
             {
+                Cleanup();
+
                 FireExecutionCompletedEvent();
             }
+        }
+
+        /// <summary>
+        /// Registers the event handlers.
+        /// </summary>
+        private void RegisterEventHandlers()
+        {
+            ExecutionContext.Instance.BeforeExecution += OnBeforeExecution;
+            ExecutionContext.Instance.AfterExecution += OnAfterExecution;
+
+            ExecutionContext.Instance.ExecutionBeforeFeature += OnExecutionBeforeFeature;
+            ExecutionContext.Instance.ExecutionAfterFeature += OnExecutionAfterFeature;
+
+            ExecutionContext.Instance.ExecutionBeforeScenario += OnExecutionBeforeScenario;
+            ExecutionContext.Instance.ExecutionAfterScenario += OnExecutionAfterScenario;
+
+            ExecutionContext.Instance.ExecutionBeforeStep += OnExecutionBeforeStep;
+            ExecutionContext.Instance.ExecutionAfterStep += OnExecutionAfterStep;
         }
 
         #endregion Public Methods
 
         #region Private Methods
 
+        /// <summary>
+        /// Gets the features from files.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">.</exception>
         private void GetFeaturesFromFiles()
         {
             _configuration.Features.ForEach(x =>
             {
                 _features
-                    .Add(_gherkinManager.ParseFeature(_testAssembly, x, Path.Combine(_tempFolder, "Features")));
+                    .Add(_gherkinManager.ParseFeature(_testAssembly, x, Path.Combine(_workingFolder, "Features")));
             });
+
+            if (!_features.Any())
+                throw new InvalidOperationException($"No feature found in the test assembly {_testAssembly.FullName}");
         }
 
         /// <summary>
@@ -157,12 +214,14 @@ namespace YellowJacket.Core.Engine
         /// </summary>
         private void InitializeFileSystem()
         {
-            _tempFolder = Path.Combine(Path.GetTempPath(), "YellowJacket");
+            _workingFolder = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName(), "YellowJacket");
 
-            if (Directory.Exists(_tempFolder))
-                DeleteDirectory(_tempFolder, true);
+            // TODO: Move this to the YellowJacket.Common project.
+            if (Directory.Exists(_workingFolder))
+                DeleteDirectory(_workingFolder, true);
         }
 
+        // TODO: Move this method in the YellowJacket.Common project.
         /// <summary>
         /// Deletes the directory.
         /// </summary>
@@ -204,6 +263,7 @@ namespace YellowJacket.Core.Engine
             Directory.Delete(path);
         }
 
+        // TODO: Commented for now
         //private void InitializeWebDriver()
         //{
         //    if (_configuration.BrowserConfiguration.Browser == BrowserType.None)
@@ -217,18 +277,109 @@ namespace YellowJacket.Core.Engine
         /// <summary>
         /// Updates the execution progress.
         /// </summary>
-        private void UpdateProgress()
+        /// <param name="hookType">Type of the hook.</param>
+        private void UpdateProgress(HookType hookType)
         {
-            // TODO: temp code. Need something more flexible. Also, we need to think about the result output.
-            int testCaseCount = _testSuite.TestCaseCount;
+            lock (_updateProgressLock)
+            {
+                switch (hookType)
+                {
+                    case HookType.AfterFeature:
 
-            int finishedTestCaseCount = _testCases.Count;
+                        UpdateProgressFeatures();
 
-            decimal progress = finishedTestCaseCount / (decimal)testCaseCount * 100;
+                        break;
 
-            FireExecutionProgressEvent(
-                Math.Round(progress, 2),
-                $"Execution of {_testCases.Last().ClassName.Split('.').Last().Substring(0, _testCases.Last().ClassName.Split('.').Last().Length - 7)} - {_testCases.Last().Name}: {_testCases.Last().Result}");
+                    case HookType.AfterScenario:
+
+                        UpdateProgressScenarios();
+
+                        break;
+
+                    case HookType.AfterStep:
+                        UpdateProgressSteps();
+
+                        break;
+                }
+
+                FireExecutionProgressEvent();
+            }
+        }
+
+        /// <summary>
+        /// Updates the progress of the steps.
+        /// </summary>
+        private void UpdateProgressSteps()
+        {
+            List<GherkinStep> steps = _features.SelectMany(x => x.Scenarios).SelectMany(x => x.Steps).ToList();
+
+            int stepIndex = steps.IndexOf(RunSummary.CurrentStep);
+
+            RunSummary.NextStep = null;
+
+            if (steps.Count > stepIndex + 1)
+            {
+                RunSummary.PreviousStep = RunSummary.CurrentStep;
+                RunSummary.CurrentStep = steps[stepIndex + 1];
+            }
+
+            if (steps.Count > stepIndex + 2)
+                RunSummary.NextStep = steps[stepIndex + 2];
+
+            _executedStepCount += 1;
+
+            RunSummary.StepExecutionPercentage =
+                Math.Round((double) _executedStepCount / RunSummary.StepCount * 100, 2);
+        }
+
+        /// <summary>
+        /// Updates the progress of the scenarios.
+        /// </summary>
+        private void UpdateProgressScenarios()
+        {
+            List<GherkinScenario> scenarios = _features.SelectMany(x => x.Scenarios).ToList();
+
+            int scenarioIndex = scenarios.IndexOf(RunSummary.CurrentScenario);
+
+            RunSummary.NextScenario = null;
+
+            if (scenarios.Count > scenarioIndex + 1)
+            {
+                RunSummary.PreviousScenario = RunSummary.CurrentScenario;
+                RunSummary.CurrentScenario = scenarios[scenarioIndex + 1];
+            }
+
+            if (scenarios.Count > scenarioIndex + 2)
+                RunSummary.NextScenario = scenarios[scenarioIndex + 2];
+
+            _executedScenarioCount += 1;
+
+            RunSummary.ScenarioExecutionPercentage =
+                Math.Round((double) _executedScenarioCount / RunSummary.ScenarioCount * 100, 2);
+        }
+
+        /// <summary>
+        /// Updates the progress of the features.
+        /// </summary>
+        private void UpdateProgressFeatures()
+        {
+            int featureIndex = _features.IndexOf(RunSummary.CurrentFeature);
+
+            RunSummary.NextFeature = null;
+
+            if (_features.Count > featureIndex + 1)
+            {
+                RunSummary.PreviousFeature = RunSummary.CurrentFeature;
+                RunSummary.CurrentFeature = _features[featureIndex + 1];
+            }
+
+            if (_features.Count > featureIndex + 2)
+                RunSummary.NextFeature = _features[featureIndex + 2];
+
+            _executedFeatureCount += 1;
+
+            RunSummary.FeatureExecutionPercentage =
+                Math.Round((double) _executedFeatureCount / RunSummary.FeatureCount * 100, 2);
         }
 
         /// <summary>
@@ -250,16 +401,29 @@ namespace YellowJacket.Core.Engine
         }
 
         /// <summary>
-        /// Cleanups the engine setup.
+        /// Cleanups after run.
         /// </summary>
         private void Cleanup()
         {
+            DeleteDirectory(_workingFolder, true);
+
             _configuration = null;
             _testAssembly = null;
             _pluginAssemblies.Clear();
-            _testSuite = null;
-            _testCases = new List<TestCase>();
             _features = new List<GherkinFeature>();
+            _workingFolder = null;
+
+            ExecutionContext.Instance.BeforeExecution -= OnBeforeExecution;
+            ExecutionContext.Instance.AfterExecution -= OnAfterExecution;
+
+            ExecutionContext.Instance.ExecutionBeforeFeature -= OnExecutionBeforeFeature;
+            ExecutionContext.Instance.ExecutionAfterFeature -= OnExecutionAfterFeature;
+
+            ExecutionContext.Instance.ExecutionBeforeScenario -= OnExecutionBeforeScenario;
+            ExecutionContext.Instance.ExecutionAfterScenario -= OnExecutionAfterScenario;
+
+            ExecutionContext.Instance.ExecutionBeforeStep -= OnExecutionBeforeStep;
+            ExecutionContext.Instance.ExecutionAfterStep -= OnExecutionAfterStep;
         }
 
         /// <summary>
@@ -267,19 +431,47 @@ namespace YellowJacket.Core.Engine
         /// </summary>
         private void ExecuteFeatures()
         {
-            TestPackage testPackage = NUnitEngineHelper.CreateTestPackage(new List<string> { _configuration.TestAssemblyFullName });
+            FireExecutionStartEvent();
 
-            TestFilter testFilter = NUnitEngineHelper.CreateTestFilter(_testAssembly, _configuration.Features);
+            TestPackage testPackage =
+                NUnitEngineHelper.CreateTestPackage(new List<string> { _configuration.TestAssemblyFullName });
+
+            TestFilter testFilter =
+                NUnitEngineHelper.CreateTestFilter(_testAssembly, _configuration.Features);
 
             ITestRunner testRunner = _testEngine.GetRunner(testPackage);
 
-            _testSuite = NUnitEngineHelper.ParseTestRun(testRunner.Explore(testFilter)).TestSuite;
+            // TODO: Not sure if we need to keep this
+            //_testSuite = NUnitEngineHelper.ParseTestRun(testRunner.Explore(testFilter)).TestSuite;
 
             CustomTestEventListener testEventListener = new CustomTestEventListener();
 
-            testEventListener.TestReport += OnTestReport;
+            // TODO: Not sure if we need to keep this
+            //testEventListener.TestReport += OnTestReport;
 
-            TestRun testRun = NUnitEngineHelper.ParseTestRun(testRunner.Run(testEventListener, testFilter));
+            // TODO: Not sure if we need to keep this
+            //NUnitEngineHelper.ParseTestRun(testRunner.Run(testEventListener, testFilter));
+
+            RunSummary.CurrentFeature = _features.First();
+            RunSummary.CurrentScenario = RunSummary.CurrentFeature.Scenarios.First();
+            RunSummary.CurrentStep = RunSummary.CurrentScenario.Steps.First();
+
+            RunSummary.FeatureCount = _features.Count;
+            RunSummary.ScenarioCount = _features.SelectMany(x => x.Scenarios).Count();
+            RunSummary.StepCount = _features.SelectMany(x => x.Scenarios).SelectMany(x => x.Steps).Count();
+
+            testRunner.Run(testEventListener, testFilter);
+
+            testRunner.StopRun(true);
+
+            while (testRunner.IsTestRunning) { }
+
+            testRunner.Unload();
+            testRunner.Dispose();
+
+            _testEngine.Services.ServiceManager.StopServices();
+            _testEngine.Services.ServiceManager.ClearServices();
+            _testEngine.Services.ServiceManager.Dispose();
         }
 
         /// <summary>
@@ -287,12 +479,20 @@ namespace YellowJacket.Core.Engine
         /// </summary>
         private void Initialize()
         {
-            // initialize the NUnit test engine
-            _testEngine = TestEngineActivator.CreateInstance();
+            _testEngine = new TestEngine();
 
-            //_testEngine.WorkDirectory = ""; // TODO: check if we need to put the WorkDirectory elsewhere
+            _testEngine.Services.Add(new SettingsService(false));
+            _testEngine.Services.Add(new ExtensionService());
+            _testEngine.Services.Add(new DriverService());
+            _testEngine.Services.Add(new InProcessTestRunnerFactory());
+            _testEngine.Services.Add(new RuntimeFrameworkService());
+            _testEngine.Services.Add(new TestFilterService());
+            _testEngine.Services.Add(new DomainManager());
+            _testEngine.Services.ServiceManager.StartServices();
+
             _testEngine.InternalTraceLevel = InternalTraceLevel.Verbose; // TODO: should be customizable
 
+            RunSummary = new RunSummary();
         }
 
         /// <summary>
@@ -321,24 +521,24 @@ namespace YellowJacket.Core.Engine
             return plugins;
         }
 
-        /// <summary>
-        /// Gets the web driver configuration plugin.
-        /// </summary>
-        /// <returns></returns>
-        /// <exception cref="ArgumentException">You cannot have more than one instance of the IWebDriverConfiguration plugin</exception>
-        private IWebDriverConfigurationPlugin GetWebDriverConfigurationPlugin()
-        {
-            List<IWebDriverConfigurationPlugin> plugins = GetPlugins<IWebDriverConfigurationPlugin>();
+        ///// <summary>
+        ///// Gets the web driver configuration plugin.
+        ///// </summary>
+        ///// <returns></returns>
+        ///// <exception cref="ArgumentException">You cannot have more than one instance of the IWebDriverConfiguration plugin</exception>
+        //private IWebDriverConfigurationPlugin GetWebDriverConfigurationPlugin()
+        //{
+        //    List<IWebDriverConfigurationPlugin> plugins = GetPlugins<IWebDriverConfigurationPlugin>();
 
-            if (plugins.Any() && plugins.Count > 1)
-                throw new ArgumentException("You cannot have more than one instance of the IWebDriverConfiguration plugin");
+        //    if (plugins.Any() && plugins.Count > 1)
+        //        throw new ArgumentException("You cannot have more than one instance of the IWebDriverConfiguration plugin");
 
-            if (plugins.Any())
-                return plugins.First();
+        //    if (plugins.Any())
+        //        return plugins.First();
 
-            return ClassActivatorHelper<WebDriverConfigurationPlugin>.CreateInstance(
-                typeof(WebDriverConfigurationPlugin));
-        }
+        //    return ClassActivatorHelper<WebDriverConfigurationPlugin>.CreateInstance(
+        //        typeof(WebDriverConfigurationPlugin));
+        //}
 
         private List<T> GetPlugins<T>()
         {
@@ -373,7 +573,7 @@ namespace YellowJacket.Core.Engine
             _configuration.PluginAssemblies.ForEach(x =>
             {
                 _pluginAssemblies.Add(Assembly.LoadFile(Path.Combine(location, x)));
-            });     
+            });
         }
 
         /// <summary>
@@ -436,17 +636,17 @@ namespace YellowJacket.Core.Engine
         /// </summary>
         private void FireExecutionCompletedEvent()
         {
+            Status = EngineStatus.Completed;
+
             ExecutionCompleted?.Invoke(this, new ExecutionCompletedEventArgs());
         }
 
         /// <summary>
         /// Fires the execution progress event.
         /// </summary>
-        /// <param name="progress">The progress.</param>
-        /// <param name="currentState">The current state.</param>
-        private void FireExecutionProgressEvent(decimal progress, string currentState)
+        private void FireExecutionProgressEvent()
         {
-            ExecutionProgress?.Invoke(this, new ExecutionProgressEventArgs(progress, currentState));
+            ExecutionProgress?.Invoke(this, new ExecutionProgressEventArgs(RunSummary));
         }
 
         /// <summary>
@@ -464,7 +664,7 @@ namespace YellowJacket.Core.Engine
         {
             ExecutionStop?.Invoke(this, new ExecutionStopEventArgs(ex));
         }
-        
+
         #endregion Events
 
         #endregion Private Methods
@@ -472,120 +672,204 @@ namespace YellowJacket.Core.Engine
         #region Event Handlers
 
         /// <summary>
-        /// TestReport event handlers.
+        /// Handler for the BeforeExecution event.
         /// </summary>
         /// <param name="sender">The sender.</param>
-        /// <param name="eventArgs">The <see cref="TestReportEventArgs"/> instance containing the event data.</param>
-        private void OnTestReport(object sender, TestReportEventArgs eventArgs)
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void OnBeforeExecution(object sender, System.EventArgs e)
         {
-            if (eventArgs.Report.StartsWith("<start-suite"))
-            {
-            }
-            if (eventArgs.Report.StartsWith("<start-test"))
-            {
-            }
-            else if (eventArgs.Report.StartsWith("<test-case"))
-            {
-                _testCases.Add(NUnitEngineHelper.ParseTestCase(eventArgs.Report));
-                UpdateProgress();
-            }
-
-            // TODO: need to analyse the test report structure to be able to report progress and generate the result output.
-            Console.WriteLine(eventArgs.Report);
-
-            /*
-
-            Test Reports:
-            -------------
-
-            <start-run count='2'/>
-
-            <start-suite id="0-1003" parentId="" name="YellowJacket.WebApp.Automation.dll" fullname="C:\Projects\yellowjacket\YellowJacket\src\YellowJacket.Console\bin\Debug\YellowJacket.WebApp.Automation.dll"/>
-
-            <start-suite id="0-1004" parentId="0-1003" name="YellowJacket" fullname="YellowJacket"/>
-
-            <start-suite id="0-1005" parentId="0-1004" name="WebApp" fullname="YellowJacket.WebApp"/>
-
-            <start-suite id="0-1006" parentId="0-1005" name="Automation" fullname="YellowJacket.WebApp.Automation"/>
-
-            <start-suite id="0-1007" parentId="0-1006" name="Features" fullname="YellowJacket.WebApp.Automation.Features"/>
-
-            <start-suite id="0-1000" parentId="0-1007" name="MyFeatureFeature" fullname="YellowJacket.WebApp.Automation.Features.MyFeatureFeature"/>
-
-            <start-test id="0-1002" parentId="0-1000" name="AddThreeNumbers" fullname="YellowJacket.WebApp.Automation.Features.MyFeatureFeature.AddThreeNumbers"/>
-
-            <test-case id="0-1002" name="AddThreeNumbers" fullname="YellowJacket.WebApp.Automation.Features.MyFeatureFeature.AddThreeNumbers" methodname="AddThreeNumbers" classname="YellowJacket.WebApp.Automation.Features.MyFeatureFeature" runstate="Runnable" seed="13049240" result="Passed" start-time="2017-02-24 16:40:27Z" end-time="2017-02-24 16:40:31Z" duration="4.175424" asserts="0" parentId="0-1000"><properties><property name="Description" value="Add three numbers" /></properties><output><![CDATA[Given I have entered 50 into the calculator
-            -> done: HomeSteps.GivenIHaveEnteredIntoTheCalculator(50) (1.0s)
-            And I have entered 70 into the calculator
-            -> done: HomeSteps.GivenIHaveEnteredIntoTheCalculator(70) (1.0s)
-            When I press add
-            -> done: HomeSteps.WhenIPressAdd() (1.0s)
-            Then the result should be 120 on the screen
-            -> done: HomeSteps.ThenTheResultShouldBeOnTheScreen(120) (1.0s)
-            ]]></output></test-case>
-
-            <start-test id="0-1001" parentId="0-1000" name="AddTwoNumbers" fullname="YellowJacket.WebApp.Automation.Features.MyFeatureFeature.AddTwoNumbers"/>
-
-            <test-case id="0-1001" name="AddTwoNumbers" fullname="YellowJacket.WebApp.Automation.Features.MyFeatureFeature.AddTwoNumbers" methodname="AddTwoNumbers" classname="YellowJacket.WebApp.Automation.Features.MyFeatureFeature" runstate="Runnable" seed="907031790" result="Passed" start-time="2017-02-24 16:40:31Z" end-time="2017-02-24 16:40:35Z" duration="4.000395" asserts="0" parentId="0-1000"><properties><property name="Description" value="Add two numbers" /></properties><output><![CDATA[Given I have entered 50 into the calculator
-            -> done: HomeSteps.GivenIHaveEnteredIntoTheCalculator(50) (1.0s)
-            And I have entered 70 into the calculator
-            -> done: HomeSteps.GivenIHaveEnteredIntoTheCalculator(70) (1.0s)
-            When I press add
-            -> done: HomeSteps.WhenIPressAdd() (1.0s)
-            Then the result should be 120 on the screen
-            -> done: HomeSteps.ThenTheResultShouldBeOnTheScreen(120) (1.0s)
-            ]]></output></test-case>
-
-            <test-suite type="TestFixture" id="0-1000" name="MyFeatureFeature" fullname="YellowJacket.WebApp.Automation.Features.MyFeatureFeature" classname="YellowJacket.WebApp.Automation.Features.MyFeatureFeature" runstate="Runnable" testcasecount="2" result="Passed" start-time="2017-02-24 16:40:26Z" end-time="2017-02-24 16:40:35Z" duration="8.489387" total="2" passed="2" failed="0" warnings="0" inconclusive="0" skipped="0" asserts="0" parentId="0-1007"><properties><property name="Description" value="MyFeature" /></properties></test-suite>
-
-            <test-suite type="TestSuite" id="0-1007" name="Features" fullname="YellowJacket.WebApp.Automation.Features" runstate="Runnable" testcasecount="2" result="Passed" start-time="2017-02-24 16:40:26Z" end-time="2017-02-24 16:40:35Z" duration="8.494632" total="2" passed="2" failed="0" warnings="0" inconclusive="0" skipped="0" asserts="0" parentId="0-1006" />
-
-            <test-suite type="TestSuite" id="0-1006" name="Automation" fullname="YellowJacket.WebApp.Automation" runstate="Runnable" testcasecount="2" result="Passed" start-time="2017-02-24 16:40:26Z" end-time="2017-02-24 16:40:35Z" duration="8.497524" total="2" passed="2" failed="0" warnings="0" inconclusive="0" skipped="0" asserts="0" parentId="0-1005" />
-
-            <test-suite type="TestSuite" id="0-1005" name="WebApp" fullname="YellowJacket.WebApp" runstate="Runnable" testcasecount="2" result="Passed" start-time="2017-02-24 16:40:26Z" end-time="2017-02-24 16:40:35Z" duration="8.498849" total="2" passed="2" failed="0" warnings="0" inconclusive="0" skipped="0" asserts="0" parentId="0-1004" />
-
-            <test-suite type="TestSuite" id="0-1004" name="YellowJacket" fullname="YellowJacket" runstate="Runnable" testcasecount="2" result="Passed" start-time="2017-02-24 16:40:26Z" end-time="2017-02-24 16:40:35Z" duration="8.534994" total="2" passed="2" failed="0" warnings="0" inconclusive="0" skipped="0" asserts="0" parentId="0-1003" />
-
-            <test-suite type="Assembly" id="0-1003" name="YellowJacket.WebApp.Automation.dll" fullname="C:\Projects\yellowjacket\YellowJacket\src\YellowJacket.Console\bin\Debug\YellowJacket.WebApp.Automation.dll" runstate="Runnable" testcasecount="2" result="Passed" start-time="2017-02-24 16:40:26Z" end-time="2017-02-24 16:40:35Z" duration="8.543382" total="2" passed="2" failed="0" warnings="0" inconclusive="0" skipped="0" asserts="0" parentId=""><properties><property name="_PID" value="8976" /><property name="_APPDOMAIN" value="domain-" /></properties></test-suite>
-
-            <test-suite type="Assembly" id="0-1003" name="YellowJacket.WebApp.Automation.dll" fullname="C:\Projects\yellowjacket\YellowJacket\src\YellowJacket.Console\bin\Debug\YellowJacket.WebApp.Automation.dll" runstate="Runnable" testcasecount="2" result="Passed" start-time="2017-02-24 16:40:26Z" end-time="2017-02-24 16:40:35Z" duration="8.543382" total="2" passed="2" failed="0" warnings="0" inconclusive="0" skipped="0" asserts="0"><environment framework-version="3.6.0.0" clr-version="4.0.30319.42000" os-version="Microsoft Windows NT 6.1.7601 Service Pack 1" platform="Win32NT" cwd="C:\Projects\yellowjacket\YellowJacket\src\YellowJacket.Console\bin\Debug" machine-name="VM-LACHAND" user="Administrator" user-domain="VM-LACHAND" culture="en-CA" uiculture="en-US" os-architecture="x64" /><settings><setting name="ImageRuntimeVersion" value="4.0.30319" /><setting name="ImageTargetFrameworkName" value=".NETFramework,Version=v4.6.1" /><setting name="ImageRequiresX86" value="False" /><setting name="ImageRequiresDefaultAppDomainAssemblyResolver" value="False" /><setting name="NumberOfTestWorkers" value="8" /></settings><properties><property name="_PID" value="8976" /><property name="_APPDOMAIN" value="domain-" /></properties><test-suite type="TestSuite" id="0-1004" name="YellowJacket" fullname="YellowJacket" runstate="Runnable" testcasecount="2" result="Passed" start-time="2017-02-24 16:40:26Z" end-time="2017-02-24 16:40:35Z" duration="8.534994" total="2" passed="2" failed="0" warnings="0" inconclusive="0" skipped="0" asserts="0"><test-suite type="TestSuite" id="0-1005" name="WebApp" fullname="YellowJacket.WebApp" runstate="Runnable" testcasecount="2" result="Passed" start-time="2017-02-24 16:40:26Z" end-time="2017-02-24 16:40:35Z" duration="8.498849" total="2" passed="2" failed="0" warnings="0" inconclusive="0" skipped="0" asserts="0"><test-suite type="TestSuite" id="0-1006" name="Automation" fullname="YellowJacket.WebApp.Automation" runstate="Runnable" testcasecount="2" result="Passed" start-time="2017-02-24 16:40:26Z" end-time="2017-02-24 16:40:35Z" duration="8.497524" total="2" passed="2" failed="0" warnings="0" inconclusive="0" skipped="0" asserts="0"><test-suite type="TestSuite" id="0-1007" name="Features" fullname="YellowJacket.WebApp.Automation.Features" runstate="Runnable" testcasecount="2" result="Passed" start-time="2017-02-24 16:40:26Z" end-time="2017-02-24 16:40:35Z" duration="8.494632" total="2" passed="2" failed="0" warnings="0" inconclusive="0" skipped="0" asserts="0"><test-suite type="TestFixture" id="0-1000" name="MyFeatureFeature" fullname="YellowJacket.WebApp.Automation.Features.MyFeatureFeature" classname="YellowJacket.WebApp.Automation.Features.MyFeatureFeature" runstate="Runnable" testcasecount="2" result="Passed" start-time="2017-02-24 16:40:26Z" end-time="2017-02-24 16:40:35Z" duration="8.489387" total="2" passed="2" failed="0" warnings="0" inconclusive="0" skipped="0" asserts="0"><properties><property name="Description" value="MyFeature" /></properties><test-case id="0-1002" name="AddThreeNumbers" fullname="YellowJacket.WebApp.Automation.Features.MyFeatureFeature.AddThreeNumbers" methodname="AddThreeNumbers" classname="YellowJacket.WebApp.Automation.Features.MyFeatureFeature" runstate="Runnable" seed="13049240" result="Passed" start-time="2017-02-24 16:40:27Z" end-time="2017-02-24 16:40:31Z" duration="4.175424" asserts="0"><properties><property name="Description" value="Add three numbers" /></properties><output><![CDATA[Given I have entered 50 into the calculator
-            -> done: HomeSteps.GivenIHaveEnteredIntoTheCalculator(50) (1.0s)
-            And I have entered 70 into the calculator
-            -> done: HomeSteps.GivenIHaveEnteredIntoTheCalculator(70) (1.0s)
-            When I press add
-            -> done: HomeSteps.WhenIPressAdd() (1.0s)
-            Then the result should be 120 on the screen
-            -> done: HomeSteps.ThenTheResultShouldBeOnTheScreen(120) (1.0s)
-            ]]></output></test-case><test-case id="0-1001" name="AddTwoNumbers" fullname="YellowJacket.WebApp.Automation.Features.MyFeatureFeature.AddTwoNumbers" methodname="AddTwoNumbers" classname="YellowJacket.WebApp.Automation.Features.MyFeatureFeature" runstate="Runnable" seed="907031790" result="Passed" start-time="2017-02-24 16:40:31Z" end-time="2017-02-24 16:40:35Z" duration="4.000395" asserts="0"><properties><property name="Description" value="Add two numbers" /></properties><output><![CDATA[Given I have entered 50 into the calculator
-            -> done: HomeSteps.GivenIHaveEnteredIntoTheCalculator(50) (1.0s)
-            And I have entered 70 into the calculator
-            -> done: HomeSteps.GivenIHaveEnteredIntoTheCalculator(70) (1.0s)
-            When I press add
-            -> done: HomeSteps.WhenIPressAdd() (1.0s)
-            Then the result should be 120 on the screen
-            -> done: HomeSteps.ThenTheResultShouldBeOnTheScreen(120) (1.0s)
-            ]]></output></test-case></test-suite></test-suite></test-suite></test-suite></test-suite></test-suite>
-
-            <test-run id="2" testcasecount="2" result="Passed" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.6.0.0" clr-version="4.0.30319.42000" start-time="2017-02-24 16:40:26Z" end-time="2017-02-24 16:43:50Z" duration="203.513055"><command-line><![CDATA["C:\Projects\yellowjacket\YellowJacket\src\YellowJacket.Console\bin\Debug\YellowJacket.Console.vshost.exe" ]]></command-line><filter><test re="1">MyFeatureFeature</test></filter><test-suite type="Assembly" id="0-1003" name="YellowJacket.WebApp.Automation.dll" fullname="C:\Projects\yellowjacket\YellowJacket\src\YellowJacket.Console\bin\Debug\YellowJacket.WebApp.Automation.dll" runstate="Runnable" testcasecount="2" result="Passed" start-time="2017-02-24 16:40:26Z" end-time="2017-02-24 16:40:35Z" duration="8.543382" total="2" passed="2" failed="0" warnings="0" inconclusive="0" skipped="0" asserts="0"><environment framework-version="3.6.0.0" clr-version="4.0.30319.42000" os-version="Microsoft Windows NT 6.1.7601 Service Pack 1" platform="Win32NT" cwd="C:\Projects\yellowjacket\YellowJacket\src\YellowJacket.Console\bin\Debug" machine-name="VM-LACHAND" user="Administrator" user-domain="VM-LACHAND" culture="en-CA" uiculture="en-US" os-architecture="x64" /><settings><setting name="ImageRuntimeVersion" value="4.0.30319" /><setting name="ImageTargetFrameworkName" value=".NETFramework,Version=v4.6.1" /><setting name="ImageRequiresX86" value="False" /><setting name="ImageRequiresDefaultAppDomainAssemblyResolver" value="False" /><setting name="NumberOfTestWorkers" value="8" /></settings><properties><property name="_PID" value="8976" /><property name="_APPDOMAIN" value="domain-" /></properties><test-suite type="TestSuite" id="0-1004" name="YellowJacket" fullname="YellowJacket" runstate="Runnable" testcasecount="2" result="Passed" start-time="2017-02-24 16:40:26Z" end-time="2017-02-24 16:40:35Z" duration="8.534994" total="2" passed="2" failed="0" warnings="0" inconclusive="0" skipped="0" asserts="0"><test-suite type="TestSuite" id="0-1005" name="WebApp" fullname="YellowJacket.WebApp" runstate="Runnable" testcasecount="2" result="Passed" start-time="2017-02-24 16:40:26Z" end-time="2017-02-24 16:40:35Z" duration="8.498849" total="2" passed="2" failed="0" warnings="0" inconclusive="0" skipped="0" asserts="0"><test-suite type="TestSuite" id="0-1006" name="Automation" fullname="YellowJacket.WebApp.Automation" runstate="Runnable" testcasecount="2" result="Passed" start-time="2017-02-24 16:40:26Z" end-time="2017-02-24 16:40:35Z" duration="8.497524" total="2" passed="2" failed="0" warnings="0" inconclusive="0" skipped="0" asserts="0"><test-suite type="TestSuite" id="0-1007" name="Features" fullname="YellowJacket.WebApp.Automation.Features" runstate="Runnable" testcasecount="2" result="Passed" start-time="2017-02-24 16:40:26Z" end-time="2017-02-24 16:40:35Z" duration="8.494632" total="2" passed="2" failed="0" warnings="0" inconclusive="0" skipped="0" asserts="0"><test-suite type="TestFixture" id="0-1000" name="MyFeatureFeature" fullname="YellowJacket.WebApp.Automation.Features.MyFeatureFeature" classname="YellowJacket.WebApp.Automation.Features.MyFeatureFeature" runstate="Runnable" testcasecount="2" result="Passed" start-time="2017-02-24 16:40:26Z" end-time="2017-02-24 16:40:35Z" duration="8.489387" total="2" passed="2" failed="0" warnings="0" inconclusive="0" skipped="0" asserts="0"><properties><property name="Description" value="MyFeature" /></properties><test-case id="0-1002" name="AddThreeNumbers" fullname="YellowJacket.WebApp.Automation.Features.MyFeatureFeature.AddThreeNumbers" methodname="AddThreeNumbers" classname="YellowJacket.WebApp.Automation.Features.MyFeatureFeature" runstate="Runnable" seed="13049240" result="Passed" start-time="2017-02-24 16:40:27Z" end-time="2017-02-24 16:40:31Z" duration="4.175424" asserts="0"><properties><property name="Description" value="Add three numbers" /></properties><output><![CDATA[Given I have entered 50 into the calculator
-            -> done: HomeSteps.GivenIHaveEnteredIntoTheCalculator(50) (1.0s)
-            And I have entered 70 into the calculator
-            -> done: HomeSteps.GivenIHaveEnteredIntoTheCalculator(70) (1.0s)
-            When I press add
-            -> done: HomeSteps.WhenIPressAdd() (1.0s)
-            Then the result should be 120 on the screen
-            -> done: HomeSteps.ThenTheResultShouldBeOnTheScreen(120) (1.0s)
-            ]]></output></test-case><test-case id="0-1001" name="AddTwoNumbers" fullname="YellowJacket.WebApp.Automation.Features.MyFeatureFeature.AddTwoNumbers" methodname="AddTwoNumbers" classname="YellowJacket.WebApp.Automation.Features.MyFeatureFeature" runstate="Runnable" seed="907031790" result="Passed" start-time="2017-02-24 16:40:31Z" end-time="2017-02-24 16:40:35Z" duration="4.000395" asserts="0"><properties><property name="Description" value="Add two numbers" /></properties><output><![CDATA[Given I have entered 50 into the calculator
-            -> done: HomeSteps.GivenIHaveEnteredIntoTheCalculator(50) (1.0s)
-            And I have entered 70 into the calculator
-            -> done: HomeSteps.GivenIHaveEnteredIntoTheCalculator(70) (1.0s)
-            When I press add
-            -> done: HomeSteps.WhenIPressAdd() (1.0s)
-            Then the result should be 120 on the screen
-            -> done: HomeSteps.ThenTheResultShouldBeOnTheScreen(120) (1.0s)
-            ]]></output></test-case></test-suite></test-suite></test-suite></test-suite></test-suite></test-suite></test-run>
-
-            */
+            // TODO: Add logging
         }
+
+        /// <summary>
+        /// Handler for the AfterExecution event.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The event arguments.</param>
+        private void OnAfterExecution(object sender, System.EventArgs e)
+        {
+            // TODO: Add logging
+        }
+
+        /// <summary>
+        /// Handler for the ExecutionBeforeFeature event.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void OnExecutionBeforeFeature(object sender, System.EventArgs e)
+        {
+            // TODO: Add logging
+        }
+
+        /// <summary>
+        /// Handler for the ExecutionAfterFeature event.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void OnExecutionAfterFeature(object sender, System.EventArgs e)
+        {
+            // TODO: Add logging
+
+            UpdateProgress(State.AfterFeature);
+        }
+
+        /// <summary>
+        /// Handler for the ExecutionBeforeScenario event.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void OnExecutionBeforeScenario(object sender, System.EventArgs e)
+        {
+            // TODO: Add logging
+        }
+
+        /// <summary>
+        /// Handler for the ExecutionAfterScenario event.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void OnExecutionAfterScenario(object sender, System.EventArgs e)
+        {
+            // TODO: Add logging
+
+            UpdateProgress(State.AfterScenario);
+        }
+
+        /// <summary>
+        /// Handler for the ExecutionBeforeStep event.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void OnExecutionBeforeStep(object sender, System.EventArgs e)
+        {
+            // TODO: Add logging
+        }
+
+        /// <summary>
+        /// Handler for the ExecutionAfterStep event.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void OnExecutionAfterStep(object sender, System.EventArgs e)
+        {
+            UpdateProgress(State.AfterStep);
+        }
+
+        ///// <summary>
+        ///// TestReport event handlers.
+        ///// </summary>
+        ///// <param name="sender">The sender.</param>
+        ///// <param name="e">The <see cref="TestReportEventArgs"/> instance containing the event data.</param>
+        //private void OnTestReport(object sender, TestReportEventArgs e)
+        //{
+        //    //if (eventArgs.Report.StartsWith("<start-suite"))
+        //    //{
+        //    //}
+        //    //if (eventArgs.Report.StartsWith("<start-test"))
+        //    //{
+        //    //}
+        //    //else if (eventArgs.Report.StartsWith("<test-case"))
+        //    //{
+        //    //    _testCases.Add(NUnitEngineHelper.ParseTestCase(eventArgs.Report));
+        //    //    UpdateProgress();
+        //    //}
+
+        //    //// TODO: need to analyse the test report structure to be able to report progress and generate the result output.
+        //    //Console.WriteLine(eventArgs.Report);
+
+        //    /*
+
+        //    Test Reports:
+        //    -------------
+
+        //    <start-run count='2'/>
+
+        //    <start-suite id="0-1003" parentId="" name="YellowJacket.WebApp.Automation.dll" fullname="C:\Projects\yellowjacket\YellowJacket\src\YellowJacket.Console\bin\Debug\YellowJacket.WebApp.Automation.dll"/>
+
+        //    <start-suite id="0-1004" parentId="0-1003" name="YellowJacket" fullname="YellowJacket"/>
+
+        //    <start-suite id="0-1005" parentId="0-1004" name="WebApp" fullname="YellowJacket.WebApp"/>
+
+        //    <start-suite id="0-1006" parentId="0-1005" name="Automation" fullname="YellowJacket.WebApp.Automation"/>
+
+        //    <start-suite id="0-1007" parentId="0-1006" name="Features" fullname="YellowJacket.WebApp.Automation.Features"/>
+
+        //    <start-suite id="0-1000" parentId="0-1007" name="MyFeatureFeature" fullname="YellowJacket.WebApp.Automation.Features.MyFeatureFeature"/>
+
+        //    <start-test id="0-1002" parentId="0-1000" name="AddThreeNumbers" fullname="YellowJacket.WebApp.Automation.Features.MyFeatureFeature.AddThreeNumbers"/>
+
+        //    <test-case id="0-1002" name="AddThreeNumbers" fullname="YellowJacket.WebApp.Automation.Features.MyFeatureFeature.AddThreeNumbers" methodname="AddThreeNumbers" classname="YellowJacket.WebApp.Automation.Features.MyFeatureFeature" runstate="Runnable" seed="13049240" result="Passed" start-time="2017-02-24 16:40:27Z" end-time="2017-02-24 16:40:31Z" duration="4.175424" asserts="0" parentId="0-1000"><properties><property name="Description" value="Add three numbers" /></properties><output><![CDATA[Given I have entered 50 into the calculator
+        //    -> done: HomeSteps.GivenIHaveEnteredIntoTheCalculator(50) (1.0s)
+        //    And I have entered 70 into the calculator
+        //    -> done: HomeSteps.GivenIHaveEnteredIntoTheCalculator(70) (1.0s)
+        //    When I press add
+        //    -> done: HomeSteps.WhenIPressAdd() (1.0s)
+        //    Then the result should be 120 on the screen
+        //    -> done: HomeSteps.ThenTheResultShouldBeOnTheScreen(120) (1.0s)
+        //    ]]></output></test-case>
+
+        //    <start-test id="0-1001" parentId="0-1000" name="AddTwoNumbers" fullname="YellowJacket.WebApp.Automation.Features.MyFeatureFeature.AddTwoNumbers"/>
+
+        //    <test-case id="0-1001" name="AddTwoNumbers" fullname="YellowJacket.WebApp.Automation.Features.MyFeatureFeature.AddTwoNumbers" methodname="AddTwoNumbers" classname="YellowJacket.WebApp.Automation.Features.MyFeatureFeature" runstate="Runnable" seed="907031790" result="Passed" start-time="2017-02-24 16:40:31Z" end-time="2017-02-24 16:40:35Z" duration="4.000395" asserts="0" parentId="0-1000"><properties><property name="Description" value="Add two numbers" /></properties><output><![CDATA[Given I have entered 50 into the calculator
+        //    -> done: HomeSteps.GivenIHaveEnteredIntoTheCalculator(50) (1.0s)
+        //    And I have entered 70 into the calculator
+        //    -> done: HomeSteps.GivenIHaveEnteredIntoTheCalculator(70) (1.0s)
+        //    When I press add
+        //    -> done: HomeSteps.WhenIPressAdd() (1.0s)
+        //    Then the result should be 120 on the screen
+        //    -> done: HomeSteps.ThenTheResultShouldBeOnTheScreen(120) (1.0s)
+        //    ]]></output></test-case>
+
+        //    <test-suite type="TestFixture" id="0-1000" name="MyFeatureFeature" fullname="YellowJacket.WebApp.Automation.Features.MyFeatureFeature" classname="YellowJacket.WebApp.Automation.Features.MyFeatureFeature" runstate="Runnable" testcasecount="2" result="Passed" start-time="2017-02-24 16:40:26Z" end-time="2017-02-24 16:40:35Z" duration="8.489387" total="2" passed="2" failed="0" warnings="0" inconclusive="0" skipped="0" asserts="0" parentId="0-1007"><properties><property name="Description" value="MyFeature" /></properties></test-suite>
+
+        //    <test-suite type="TestSuite" id="0-1007" name="Features" fullname="YellowJacket.WebApp.Automation.Features" runstate="Runnable" testcasecount="2" result="Passed" start-time="2017-02-24 16:40:26Z" end-time="2017-02-24 16:40:35Z" duration="8.494632" total="2" passed="2" failed="0" warnings="0" inconclusive="0" skipped="0" asserts="0" parentId="0-1006" />
+
+        //    <test-suite type="TestSuite" id="0-1006" name="Automation" fullname="YellowJacket.WebApp.Automation" runstate="Runnable" testcasecount="2" result="Passed" start-time="2017-02-24 16:40:26Z" end-time="2017-02-24 16:40:35Z" duration="8.497524" total="2" passed="2" failed="0" warnings="0" inconclusive="0" skipped="0" asserts="0" parentId="0-1005" />
+
+        //    <test-suite type="TestSuite" id="0-1005" name="WebApp" fullname="YellowJacket.WebApp" runstate="Runnable" testcasecount="2" result="Passed" start-time="2017-02-24 16:40:26Z" end-time="2017-02-24 16:40:35Z" duration="8.498849" total="2" passed="2" failed="0" warnings="0" inconclusive="0" skipped="0" asserts="0" parentId="0-1004" />
+
+        //    <test-suite type="TestSuite" id="0-1004" name="YellowJacket" fullname="YellowJacket" runstate="Runnable" testcasecount="2" result="Passed" start-time="2017-02-24 16:40:26Z" end-time="2017-02-24 16:40:35Z" duration="8.534994" total="2" passed="2" failed="0" warnings="0" inconclusive="0" skipped="0" asserts="0" parentId="0-1003" />
+
+        //    <test-suite type="Assembly" id="0-1003" name="YellowJacket.WebApp.Automation.dll" fullname="C:\Projects\yellowjacket\YellowJacket\src\YellowJacket.Console\bin\Debug\YellowJacket.WebApp.Automation.dll" runstate="Runnable" testcasecount="2" result="Passed" start-time="2017-02-24 16:40:26Z" end-time="2017-02-24 16:40:35Z" duration="8.543382" total="2" passed="2" failed="0" warnings="0" inconclusive="0" skipped="0" asserts="0" parentId=""><properties><property name="_PID" value="8976" /><property name="_APPDOMAIN" value="domain-" /></properties></test-suite>
+
+        //    <test-suite type="Assembly" id="0-1003" name="YellowJacket.WebApp.Automation.dll" fullname="C:\Projects\yellowjacket\YellowJacket\src\YellowJacket.Console\bin\Debug\YellowJacket.WebApp.Automation.dll" runstate="Runnable" testcasecount="2" result="Passed" start-time="2017-02-24 16:40:26Z" end-time="2017-02-24 16:40:35Z" duration="8.543382" total="2" passed="2" failed="0" warnings="0" inconclusive="0" skipped="0" asserts="0"><environment framework-version="3.6.0.0" clr-version="4.0.30319.42000" os-version="Microsoft Windows NT 6.1.7601 Service Pack 1" platform="Win32NT" cwd="C:\Projects\yellowjacket\YellowJacket\src\YellowJacket.Console\bin\Debug" machine-name="VM-LACHAND" user="Administrator" user-domain="VM-LACHAND" culture="en-CA" uiculture="en-US" os-architecture="x64" /><settings><setting name="ImageRuntimeVersion" value="4.0.30319" /><setting name="ImageTargetFrameworkName" value=".NETFramework,Version=v4.6.1" /><setting name="ImageRequiresX86" value="False" /><setting name="ImageRequiresDefaultAppDomainAssemblyResolver" value="False" /><setting name="NumberOfTestWorkers" value="8" /></settings><properties><property name="_PID" value="8976" /><property name="_APPDOMAIN" value="domain-" /></properties><test-suite type="TestSuite" id="0-1004" name="YellowJacket" fullname="YellowJacket" runstate="Runnable" testcasecount="2" result="Passed" start-time="2017-02-24 16:40:26Z" end-time="2017-02-24 16:40:35Z" duration="8.534994" total="2" passed="2" failed="0" warnings="0" inconclusive="0" skipped="0" asserts="0"><test-suite type="TestSuite" id="0-1005" name="WebApp" fullname="YellowJacket.WebApp" runstate="Runnable" testcasecount="2" result="Passed" start-time="2017-02-24 16:40:26Z" end-time="2017-02-24 16:40:35Z" duration="8.498849" total="2" passed="2" failed="0" warnings="0" inconclusive="0" skipped="0" asserts="0"><test-suite type="TestSuite" id="0-1006" name="Automation" fullname="YellowJacket.WebApp.Automation" runstate="Runnable" testcasecount="2" result="Passed" start-time="2017-02-24 16:40:26Z" end-time="2017-02-24 16:40:35Z" duration="8.497524" total="2" passed="2" failed="0" warnings="0" inconclusive="0" skipped="0" asserts="0"><test-suite type="TestSuite" id="0-1007" name="Features" fullname="YellowJacket.WebApp.Automation.Features" runstate="Runnable" testcasecount="2" result="Passed" start-time="2017-02-24 16:40:26Z" end-time="2017-02-24 16:40:35Z" duration="8.494632" total="2" passed="2" failed="0" warnings="0" inconclusive="0" skipped="0" asserts="0"><test-suite type="TestFixture" id="0-1000" name="MyFeatureFeature" fullname="YellowJacket.WebApp.Automation.Features.MyFeatureFeature" classname="YellowJacket.WebApp.Automation.Features.MyFeatureFeature" runstate="Runnable" testcasecount="2" result="Passed" start-time="2017-02-24 16:40:26Z" end-time="2017-02-24 16:40:35Z" duration="8.489387" total="2" passed="2" failed="0" warnings="0" inconclusive="0" skipped="0" asserts="0"><properties><property name="Description" value="MyFeature" /></properties><test-case id="0-1002" name="AddThreeNumbers" fullname="YellowJacket.WebApp.Automation.Features.MyFeatureFeature.AddThreeNumbers" methodname="AddThreeNumbers" classname="YellowJacket.WebApp.Automation.Features.MyFeatureFeature" runstate="Runnable" seed="13049240" result="Passed" start-time="2017-02-24 16:40:27Z" end-time="2017-02-24 16:40:31Z" duration="4.175424" asserts="0"><properties><property name="Description" value="Add three numbers" /></properties><output><![CDATA[Given I have entered 50 into the calculator
+        //    -> done: HomeSteps.GivenIHaveEnteredIntoTheCalculator(50) (1.0s)
+        //    And I have entered 70 into the calculator
+        //    -> done: HomeSteps.GivenIHaveEnteredIntoTheCalculator(70) (1.0s)
+        //    When I press add
+        //    -> done: HomeSteps.WhenIPressAdd() (1.0s)
+        //    Then the result should be 120 on the screen
+        //    -> done: HomeSteps.ThenTheResultShouldBeOnTheScreen(120) (1.0s)
+        //    ]]></output></test-case><test-case id="0-1001" name="AddTwoNumbers" fullname="YellowJacket.WebApp.Automation.Features.MyFeatureFeature.AddTwoNumbers" methodname="AddTwoNumbers" classname="YellowJacket.WebApp.Automation.Features.MyFeatureFeature" runstate="Runnable" seed="907031790" result="Passed" start-time="2017-02-24 16:40:31Z" end-time="2017-02-24 16:40:35Z" duration="4.000395" asserts="0"><properties><property name="Description" value="Add two numbers" /></properties><output><![CDATA[Given I have entered 50 into the calculator
+        //    -> done: HomeSteps.GivenIHaveEnteredIntoTheCalculator(50) (1.0s)
+        //    And I have entered 70 into the calculator
+        //    -> done: HomeSteps.GivenIHaveEnteredIntoTheCalculator(70) (1.0s)
+        //    When I press add
+        //    -> done: HomeSteps.WhenIPressAdd() (1.0s)
+        //    Then the result should be 120 on the screen
+        //    -> done: HomeSteps.ThenTheResultShouldBeOnTheScreen(120) (1.0s)
+        //    ]]></output></test-case></test-suite></test-suite></test-suite></test-suite></test-suite></test-suite>
+
+        //    <test-run id="2" testcasecount="2" result="Passed" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.6.0.0" clr-version="4.0.30319.42000" start-time="2017-02-24 16:40:26Z" end-time="2017-02-24 16:43:50Z" duration="203.513055"><command-line><![CDATA["C:\Projects\yellowjacket\YellowJacket\src\YellowJacket.Console\bin\Debug\YellowJacket.Console.vshost.exe" ]]></command-line><filter><test re="1">MyFeatureFeature</test></filter><test-suite type="Assembly" id="0-1003" name="YellowJacket.WebApp.Automation.dll" fullname="C:\Projects\yellowjacket\YellowJacket\src\YellowJacket.Console\bin\Debug\YellowJacket.WebApp.Automation.dll" runstate="Runnable" testcasecount="2" result="Passed" start-time="2017-02-24 16:40:26Z" end-time="2017-02-24 16:40:35Z" duration="8.543382" total="2" passed="2" failed="0" warnings="0" inconclusive="0" skipped="0" asserts="0"><environment framework-version="3.6.0.0" clr-version="4.0.30319.42000" os-version="Microsoft Windows NT 6.1.7601 Service Pack 1" platform="Win32NT" cwd="C:\Projects\yellowjacket\YellowJacket\src\YellowJacket.Console\bin\Debug" machine-name="VM-LACHAND" user="Administrator" user-domain="VM-LACHAND" culture="en-CA" uiculture="en-US" os-architecture="x64" /><settings><setting name="ImageRuntimeVersion" value="4.0.30319" /><setting name="ImageTargetFrameworkName" value=".NETFramework,Version=v4.6.1" /><setting name="ImageRequiresX86" value="False" /><setting name="ImageRequiresDefaultAppDomainAssemblyResolver" value="False" /><setting name="NumberOfTestWorkers" value="8" /></settings><properties><property name="_PID" value="8976" /><property name="_APPDOMAIN" value="domain-" /></properties><test-suite type="TestSuite" id="0-1004" name="YellowJacket" fullname="YellowJacket" runstate="Runnable" testcasecount="2" result="Passed" start-time="2017-02-24 16:40:26Z" end-time="2017-02-24 16:40:35Z" duration="8.534994" total="2" passed="2" failed="0" warnings="0" inconclusive="0" skipped="0" asserts="0"><test-suite type="TestSuite" id="0-1005" name="WebApp" fullname="YellowJacket.WebApp" runstate="Runnable" testcasecount="2" result="Passed" start-time="2017-02-24 16:40:26Z" end-time="2017-02-24 16:40:35Z" duration="8.498849" total="2" passed="2" failed="0" warnings="0" inconclusive="0" skipped="0" asserts="0"><test-suite type="TestSuite" id="0-1006" name="Automation" fullname="YellowJacket.WebApp.Automation" runstate="Runnable" testcasecount="2" result="Passed" start-time="2017-02-24 16:40:26Z" end-time="2017-02-24 16:40:35Z" duration="8.497524" total="2" passed="2" failed="0" warnings="0" inconclusive="0" skipped="0" asserts="0"><test-suite type="TestSuite" id="0-1007" name="Features" fullname="YellowJacket.WebApp.Automation.Features" runstate="Runnable" testcasecount="2" result="Passed" start-time="2017-02-24 16:40:26Z" end-time="2017-02-24 16:40:35Z" duration="8.494632" total="2" passed="2" failed="0" warnings="0" inconclusive="0" skipped="0" asserts="0"><test-suite type="TestFixture" id="0-1000" name="MyFeatureFeature" fullname="YellowJacket.WebApp.Automation.Features.MyFeatureFeature" classname="YellowJacket.WebApp.Automation.Features.MyFeatureFeature" runstate="Runnable" testcasecount="2" result="Passed" start-time="2017-02-24 16:40:26Z" end-time="2017-02-24 16:40:35Z" duration="8.489387" total="2" passed="2" failed="0" warnings="0" inconclusive="0" skipped="0" asserts="0"><properties><property name="Description" value="MyFeature" /></properties><test-case id="0-1002" name="AddThreeNumbers" fullname="YellowJacket.WebApp.Automation.Features.MyFeatureFeature.AddThreeNumbers" methodname="AddThreeNumbers" classname="YellowJacket.WebApp.Automation.Features.MyFeatureFeature" runstate="Runnable" seed="13049240" result="Passed" start-time="2017-02-24 16:40:27Z" end-time="2017-02-24 16:40:31Z" duration="4.175424" asserts="0"><properties><property name="Description" value="Add three numbers" /></properties><output><![CDATA[Given I have entered 50 into the calculator
+        //    -> done: HomeSteps.GivenIHaveEnteredIntoTheCalculator(50) (1.0s)
+        //    And I have entered 70 into the calculator
+        //    -> done: HomeSteps.GivenIHaveEnteredIntoTheCalculator(70) (1.0s)
+        //    When I press add
+        //    -> done: HomeSteps.WhenIPressAdd() (1.0s)
+        //    Then the result should be 120 on the screen
+        //    -> done: HomeSteps.ThenTheResultShouldBeOnTheScreen(120) (1.0s)
+        //    ]]></output></test-case><test-case id="0-1001" name="AddTwoNumbers" fullname="YellowJacket.WebApp.Automation.Features.MyFeatureFeature.AddTwoNumbers" methodname="AddTwoNumbers" classname="YellowJacket.WebApp.Automation.Features.MyFeatureFeature" runstate="Runnable" seed="907031790" result="Passed" start-time="2017-02-24 16:40:31Z" end-time="2017-02-24 16:40:35Z" duration="4.000395" asserts="0"><properties><property name="Description" value="Add two numbers" /></properties><output><![CDATA[Given I have entered 50 into the calculator
+        //    -> done: HomeSteps.GivenIHaveEnteredIntoTheCalculator(50) (1.0s)
+        //    And I have entered 70 into the calculator
+        //    -> done: HomeSteps.GivenIHaveEnteredIntoTheCalculator(70) (1.0s)
+        //    When I press add
+        //    -> done: HomeSteps.WhenIPressAdd() (1.0s)
+        //    Then the result should be 120 on the screen
+        //    -> done: HomeSteps.ThenTheResultShouldBeOnTheScreen(120) (1.0s)
+        //    ]]></output></test-case></test-suite></test-suite></test-suite></test-suite></test-suite></test-suite></test-run>
+
+        //    */
+        //}
 
         #endregion Event Handlers
     }

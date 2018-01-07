@@ -62,7 +62,6 @@ namespace YellowJacket.Core.Gherkin
             {
                 Name = gherkinDocument.Feature.Name,
                 Description = gherkinDocument.Feature.Description,
-                Tags = ParseTags(gherkinDocument.Feature.Tags),
                 Scenarios = ParseScenarioDefinitions(gherkinDocument.Feature.Children)
             };
 
@@ -73,7 +72,7 @@ namespace YellowJacket.Core.Gherkin
 
         #region Private Methods
 
-        private IEnumerable<GherkinScenario> ParseScenarioDefinitions(
+        private List<GherkinScenario> ParseScenarioDefinitions(
             IEnumerable<ScenarioDefinition> scenarioDefinitions)
         {
             return 
@@ -87,24 +86,13 @@ namespace YellowJacket.Core.Gherkin
                     .ToList();
         }
 
-        private IEnumerable<GherkinStep> ParseSteps(IEnumerable<Step> steps)
+        private List<GherkinStep> ParseSteps(IEnumerable<Step> steps)
         {
             return steps
                 .Select(step => 
                     new GherkinStep
                     {
                         Text = step.Text
-                    })
-                .ToList();
-        }
-
-        private IEnumerable<GherkinTag> ParseTags(IEnumerable<Tag> tags)
-        {
-            return tags
-                .Select(tag => 
-                    new GherkinTag
-                    {
-                        Name = tag.Name
                     })
                 .ToList();
         }

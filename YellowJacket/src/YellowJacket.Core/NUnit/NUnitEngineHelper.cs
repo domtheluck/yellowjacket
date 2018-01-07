@@ -52,7 +52,7 @@ namespace YellowJacket.Core.NUnit
 
             // TODO Need to convert those hardcoded values to constants
             testPackage.AddSetting("ProcessModel", "Single");
-            //testPackage.AddSetting("DomainUsage", "None");
+            testPackage.AddSetting("DomainUsage", "None");
 
             return testPackage;
         }

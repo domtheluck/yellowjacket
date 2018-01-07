@@ -21,16 +21,39 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
-
-namespace YellowJacket.Core.Engine.Events
+namespace YellowJacket.Core.Engine.EventArgs
 {
     /// <inheritdoc />
     /// <summary>
-    /// Contains the arguments for the Execution Start event.
+    /// Contains the arguments for the Execution Progress event.
     /// </summary>
     /// <seealso cref="T:System.EventArgs" />
-    public class ExecutionStartEventArgs: EventArgs
+    public class ExecutionProgressEventArgs : System.EventArgs
     {
+        #region Properties
+
+        /// <summary>
+        /// Gets the progress.
+        /// </summary>
+        /// <value>
+        /// The progress.
+        /// </value>
+        public RunSummary RunSummary { get; }
+
+        #endregion
+
+        #region Constructors
+
+        /// <inheritdoc />
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:YellowJacket.Core.Engine.EventArgs.ExecutionProgressEventArgs" /> class.
+        /// </summary>
+        /// <param name="runSummary">The run summary.</param>
+        internal ExecutionProgressEventArgs(RunSummary runSummary)
+        {
+            RunSummary = runSummary;
+        }
+
+        #endregion
     }
 }

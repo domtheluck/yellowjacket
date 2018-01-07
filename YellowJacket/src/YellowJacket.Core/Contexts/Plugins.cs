@@ -26,8 +26,15 @@ using YellowJacket.Core.Plugins.Interfaces;
 
 namespace YellowJacket.Core.Contexts
 {
+    /// <summary>
+    /// Contains all plugins.
+    /// </summary>
     public class Plugins
     {
+        #region Properties
+
         public List<ILogPlugin> LogPlugins { get; } = new List<ILogPlugin>();
+
+        #endregion
     }
 }

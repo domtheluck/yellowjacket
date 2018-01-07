@@ -20,31 +20,16 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
-
-using System.Diagnostics.CodeAnalysis;
-using System.Threading;
-using TechTalk.SpecFlow;
-
-namespace YellowJacket.Core.Test.Data.Steps
+namespace YellowJacket.Core.Enums
 {
-    [ExcludeFromCodeCoverage]
-    [Binding]
-    public class LoginSteps
+    /// <summary>
+    /// Contains the engine statuses.
+    /// </summary>
+    public enum EngineStatus
     {
-        #region Public Methods
-
-        [Then(@"I see my profile page")]
-        public void ThenISeeMyProfilePage()
-        {
-            Thread.Sleep(100);
-        }
-
-        [Then(@"I see invalid password message")]
-        public void ThenISeeInvalidPasswordMessage()
-        {
-            Thread.Sleep(100);
-        }
-
-        #endregion
+        Initialized,
+        Processing,
+        Completed,
+        Stopped
     }
 }

@@ -21,51 +21,19 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
+using System.Threading;
+using TechTalk.SpecFlow;
 
-namespace YellowJacket.Core.Engine.Events
+namespace YellowJacket.Core.Test.Data.Steps
 {
-    /// <inheritdoc />
-    /// <summary>
-    /// Contains the arguments for the Execution Progress event.
-    /// </summary>
-    /// <seealso cref="T:System.EventArgs" />
-    public class ExecutionProgressEventArgs : EventArgs
+    [Binding]
+    public class RegisterSteps
     {
-        #region Properties
-
-        /// <summary>
-        /// Gets the progress.
-        /// </summary>
-        /// <value>
-        /// The progress.
-        /// </value>
-        public decimal Progress { get; }
-
-        /// <summary>
-        /// Gets the state of the current.
-        /// </summary>
-        /// <value>
-        /// The state of the current.
-        /// </value>
-        public string CurrentState { get;  }
-
-        #endregion
-
-        #region Constructors
-
-        /// <inheritdoc />
-        /// <summary>
-        /// Initializes a new instance of the <see cref="T:YellowJacket.Core.Engine.Events.ExecutionProgressEventArgs" /> class.
-        /// </summary>
-        /// <param name="progress">The progress.</param>
-        /// <param name="currentState">The current state.</param>
-        public ExecutionProgressEventArgs(decimal progress, string currentState)
+        [Then(@"I see register success message")]
+        public void ThenISeeRegisterSuccessMessage()
         {
-            Progress = progress;
-            CurrentState = currentState;
+            Thread.Sleep(100);
         }
 
-        #endregion
     }
 }
