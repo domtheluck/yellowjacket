@@ -21,24 +21,59 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
 using System.Collections.Generic;
-using System.Xml.Serialization;
+using System.IO;
+using NUnit.Framework;
+using YellowJacket.Core.Contexts;
+using YellowJacket.Core.Engine;
+using YellowJacket.Core.Factories;
+using YellowJacket.Core.Interfaces;
 
-namespace YellowJacket.Core.NUnit.Models
+namespace YellowJacket.Core.Test.Engine
 {
-    /// <summary>
-    /// Represents an NUnit list of settings. 
-    /// </summary>
-    [XmlRoot(ElementName = "settings")]
-    public class Settings
+    [TestFixture]
+    [Category("Engine")]
+    public class EngineHookTests
     {
-        /// <summary>
-        /// Gets or sets the setting list.
-        /// </summary>
-        /// <value>
-        /// The setting list.
-        /// </value>
-        [XmlElement(ElementName = "setting")]
-        public List<Setting> SettingList { get; set; }
+        [SetUp]
+        public void Setup()
+        {
+
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+
+        }
+
+        #region Test Methods
+
+        [Test]
+        public void RegisterHooks_Run_HookInstancesInitialized()
+        {
+            // Arrange
+            IEngine engine = EngineFactory.Create();
+
+            string testAssemblyFullName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "YellowJacket.Core.Test.Data.dll");
+
+            List<string> features = new List<string> { "Login" };
+
+            // Act
+            Configuration configuration =
+                new Configuration
+                {
+                    TestAssemblyFullName = testAssemblyFullName,
+                    Features = features
+                };
+
+            engine.Run(configuration);
+
+            // Assert
+            Assert.That(ExecutionContext.Instance.Hooks.Count, Is.EqualTo(2));
+        }
+
+        #endregion
     }
 }

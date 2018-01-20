@@ -21,34 +21,24 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using NUnit.Engine;
+using System.Collections.Generic;
+using System.Xml.Serialization;
 
-namespace YellowJacket.Core.NUnit
+namespace YellowJacket.Core.NUnitWrapper.Models
 {
-    public delegate void TestReportHandler(object sender, TestReportEventArgs eventArgs);
-
     /// <summary>
-    /// Used to handle the process progress reports and other events from the NUnit test.
+    /// Represents an NUnit list of properties. 
     /// </summary>
-    public class CustomTestEventListener: ITestEventListener
+    [XmlRoot(ElementName = "properties")]
+    public class Properties
     {
-        #region Events
-
-        public event TestReportHandler TestReport;
-
-        #endregion
-
-        #region Public Methods
-
         /// <summary>
-        /// Event handler used for the NUnit progress report.
+        /// Gets or sets the property list.
         /// </summary>
-        /// <param name="report">The report.</param>
-        public void OnTestEvent(string report)
-        {
-            TestReport?.Invoke(this, new TestReportEventArgs(report));
-        }
-
-        #endregion
+        /// <value>
+        /// The property list.
+        /// </value>
+        [XmlElement(ElementName = "property")]
+        public List<Property> PropertyList { get; set; }
     }
 }

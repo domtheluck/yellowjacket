@@ -41,14 +41,6 @@ namespace YellowJacket.Core.Gherkin
         public string Name { get; internal set; }
 
         /// <summary>
-        /// Gets or sets the description.
-        /// </summary>
-        /// <value>
-        /// The description.
-        /// </value>
-        public string Description { get; internal set; }
-
-        /// <summary>
         /// Gets or sets the scenarios.
         /// </summary>
         /// <value>
@@ -63,10 +55,7 @@ namespace YellowJacket.Core.Gherkin
         /// <summary>
         /// Initializes a new instance of the <see cref="GherkinFeature"/> class.
         /// </summary>
-        internal GherkinFeature()
-        {
-            Scenarios = new List<GherkinScenario>();
-        }
+        internal GherkinFeature() => Scenarios = new List<GherkinScenario>();
 
         #endregion
     }

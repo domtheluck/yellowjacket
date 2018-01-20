@@ -48,9 +48,6 @@ namespace YellowJacket.Core.Gherkin
         /// <returns><see cref="GherkinFeature"/>.</returns>
         public GherkinFeature ParseFeature(Assembly assembly, string featureName, string workingFolder)
         {
-            if (string.IsNullOrEmpty(workingFolder))
-                throw new ArgumentException("You must provide a value for the location");
-
             if (!Directory.Exists(workingFolder))
                 Directory.CreateDirectory(workingFolder);
 
@@ -61,7 +58,6 @@ namespace YellowJacket.Core.Gherkin
             GherkinFeature feature = new GherkinFeature
             {
                 Name = gherkinDocument.Feature.Name,
-                Description = gherkinDocument.Feature.Description,
                 Scenarios = ParseScenarioDefinitions(gherkinDocument.Feature.Children)
             };
 
@@ -72,6 +68,11 @@ namespace YellowJacket.Core.Gherkin
 
         #region Private Methods
 
+        /// <summary>
+        /// Parses the scenario definitions.
+        /// </summary>
+        /// <param name="scenarioDefinitions">The scenario definitions.</param>
+        /// <returns><see cref="List{GherkinScenario}"/>.</returns>
         private List<GherkinScenario> ParseScenarioDefinitions(
             IEnumerable<ScenarioDefinition> scenarioDefinitions)
         {
@@ -86,6 +87,11 @@ namespace YellowJacket.Core.Gherkin
                     .ToList();
         }
 
+        /// <summary>
+        /// Parses the steps.
+        /// </summary>
+        /// <param name="steps">The steps.</param>
+        /// <returns></returns>
         private List<GherkinStep> ParseSteps(IEnumerable<Step> steps)
         {
             return steps

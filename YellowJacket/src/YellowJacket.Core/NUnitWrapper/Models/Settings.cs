@@ -21,27 +21,24 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using OpenQA.Selenium.Support.PageObjects;
-using YellowJacket.Core.Contexts;
+using System.Collections.Generic;
+using System.Xml.Serialization;
 
-namespace YellowJacket.Core.Framework
+namespace YellowJacket.Core.NUnitWrapper.Models
 {
-    /// <inheritdoc />
     /// <summary>
-    /// Base page.
+    /// Represents an NUnit list of settings. 
     /// </summary>
-    public abstract class BasePage: Base
+    [XmlRoot(ElementName = "settings")]
+    public class Settings
     {
-        #region Constructors
-
         /// <summary>
-        /// Initializes a new instance of the <see cref="BasePage"/> class.
+        /// Gets or sets the setting list.
         /// </summary>
-        protected BasePage()
-        {
-            PageFactory.InitElements(DriverContext.Driver, this);
-        }
-
-        #endregion
+        /// <value>
+        /// The setting list.
+        /// </value>
+        [XmlElement(ElementName = "setting")]
+        public List<Setting> SettingList { get; set; }
     }
 }

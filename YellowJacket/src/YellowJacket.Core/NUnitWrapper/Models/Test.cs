@@ -21,30 +21,32 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System.ComponentModel;
+using System.Xml.Serialization;
 
-namespace YellowJacket.Core.Enums
+namespace YellowJacket.Core.NUnitWrapper.Models
 {
-    // TODO: We should think about a Java agent to be able to support more browser and OS like OS X and Linux.
-    
     /// <summary>
-    /// Contains the browser type.
+    /// Represents a NUnit test.
     /// </summary>
-    public enum BrowserType
+    [XmlRoot(ElementName = "test")]
+    public class Test
     {
-        [Description("None")]
-        None,
+        /// <summary>
+        /// Gets or sets the repetition.
+        /// </summary>
+        /// <value>
+        /// The repetition.
+        /// </value>
+        [XmlAttribute(AttributeName = "re")]
+        public string Re { get; set; }
 
-        [Description("InternetExplorer")]
-        InternetExplorer,
-
-        [Description("Firefox")]
-        Firefox,
-
-        [Description("Chrome")]
-        Chrome,
-
-        [Description("Edge")]
-        Edge
+        /// <summary>
+        /// Gets or sets the text.
+        /// </summary>
+        /// <value>
+        /// The text.
+        /// </value>
+        [XmlText]
+        public string Text { get; set; }
     }
 }

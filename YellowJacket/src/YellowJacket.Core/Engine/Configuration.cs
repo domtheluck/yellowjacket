@@ -49,14 +49,6 @@ namespace YellowJacket.Core.Engine
         public List<string> PluginAssemblies { get; set; }
 
         /// <summary>
-        /// Gets or sets the browser configuration.
-        /// </summary>
-        /// <value>
-        /// The browser configuration.
-        /// </value>
-        public BrowserConfiguration BrowserConfiguration { get; set; }
-
-        /// <summary>
         /// Gets or sets the features.
         /// </summary>
         /// <value>

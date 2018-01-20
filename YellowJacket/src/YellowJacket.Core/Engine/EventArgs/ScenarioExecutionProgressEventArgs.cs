@@ -21,25 +21,35 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-namespace YellowJacket.Core.Framework
+namespace YellowJacket.Core.Engine.EventArgs
 {
     /// <inheritdoc />
     /// <summary>
-    /// Base step class.
+    /// Contains the arguments for the Scenario Execution Progress event.
     /// </summary>
-    public abstract class BaseStep: Base
+    /// <seealso cref="T:System.EventArgs" />
+    public class ScenarioExecutionProgressEventArgs : System.EventArgs
     {
-        #region Public Methods
+        #region Properties
+
+        /// <summary>
+        /// Gets the execution percentage.
+        /// </summary>
+        /// <value>
+        /// The execution percentage.
+        /// </value>
+        public double ExecutionPercentage { get; }
+
+        #endregion
+
+        #region Constructors
 
         /// <inheritdoc />
         /// <summary>
-        /// Navigates to the site.
+        /// Initializes a new instance of the <see cref="T:YellowJacket.Core.Engine.EventArgs.ScenarioExecutionProgressEventArgs" /> class.
         /// </summary>
-        public override void NavigateSite()
-        {
-            // TODO: We need to navigate to the site homepage. Should be in configuration somehow.
-            //DriverContext.Browser.GoToUrl(EnvironmentHelper.GetLoginUrl(Settings.Environment));
-        }
+        /// <param name="executionPercentage">The execution progress.</param>
+        internal ScenarioExecutionProgressEventArgs(double executionPercentage) => ExecutionPercentage = executionPercentage;
 
         #endregion
     }

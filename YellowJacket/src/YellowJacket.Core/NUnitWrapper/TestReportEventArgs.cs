@@ -21,32 +21,41 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System.Xml.Serialization;
+using System;
 
-namespace YellowJacket.Core.NUnit.Models
+namespace YellowJacket.Core.NUnitWrapper
 {
+    /// <inheritdoc />
     /// <summary>
-    /// Represents a NUnit test property.
+    /// Contains the arguments for the TestReport event.
     /// </summary>
-    [XmlRoot(ElementName = "property")]
-    public class Property
+    /// <seealso cref="T:System.EventArgs" />
+    public class TestReportEventArgs : EventArgs
     {
-        /// <summary>
-        /// Gets or sets the name.
-        /// </summary>
-        /// <value>
-        /// The name.
-        /// </value>
-        [XmlAttribute(AttributeName = "name")]
-        public string Name { get; set; }
+        #region Properties
 
         /// <summary>
-        /// Gets or sets the value.
+        /// Gets the report.
         /// </summary>
         /// <value>
-        /// The value.
+        /// The report.
         /// </value>
-        [XmlAttribute(AttributeName = "value")]
-        public string Value { get; set; }
+        public string Report { get; }
+
+        #endregion
+
+        #region Constructors
+
+        /// <inheritdoc />
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TestReportEventArgs" /> class.
+        /// </summary>
+        /// <param name="report">The report.</param>
+        public TestReportEventArgs(string report)
+        {
+            Report = report;
+        }
+
+        #endregion
     }
 }

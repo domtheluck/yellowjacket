@@ -32,34 +32,124 @@ namespace YellowJacket.Core.Engine
     {
         #region Public Properties
 
+        /// <summary>
+        /// Gets the previous feature.
+        /// </summary>
+        /// <value>
+        /// The previous feature.
+        /// </value>
         public GherkinFeature PreviousFeature { get; internal set; }
 
+        /// <summary>
+        /// Gets the current feature.
+        /// </summary>
+        /// <value>
+        /// The current feature.
+        /// </value>
         public GherkinFeature CurrentFeature { get; internal set; }
 
+        /// <summary>
+        /// Gets the next feature.
+        /// </summary>
+        /// <value>
+        /// The next feature.
+        /// </value>
         public GherkinFeature NextFeature { get; internal set; }
 
+        /// <summary>
+        /// Gets the previous scenario.
+        /// </summary>
+        /// <value>
+        /// The previous scenario.
+        /// </value>
         public GherkinScenario PreviousScenario { get; internal set; }
 
+        /// <summary>
+        /// Gets the current scenario.
+        /// </summary>
+        /// <value>
+        /// The current scenario.
+        /// </value>
         public GherkinScenario CurrentScenario { get; internal set; }
 
+        /// <summary>
+        /// Gets the next scenario.
+        /// </summary>
+        /// <value>
+        /// The next scenario.
+        /// </value>
         public GherkinScenario NextScenario { get; internal set; }
 
+        /// <summary>
+        /// Gets the previous step.
+        /// </summary>
+        /// <value>
+        /// The previous step.
+        /// </value>
         public GherkinStep PreviousStep { get; internal set; }
 
+        /// <summary>
+        /// Gets the current step.
+        /// </summary>
+        /// <value>
+        /// The current step.
+        /// </value>
         public GherkinStep CurrentStep { get; internal set; }
 
+        /// <summary>
+        /// Gets the next step.
+        /// </summary>
+        /// <value>
+        /// The next step.
+        /// </value>
         public GherkinStep NextStep { get; internal set; }
 
+        /// <summary>
+        /// Gets the step execution percentage.
+        /// </summary>
+        /// <value>
+        /// The step execution percentage.
+        /// </value>
         public double StepExecutionPercentage { get; internal set; }
 
+        /// <summary>
+        /// Gets the feature execution percentage.
+        /// </summary>
+        /// <value>
+        /// The feature execution percentage.
+        /// </value>
         public double FeatureExecutionPercentage { get; internal set; }
 
+        /// <summary>
+        /// Gets the scenario execution percentage.
+        /// </summary>
+        /// <value>
+        /// The scenario execution percentage.
+        /// </value>
         public double ScenarioExecutionPercentage { get; internal set; }
 
+        /// <summary>
+        /// Gets the feature count.
+        /// </summary>
+        /// <value>
+        /// The feature count.
+        /// </value>
         public int FeatureCount { get; internal set; }
 
+        /// <summary>
+        /// Gets the scenario count.
+        /// </summary>
+        /// <value>
+        /// The scenario count.
+        /// </value>
         public int ScenarioCount { get; internal set; }
 
+        /// <summary>
+        /// Gets the step count.
+        /// </summary>
+        /// <value>
+        /// The step count.
+        /// </value>
         public int StepCount { get; internal set; }
 
         #endregion

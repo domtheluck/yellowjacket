@@ -23,30 +23,30 @@
 
 using System.Xml.Serialization;
 
-namespace YellowJacket.Core.NUnit.Models
+namespace YellowJacket.Core.NUnitWrapper.Models
 {
     /// <summary>
-    /// Represents a NUnit test.
+    /// Represents a NUnit test property.
     /// </summary>
-    [XmlRoot(ElementName = "test")]
-    public class Test
+    [XmlRoot(ElementName = "property")]
+    public class Property
     {
         /// <summary>
-        /// Gets or sets the repetition.
+        /// Gets or sets the name.
         /// </summary>
         /// <value>
-        /// The repetition.
+        /// The name.
         /// </value>
-        [XmlAttribute(AttributeName = "re")]
-        public string Re { get; set; }
+        [XmlAttribute(AttributeName = "name")]
+        public string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets the text.
+        /// Gets or sets the value.
         /// </summary>
         /// <value>
-        /// The text.
+        /// The value.
         /// </value>
-        [XmlText]
-        public string Text { get; set; }
+        [XmlAttribute(AttributeName = "value")]
+        public string Value { get; set; }
     }
 }

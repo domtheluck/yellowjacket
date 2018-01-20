@@ -21,42 +21,43 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System.Collections.Generic;
 using System.Xml.Serialization;
 
-namespace YellowJacket.Core.NUnit.Models
+namespace YellowJacket.Core.NUnitWrapper.Models
 {
     /// <summary>
-    /// Represents an NUnit test run.
+    /// Represents an NUnit test suite.
     /// </summary>
-    [XmlRoot(ElementName = "test-run")]
-    public class TestRun
+    [XmlRoot(ElementName = "test-suite")]
+    public class TestSuite
     {
         /// <summary>
-        /// Gets or sets the command line.
+        /// Gets or sets the properties.
         /// </summary>
         /// <value>
-        /// The command line.
+        /// The properties.
         /// </value>
-        [XmlElement(ElementName = "command-line")]
-        public string CommandLine { get; set; }
+        [XmlElement(ElementName = "properties")]
+        public Properties Properties { get; set; }
 
         /// <summary>
-        /// Gets or sets the filter.
+        /// Gets or sets the test case.
         /// </summary>
         /// <value>
-        /// The filter.
+        /// The test case.
         /// </value>
-        [XmlElement(ElementName = "filter")]
-        public Filter Filter { get; set; }
+        [XmlElement(ElementName = "test-case")]
+        public List<TestCase> TestCases { get; set; }
 
         /// <summary>
-        /// Gets or sets the test suite.
+        /// Gets or sets the type.
         /// </summary>
         /// <value>
-        /// The test suite.
+        /// The type.
         /// </value>
-        [XmlElement(ElementName = "test-suite")]
-        public TestSuite TestSuite { get; set; }
+        [XmlAttribute(AttributeName = "type")]
+        public string Type { get; set; }
 
         /// <summary>
         /// Gets or sets the identifier.
@@ -86,6 +87,24 @@ namespace YellowJacket.Core.NUnit.Models
         public string FullName { get; set; }
 
         /// <summary>
+        /// Gets or sets the name of the class.
+        /// </summary>
+        /// <value>
+        /// The name of the class.
+        /// </value>
+        [XmlAttribute(AttributeName = "classname")]
+        public string ClassName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the state of the run.
+        /// </summary>
+        /// <value>
+        /// The state of the run.
+        /// </value>
+        [XmlAttribute(AttributeName = "runstate")]
+        public string RunState { get; set; }
+
+        /// <summary>
         /// Gets or sets the test case count.
         /// </summary>
         /// <value>
@@ -102,6 +121,33 @@ namespace YellowJacket.Core.NUnit.Models
         /// </value>
         [XmlAttribute(AttributeName = "result")]
         public string Result { get; set; }
+
+        /// <summary>
+        /// Gets or sets the start time.
+        /// </summary>
+        /// <value>
+        /// The start time.
+        /// </value>
+        [XmlAttribute(AttributeName = "start-time")]
+        public string StartTime { get; set; }
+
+        /// <summary>
+        /// Gets or sets the end time.
+        /// </summary>
+        /// <value>
+        /// The end time.
+        /// </value>
+        [XmlAttribute(AttributeName = "end-time")]
+        public string EndTime { get; set; }
+
+        /// <summary>
+        /// Gets or sets the duration.
+        /// </summary>
+        /// <value>
+        /// The duration.
+        /// </value>
+        [XmlAttribute(AttributeName = "duration")]
+        public double Duration { get; set; }
 
         /// <summary>
         /// Gets or sets the total.
@@ -131,6 +177,15 @@ namespace YellowJacket.Core.NUnit.Models
         public int Failed { get; set; }
 
         /// <summary>
+        /// Gets or sets the warnings.
+        /// </summary>
+        /// <value>
+        /// The warnings.
+        /// </value>
+        [XmlAttribute(AttributeName = "warnings")]
+        public int Warnings { get; set; }
+
+        /// <summary>
         /// Gets or sets the inconclusive.
         /// </summary>
         /// <value>
@@ -156,50 +211,5 @@ namespace YellowJacket.Core.NUnit.Models
         /// </value>
         [XmlAttribute(AttributeName = "asserts")]
         public int Asserts { get; set; }
-
-        /// <summary>
-        /// Gets or sets the engine version.
-        /// </summary>
-        /// <value>
-        /// The engine version.
-        /// </value>
-        [XmlAttribute(AttributeName = "engine-version")]
-        public string EngineVersion { get; set; }
-
-        /// <summary>
-        /// Gets or sets the CLR version.
-        /// </summary>
-        /// <value>
-        /// The CLR version.
-        /// </value>
-        [XmlAttribute(AttributeName = "clr-version")]
-        public string ClrVersion { get; set; }
-
-        /// <summary>
-        /// Gets or sets the start time.
-        /// </summary>
-        /// <value>
-        /// The start time.
-        /// </value>
-        [XmlAttribute(AttributeName = "start-time")]
-        public string StartTime { get; set; }
-
-        /// <summary>
-        /// Gets or sets the end time.
-        /// </summary>
-        /// <value>
-        /// The end time.
-        /// </value>
-        [XmlAttribute(AttributeName = "end-time")]
-        public string EndTime { get; set; }
-
-        /// <summary>
-        /// Gets or sets the duration.
-        /// </summary>
-        /// <value>
-        /// The duration.
-        /// </value>
-        [XmlAttribute(AttributeName = "duration")]
-        public double Duration { get; set; }
     }
 }

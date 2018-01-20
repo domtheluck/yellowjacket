@@ -49,10 +49,7 @@ namespace YellowJacket.Core.Engine.EventArgs
         /// Initializes a new instance of the <see cref="T:YellowJacket.Core.Engine.EventArgs.ExecutionProgressEventArgs" /> class.
         /// </summary>
         /// <param name="runSummary">The run summary.</param>
-        internal ExecutionProgressEventArgs(RunSummary runSummary)
-        {
-            RunSummary = runSummary;
-        }
+        internal ExecutionProgressEventArgs(RunSummary runSummary) => RunSummary = runSummary;
 
         #endregion
     }

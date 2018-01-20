@@ -21,32 +21,35 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System.Xml.Serialization;
-
-namespace YellowJacket.Core.NUnit.Models
+namespace YellowJacket.Core.Engine.EventArgs
 {
+    /// <inheritdoc />
     /// <summary>
-    /// Represents an NUnit setting.
+    /// Contains the arguments for the Step Execution Progress event.
     /// </summary>
-    [XmlRoot(ElementName = "setting")]
-    public class Setting
+    /// <seealso cref="T:System.EventArgs" />
+    public class StepExecutionProgressEventArgs : System.EventArgs
     {
-        /// <summary>
-        /// Gets or sets the name.
-        /// </summary>
-        /// <value>
-        /// The name.
-        /// </value>
-        [XmlAttribute(AttributeName = "name")]
-        public string Name { get; set; }
+        #region Properties
 
         /// <summary>
-        /// Gets or sets the value.
+        /// Gets the execution percentage.
         /// </summary>
         /// <value>
-        /// The value.
+        /// The execution percentage.
         /// </value>
-        [XmlAttribute(AttributeName = "value")]
-        public string Value { get; set; }
+        public double ExecutionPercentage { get; }
+
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StepExecutionProgressEventArgs"/> class.
+        /// </summary>
+        /// <param name="executionPercentage">The execution progress.</param>
+        internal StepExecutionProgressEventArgs(double executionPercentage) => ExecutionPercentage = executionPercentage;
+
+        #endregion
     }
 }

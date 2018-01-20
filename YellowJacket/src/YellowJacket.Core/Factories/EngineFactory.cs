@@ -34,9 +34,6 @@ namespace YellowJacket.Core.Factories
         /// Creates an IEngine instance.
         /// </summary>
         /// <returns><see cref="IEngine"/>.</returns>
-        public static IEngine Create()
-        {
-            return new Engine.Engine();
-        }
+        public static IEngine Create() => new Engine.Engine();
     }
 }

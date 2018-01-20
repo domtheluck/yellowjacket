@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Engine\EngineEventTests.cs" />
+    <Compile Include="Engine\EngineHookTests.cs" />
     <Compile Include="Engine\EngineInputTests.cs" />
     <Compile Include="Engine\EngineRunSummaryTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

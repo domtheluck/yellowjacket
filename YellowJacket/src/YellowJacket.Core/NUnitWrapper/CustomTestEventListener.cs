@@ -21,57 +21,32 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using OpenQA.Selenium;
-using YellowJacket.Core.Contexts;
-using YellowJacket.Core.Enums;
+using NUnit.Engine;
 
-namespace YellowJacket.Core.Framework
+namespace YellowJacket.Core.NUnitWrapper
 {
+    public delegate void TestReportHandler(object sender, TestReportEventArgs eventArgs);
+
     /// <summary>
-    /// Contains browser and driver implementation.
+    /// Used to handle the process progress reports and other events from the NUnit test.
     /// </summary>
-    public class Browser
+    public class CustomTestEventListener: ITestEventListener
     {
-        #region Private Members
+        #region Events
 
-        public readonly IWebDriver Driver;
-
-        #endregion
-
-        #region Constructors
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Browser"/> class.
-        /// </summary>
-        /// <param name="driver">The driver.</param>
-        public Browser(IWebDriver driver)
-        {
-            Driver = driver;
-        }
-
-        #endregion
-
-        #region Properties
-
-        /// <summary>
-        /// Gets or sets the browser type.
-        /// </summary>
-        /// <value>
-        /// The browser type.
-        /// </value>
-        public BrowserType Type { get; set; }
+        public event TestReportHandler TestReport;
 
         #endregion
 
         #region Public Methods
 
         /// <summary>
-        /// Goes to URL.
+        /// Event handler used for the NUnit progress report.
         /// </summary>
-        /// <param name="url">The URL.</param>
-        public void GoToUrl(string url)
+        /// <param name="report">The report.</param>
+        public void OnTestEvent(string report)
         {
-            DriverContext.Driver.Url = url;
+            TestReport?.Invoke(this, new TestReportEventArgs(report));
         }
 
         #endregion

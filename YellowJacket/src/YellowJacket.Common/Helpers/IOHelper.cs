@@ -21,41 +21,54 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
+using System.IO;
 
-namespace YellowJacket.Core.NUnit
+namespace YellowJacket.Common.Helpers
 {
-    /// <inheritdoc />
     /// <summary>
-    /// Contains the arguments for the TestReport event.
+    /// Input/Output helper methods.
     /// </summary>
-    /// <seealso cref="T:System.EventArgs" />
-    public class TestReportEventArgs : EventArgs
+    public class IoHelper
     {
-        #region Properties
-
         /// <summary>
-        /// Gets the report.
+        /// Deletes the directory.
         /// </summary>
-        /// <value>
-        /// The report.
-        /// </value>
-        public string Report { get; }
-
-        #endregion
-
-        #region Constructors
-
-        /// <inheritdoc />
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TestReportEventArgs" /> class.
-        /// </summary>
-        /// <param name="report">The report.</param>
-        public TestReportEventArgs(string report)
+        /// <param name="path">The path.</param>
+        /// <param name="recursive">if set to <c>true</c> [recursive].</param>
+        public static void DeleteDirectory(string path, bool recursive)
         {
-            Report = report;
-        }
+            if (recursive)
+            {
+                string[] subfolders = Directory.GetDirectories(path);
 
-        #endregion
+                foreach (string folder in subfolders)
+                {
+                    DeleteDirectory(folder, true);
+                }
+            }
+
+            string[] files = Directory.GetFiles(path);
+
+            foreach (string file in files)
+            {
+                try
+                {
+                    FileAttributes attr = File.GetAttributes(file);
+
+                    if ((attr & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
+                    {
+                        File.SetAttributes(file, attr ^ FileAttributes.ReadOnly);
+                    }
+
+                    File.Delete(file);
+                }
+                catch
+                {
+                    // ignored
+                }
+            }
+
+            Directory.Delete(path);
+        }
     }
 }

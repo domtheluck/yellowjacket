@@ -51,10 +51,7 @@ namespace YellowJacket.Core.Engine.EventArgs
         /// Initializes a new instance of the <see cref="T:YellowJacket.Core.Engine.EventArgs.ExecutionStopEventArgs" /> class.
         /// </summary>
         /// <param name="exception">The exception.</param>
-        public ExecutionStopEventArgs(Exception exception)
-        {
-            Exception = exception;
-        }
+        internal ExecutionStopEventArgs(Exception exception) => Exception = exception;
 
         #endregion
     }

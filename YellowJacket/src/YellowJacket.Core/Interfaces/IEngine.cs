@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using YellowJacket.Core.Engine;
+using YellowJacket.Core.Engine; 
 using YellowJacket.Core.Engine.EventArgs;
 using YellowJacket.Core.Enums;
 
@@ -30,9 +30,14 @@ namespace YellowJacket.Core.Interfaces
     #region Delegates
 
     public delegate void ExecutionStartHandler(object sender, ExecutionStartEventArgs eventArgs);
-    public delegate void ExecutionStopHandler(object sender, ExecutionStopEventArgs eventArgs);
     public delegate void ExecutionCompletedHandler(object sender, ExecutionCompletedEventArgs eventArgs);
+    public delegate void ExecutionStopHandler(object sender, ExecutionStopEventArgs eventArgs);
+
     public delegate void ExecutionProgressHandler(object sender, ExecutionProgressEventArgs eventArgs);
+
+    public delegate void FeatureExecutionProgressHandler(object sender, FeatureExecutionProgressEventArgs eventArgs);
+    public delegate void ScenarioExecutionProgressHandler(object sender, ScenarioExecutionProgressEventArgs eventArgs);
+    public delegate void StepExecutionProgressHandler(object sender, StepExecutionProgressEventArgs eventArgs);
 
     #endregion
 
@@ -44,19 +49,32 @@ namespace YellowJacket.Core.Interfaces
         #region Events
 
         event ExecutionStartHandler ExecutionStart;
-
+        event ExecutionCompletedHandler ExecutionCompleted;
         event ExecutionStopHandler ExecutionStop;
 
-        event ExecutionCompletedHandler ExecutionCompleted;
-
         event ExecutionProgressHandler ExecutionProgress;
+        event FeatureExecutionProgressHandler FeatureExecutionProgress;
+        event ScenarioExecutionProgressHandler ScenarioExecutionProgress;
+        event StepExecutionProgressHandler StepExecutionProgress;
 
         #endregion
 
         #region Properties
 
+        /// <summary>
+        /// Gets the status.
+        /// </summary>
+        /// <value>
+        /// The status.
+        /// </value>
         EngineStatus Status { get; }
 
+        /// <summary>
+        /// Gets the run summary.
+        /// </summary>
+        /// <value>
+        /// The run summary.
+        /// </value>
         RunSummary RunSummary { get; }
 
         #endregion

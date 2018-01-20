@@ -19,17 +19,34 @@
 // LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// ***********************************************************************
 
-using OpenQA.Selenium;
-using YellowJacket.Core.Enums;
+using System.Xml.Serialization;
 
-namespace YellowJacket.Core.Plugins.Interfaces
+namespace YellowJacket.Core.NUnitWrapper.Models
 {
     /// <summary>
-    /// Web Driver configuration plugin interface definition.
+    /// Represents an NUnit setting.
     /// </summary>
-    internal interface IWebDriverConfigurationPlugin
+    [XmlRoot(ElementName = "setting")]
+    public class Setting
     {
-        IWebDriver Get(BrowserType browser);
+        /// <summary>
+        /// Gets or sets the name.
+        /// </summary>
+        /// <value>
+        /// The name.
+        /// </value>
+        [XmlAttribute(AttributeName = "name")]
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value.
+        /// </summary>
+        /// <value>
+        /// The value.
+        /// </value>
+        [XmlAttribute(AttributeName = "value")]
+        public string Value { get; set; }
     }
 }

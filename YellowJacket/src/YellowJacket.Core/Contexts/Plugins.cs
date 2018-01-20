@@ -33,6 +33,12 @@ namespace YellowJacket.Core.Contexts
     {
         #region Properties
 
+        /// <summary>
+        /// Gets the log plugins.
+        /// </summary>
+        /// <value>
+        /// The log plugins.
+        /// </value>
         public List<ILogPlugin> LogPlugins { get; } = new List<ILogPlugin>();
 
         #endregion

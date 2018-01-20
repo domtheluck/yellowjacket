@@ -21,24 +21,36 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System.Collections.Generic;
-using System.Xml.Serialization;
-
-namespace YellowJacket.Core.NUnit.Models
+namespace YellowJacket.Core.Engine.EventArgs
 {
+    /// <inheritdoc />
     /// <summary>
-    /// Represents an NUnit list of properties. 
+    /// Contains the arguments for the Feature Execution Progress event.
     /// </summary>
-    [XmlRoot(ElementName = "properties")]
-    public class Properties
+    /// <seealso cref="T:System.EventArgs" />
+    public class FeatureExecutionProgressEventArgs : System.EventArgs
     {
+        #region Properties
+
         /// <summary>
-        /// Gets or sets the property list.
+        /// Gets the execution percentage.
         /// </summary>
         /// <value>
-        /// The property list.
+        /// The execution percentage.
         /// </value>
-        [XmlElement(ElementName = "property")]
-        public List<Property> PropertyList { get; set; }
+        public double ExecutionPercentage { get; }
+
+        #endregion
+
+        #region Constructors
+
+        /// <inheritdoc />
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:YellowJacket.Core.Engine.EventArgs.FeatureExecutionProgressEventArgs" /> class.
+        /// </summary>
+        /// <param name="executionPercentage">The execution progress.</param>
+        internal FeatureExecutionProgressEventArgs(double executionPercentage) => ExecutionPercentage = executionPercentage;
+
+        #endregion
     }
 }

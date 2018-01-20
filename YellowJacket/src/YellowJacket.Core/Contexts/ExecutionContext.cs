@@ -39,9 +39,6 @@ namespace YellowJacket.Core.Contexts
         private static readonly Lazy<ExecutionContext> Context =
             new Lazy<ExecutionContext>(() => new ExecutionContext());
 
-        // TODO: Commented for now
-        //private static IWebDriverConfigurationPlugin _webDriverConfigurationPlugin;
-
         #endregion
 
         #region Properties
@@ -69,15 +66,6 @@ namespace YellowJacket.Core.Contexts
         /// The plugins.
         /// </value>
         public Plugins Plugins { get; } = new Plugins();
-
-        // TODO: Commented for now
-        ///// <summary>
-        ///// Gets or sets the driver.
-        ///// </summary>
-        ///// <value>
-        ///// The driver.
-        ///// </value>
-        //public IWebDriver WebDriver { get; set; }
 
         #endregion
 
@@ -201,26 +189,6 @@ namespace YellowJacket.Core.Contexts
         {
             Plugins.LogPlugins.Add(logPlugin);
         }
-
-        // TODO: Commented for now
-        ///// <summary>
-        ///// Registers the web driver configuration plugin.
-        ///// </summary>
-        ///// <param name="webDriverConfigurationPlugin">The web driver configuration plugin.</param>
-        //internal void RegisterWebDriverConfigurationPlugin(IWebDriverConfigurationPlugin webDriverConfigurationPlugin)
-        //{
-        //    _webDriverConfigurationPlugin = webDriverConfigurationPlugin;
-        //}
-
-        // TODO: Commented for now
-        ///// <summary>
-        ///// Gets the web driver configuration plugin.
-        ///// </summary>
-        ///// <returns><see cref="IWebDriverConfigurationPlugin"/>.</returns>
-        //internal IWebDriverConfigurationPlugin GetWebDriverConfigurationPlugin()
-        //{
-        //    return _webDriverConfigurationPlugin;
-        //}
 
         #endregion
     }

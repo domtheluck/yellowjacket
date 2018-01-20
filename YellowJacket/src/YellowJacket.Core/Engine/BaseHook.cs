@@ -36,6 +36,9 @@ namespace YellowJacket.Core.Engine
     {
         #region Public Methods
 
+        /// <summary>
+        /// Hook used before a test run.
+        /// </summary>
         [BeforeTestRun]
         public static void BeforeTestRun()
         {
@@ -44,6 +47,9 @@ namespace YellowJacket.Core.Engine
             HookProcessor.Process(HookType.BeforeExecution);
         }
 
+        /// <summary>
+        /// Hook used after a test run.
+        /// </summary>
         [AfterTestRun]
         public static void AfterTestRun()
         {

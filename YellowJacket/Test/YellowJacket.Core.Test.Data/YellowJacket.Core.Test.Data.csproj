@@ -54,6 +54,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Navigate.feature</DependentUpon>
     </Compile>
+    <Compile Include="Hooks\HookInstanceA.cs" />
+    <Compile Include="Hooks\HookInstanceB.cs" />
     <Compile Include="Steps\CommonSteps.cs" />
     <Compile Include="Features\Login.feature.cs">
       <AutoGen>True</AutoGen>
@@ -69,7 +71,12 @@
     <Compile Include="Steps\LoginSteps.cs" />
     <Compile Include="Steps\RegisterSteps.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\YellowJacket.Core\YellowJacket.Core.csproj">
+      <Project>{4f02b61b-241a-48ef-a6d8-fdb94700202f}</Project>
+      <Name>YellowJacket.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <EmbeddedResource Include="Features\Login.feature">

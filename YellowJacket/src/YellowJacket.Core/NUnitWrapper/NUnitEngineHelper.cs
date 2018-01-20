@@ -30,9 +30,9 @@ using System.Xml.Serialization;
 using NUnit.Engine;
 using NUnit.Framework;
 using YellowJacket.Common.Helpers;
-using YellowJacket.Core.NUnit.Models;
+using YellowJacket.Core.NUnitWrapper.Models;
 
-namespace YellowJacket.Core.NUnit
+namespace YellowJacket.Core.NUnitWrapper
 {
     /// <summary>
     /// Helper class for the NUnit engine.

@@ -23,7 +23,7 @@
 
 using System.Xml.Serialization;
 
-namespace YellowJacket.Core.NUnit.Models
+namespace YellowJacket.Core.NUnitWrapper.Models
 {
     /// <summary>
     /// Represents an NUnit test case.

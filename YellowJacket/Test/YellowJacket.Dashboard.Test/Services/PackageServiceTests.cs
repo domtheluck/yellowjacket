@@ -37,7 +37,7 @@ namespace YellowJacket.Dashboard.Test.Services
 {
     [ExcludeFromCodeCoverage]
     [TestFixture]
-    [Parallelizable(ParallelScope.All)]
+   // [Parallelizable(ParallelScope.All)]
     public class PackageServiceTests: TestBase
     {
         #region Private Members

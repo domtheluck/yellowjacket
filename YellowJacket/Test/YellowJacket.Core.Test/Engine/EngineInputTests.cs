@@ -23,7 +23,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using NUnit.Framework;
 using YellowJacket.Core.Engine;
@@ -34,7 +33,7 @@ using YellowJacket.Core.Interfaces;
 namespace YellowJacket.Core.Test.Engine
 {
     [TestFixture]
-    [Parallelizable(ParallelScope.All)]
+    [Category("Engine")]
     public class EngineInputTests
     {
         [SetUp]
@@ -138,6 +137,29 @@ namespace YellowJacket.Core.Test.Engine
 
             // Assert
             Assert.That(engine.Status, Is.EqualTo(EngineStatus.Completed));
+        }
+
+        [Test]
+        public void Run_FeatureNotFound_NoError_ArgumentExceptionThrown()
+        {
+            // Arrange
+            IEngine engine = EngineFactory.Create();
+
+            string testAssemblyFullName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "YellowJacket.Core.Test.Data.dll");
+
+            List<string> features = new List<string> { "MyFeature" };
+
+            // Act
+            Configuration configuration =
+                new Configuration
+                {
+                    TestAssemblyFullName = testAssemblyFullName,
+                    Features = features
+                };
+
+            // Assert
+            Assert.Throws<ArgumentException>(()
+                => engine.Run(configuration));
         }
 
         #endregion

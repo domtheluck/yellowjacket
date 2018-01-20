@@ -24,6 +24,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using NUnit.Framework;
 using YellowJacket.Core.Engine;
 using YellowJacket.Core.Factories;
@@ -32,7 +33,7 @@ using YellowJacket.Core.Interfaces;
 namespace YellowJacket.Core.Test.Engine
 {
     [TestFixture]
-    [Parallelizable(ParallelScope.All)]
+    [Category("Engine")]
     public class EngineRunSummaryTests
     {
         [SetUp]
@@ -389,6 +390,130 @@ namespace YellowJacket.Core.Test.Engine
                 engine.RunSummary.NextStep,
                 Is.Null,
                 "The actual next step is not null.");
+        }
+
+        [Test]
+        public void RunSummary_FeatureExecutionPercentage_NoError()
+        {
+            // Arrange
+            IEngine engine = EngineFactory.Create();
+
+            string testAssemblyFullName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "YellowJacket.Core.Test.Data.dll");
+
+            List<string> features = new List<string> { "Login", "Register", "Navigate" };
+
+            List<double> progressValues = new List<double>();
+
+            List<double> expectedValues = new List<double>{0d, 33.33d, 66.67d, 100d};
+
+            AutoResetEvent autoResetEvent = new AutoResetEvent(false);
+
+            // Act
+            Configuration configuration =
+                new Configuration
+                {
+                    TestAssemblyFullName = testAssemblyFullName,
+                    Features = features
+                };
+
+            engine.ExecutionProgress += (sender, e) =>
+            {
+                if (!progressValues.Contains(e.RunSummary.FeatureExecutionPercentage))
+                    progressValues.Add(e.RunSummary.FeatureExecutionPercentage);
+
+                autoResetEvent.Set();
+            };
+
+            engine.Run(configuration);
+
+            // Assert
+            Assert.That(
+                progressValues,
+                Is.EqualTo(expectedValues),
+                $"The actual feature progress values {string.Join(", ", progressValues)} are not equals to the expected ones {string.Join(", ", expectedValues)}");
+        }
+
+        [Test]
+        public void RunSummary_ScenarioExecutionPercentage_NoError()
+        {
+            // Arrange
+            IEngine engine = EngineFactory.Create();
+
+            string testAssemblyFullName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "YellowJacket.Core.Test.Data.dll");
+
+            List<string> features = new List<string> { "Login", "Register", "Navigate" };
+
+            List<double> progressValues = new List<double>();
+
+            List<double> expectedValues = new List<double> { 0d, 16.67d, 33.33d, 50d, 66.67d, 83.33d, 100d};
+
+            AutoResetEvent autoResetEvent = new AutoResetEvent(false);
+
+            // Act
+            Configuration configuration =
+                new Configuration
+                {
+                    TestAssemblyFullName = testAssemblyFullName,
+                    Features = features
+                };
+
+            engine.ExecutionProgress += (sender, e) =>
+            {
+                if (!progressValues.Contains(e.RunSummary.ScenarioExecutionPercentage))
+                    progressValues.Add(e.RunSummary.ScenarioExecutionPercentage);
+
+                autoResetEvent.Set();
+            };
+
+            engine.Run(configuration);
+
+            // Assert
+            Assert.That(
+                progressValues,
+                Is.EqualTo(expectedValues),
+                $"The actual scenario progress values {string.Join(", ", progressValues)} are not equals to the expected ones {string.Join(", ", expectedValues)}");
+        }
+
+        [Test]
+        public void RunSummary_StepExecutionPercentage_NoError()
+        {
+            // Arrange
+            IEngine engine = EngineFactory.Create();
+
+            string testAssemblyFullName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "YellowJacket.Core.Test.Data.dll");
+
+            List<string> features = new List<string> { "Login", "Register", "Navigate" };
+
+            List<double> progressValues = new List<double>();
+
+            List<double> expectedValues = 
+                new List<double> { 5.88d, 11.76d, 17.65d, 23.53d, 29.41d, 35.29d, 41.18d, 47.06d, 52.94d, 58.82d, 64.71d, 70.59d, 76.47d, 82.35d, 88.24d, 94.12d, 100d };
+
+            AutoResetEvent autoResetEvent = new AutoResetEvent(false);
+
+            // Act
+            Configuration configuration =
+                new Configuration
+                {
+                    TestAssemblyFullName = testAssemblyFullName,
+                    Features = features
+                };
+
+            engine.ExecutionProgress += (sender, e) =>
+            {
+                if (!progressValues.Contains(e.RunSummary.StepExecutionPercentage))
+                    progressValues.Add(e.RunSummary.StepExecutionPercentage);
+
+                autoResetEvent.Set();
+            };
+
+            engine.Run(configuration);
+
+            // Assert
+            Assert.That(
+                progressValues,
+                Is.EqualTo(expectedValues),
+                $"The actual step progress values {string.Join(", ", progressValues)} are not equals to the expected ones {string.Join(", ", expectedValues)}");
         }
 
         #endregion

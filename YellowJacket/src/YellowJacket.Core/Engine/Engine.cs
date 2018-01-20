@@ -24,7 +24,6 @@
 using NUnit.Engine;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -35,12 +34,11 @@ using YellowJacket.Core.Enums;
 using YellowJacket.Core.Gherkin;
 using YellowJacket.Core.Hook;
 using YellowJacket.Core.Interfaces;
-using YellowJacket.Core.NUnit;
+using YellowJacket.Core.NUnitWrapper;
 using YellowJacket.Core.Plugins;
 using YellowJacket.Core.Plugins.Interfaces;
 using ExecutionContext = YellowJacket.Core.Contexts.ExecutionContext;
 using ITestRunner = NUnit.Engine.ITestRunner;
-
 
 namespace YellowJacket.Core.Engine
 {
@@ -50,13 +48,6 @@ namespace YellowJacket.Core.Engine
     /// </summary>
     public sealed class Engine : IEngine
     {
-        //#region Constants
-
-        //// TODO: Commented for now
-        ////private const string BrowserNone = "None";
-
-        //#endregion Constants
-
         #region Private Members
 
         private Assembly _testAssembly;
@@ -81,15 +72,21 @@ namespace YellowJacket.Core.Engine
 
         #region Events
 
-        public event ExecutionCompletedHandler ExecutionCompleted;
         public event ExecutionProgressHandler ExecutionProgress;
+
+        public event FeatureExecutionProgressHandler FeatureExecutionProgress;
+        public event ScenarioExecutionProgressHandler ScenarioExecutionProgress;
+        public event StepExecutionProgressHandler StepExecutionProgress;
+
         public event ExecutionStartHandler ExecutionStart;
+        public event ExecutionCompletedHandler ExecutionCompleted;
         public event ExecutionStopHandler ExecutionStop;
 
         #endregion Events
 
         #region Properties
 
+        /// <inheritdoc />
         /// <summary>
         /// Gets the status.
         /// </summary>
@@ -98,6 +95,7 @@ namespace YellowJacket.Core.Engine
         /// </value>
         public EngineStatus Status { get; internal set; }
 
+        /// <inheritdoc />
         /// <summary>
         /// Gets the run summary.
         /// </summary>
@@ -147,9 +145,6 @@ namespace YellowJacket.Core.Engine
 
                 GetFeaturesFromFiles();
 
-                // TODO: Commented for now
-                //InitializeWebDriver();
-
                 RegisterEventHandlers();
 
                 ExecuteFeatures();
@@ -157,8 +152,6 @@ namespace YellowJacket.Core.Engine
             catch (Exception ex)
             {
                 // if an exception is raised, we are raising a specific event to inform the caller.
-                Debugger.Launch();
-
                 FireExecutionStopEvent(ex);
 
                 throw;
@@ -204,9 +197,6 @@ namespace YellowJacket.Core.Engine
                 _features
                     .Add(_gherkinManager.ParseFeature(_testAssembly, x, Path.Combine(_workingFolder, "Features")));
             });
-
-            if (!_features.Any())
-                throw new InvalidOperationException($"No feature found in the test assembly {_testAssembly.FullName}");
         }
 
         /// <summary>
@@ -215,64 +205,7 @@ namespace YellowJacket.Core.Engine
         private void InitializeFileSystem()
         {
             _workingFolder = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName(), "YellowJacket");
-
-            // TODO: Move this to the YellowJacket.Common project.
-            if (Directory.Exists(_workingFolder))
-                DeleteDirectory(_workingFolder, true);
         }
-
-        // TODO: Move this method in the YellowJacket.Common project.
-        /// <summary>
-        /// Deletes the directory.
-        /// </summary>
-        /// <param name="path">The path.</param>
-        /// <param name="recursive">if set to <c>true</c> [recursive].</param>
-        public void DeleteDirectory(string path, bool recursive)
-        {
-            if (recursive)
-            {
-                string[] subfolders = Directory.GetDirectories(path);
-
-                foreach (string folder in subfolders)
-                {
-                    DeleteDirectory(folder, true);
-                }
-            }
-
-            string[] files = Directory.GetFiles(path);
-
-            foreach (string file in files)
-            {
-                try
-                {
-                    FileAttributes attr = File.GetAttributes(file);
-
-                    if ((attr & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
-                    {
-                        File.SetAttributes(file, attr ^ FileAttributes.ReadOnly);
-                    }
-
-                    File.Delete(file);
-                }
-                catch (IOException)
-                {
-                    //IOErrorOnDelete = true;
-                }
-            }
-
-            Directory.Delete(path);
-        }
-
-        // TODO: Commented for now
-        //private void InitializeWebDriver()
-        //{
-        //    if (_configuration.BrowserConfiguration.Browser == BrowserType.None)
-        //        return;
-
-        //    ExecutionContext.Current.WebDriver = ExecutionContext.Current
-        //        .GetWebDriverConfigurationPlugin()
-        //        .Get(_configuration.BrowserConfiguration.Browser);
-        //}
 
         /// <summary>
         /// Updates the execution progress.
@@ -285,13 +218,11 @@ namespace YellowJacket.Core.Engine
                 switch (hookType)
                 {
                     case HookType.AfterFeature:
-
                         UpdateProgressFeatures();
 
                         break;
 
                     case HookType.AfterScenario:
-
                         UpdateProgressScenarios();
 
                         break;
@@ -329,7 +260,9 @@ namespace YellowJacket.Core.Engine
             _executedStepCount += 1;
 
             RunSummary.StepExecutionPercentage =
-                Math.Round((double) _executedStepCount / RunSummary.StepCount * 100, 2);
+                Math.Round((double)_executedStepCount / RunSummary.StepCount * 100, 2);
+
+            FireStepExecutionProgressEvent();
         }
 
         /// <summary>
@@ -355,7 +288,9 @@ namespace YellowJacket.Core.Engine
             _executedScenarioCount += 1;
 
             RunSummary.ScenarioExecutionPercentage =
-                Math.Round((double) _executedScenarioCount / RunSummary.ScenarioCount * 100, 2);
+                Math.Round((double)_executedScenarioCount / RunSummary.ScenarioCount * 100, 2);
+
+            FireScenarioExecutionProgressEvent();
         }
 
         /// <summary>
@@ -379,7 +314,9 @@ namespace YellowJacket.Core.Engine
             _executedFeatureCount += 1;
 
             RunSummary.FeatureExecutionPercentage =
-                Math.Round((double) _executedFeatureCount / RunSummary.FeatureCount * 100, 2);
+                Math.Round((double)_executedFeatureCount / RunSummary.FeatureCount * 100, 2);
+
+            FireFeatureExecutionProgressEvent();
         }
 
         /// <summary>
@@ -405,7 +342,7 @@ namespace YellowJacket.Core.Engine
         /// </summary>
         private void Cleanup()
         {
-            DeleteDirectory(_workingFolder, true);
+            IoHelper.DeleteDirectory(_workingFolder, true);
 
             _configuration = null;
             _testAssembly = null;
@@ -464,7 +401,7 @@ namespace YellowJacket.Core.Engine
 
             testRunner.StopRun(true);
 
-            while (testRunner.IsTestRunning) { }
+            //while (testRunner.IsTestRunning) { }
 
             testRunner.Unload();
             testRunner.Dispose();
@@ -521,25 +458,6 @@ namespace YellowJacket.Core.Engine
             return plugins;
         }
 
-        ///// <summary>
-        ///// Gets the web driver configuration plugin.
-        ///// </summary>
-        ///// <returns></returns>
-        ///// <exception cref="ArgumentException">You cannot have more than one instance of the IWebDriverConfiguration plugin</exception>
-        //private IWebDriverConfigurationPlugin GetWebDriverConfigurationPlugin()
-        //{
-        //    List<IWebDriverConfigurationPlugin> plugins = GetPlugins<IWebDriverConfigurationPlugin>();
-
-        //    if (plugins.Any() && plugins.Count > 1)
-        //        throw new ArgumentException("You cannot have more than one instance of the IWebDriverConfiguration plugin");
-
-        //    if (plugins.Any())
-        //        return plugins.First();
-
-        //    return ClassActivatorHelper<WebDriverConfigurationPlugin>.CreateInstance(
-        //        typeof(WebDriverConfigurationPlugin));
-        //}
-
         private List<T> GetPlugins<T>()
         {
             List<T> plugins = new List<T>();
@@ -567,12 +485,10 @@ namespace YellowJacket.Core.Engine
         {
             string location = Path.GetDirectoryName(_configuration.TestAssemblyFullName);
 
-            if (string.IsNullOrEmpty(location))
-                return;
-
             _configuration.PluginAssemblies.ForEach(x =>
             {
-                _pluginAssemblies.Add(Assembly.LoadFile(Path.Combine(location, x)));
+                _pluginAssemblies.Add(
+                    Assembly.LoadFile(Path.Combine(location ?? throw new InvalidOperationException(), x)));
             });
         }
 
@@ -581,15 +497,12 @@ namespace YellowJacket.Core.Engine
         /// </summary>
         private void RegisterPlugins()
         {
-            // cleanup the existing plugins
             ExecutionContext.Instance.ClearPlugins();
 
             GetLogPlugins().ForEach(x =>
             {
                 ExecutionContext.Instance.RegisterLogPlugin(x);
             });
-
-            //ExecutionContext.Current.RegisterWebDriverConfigurationPlugin(GetWebDriverConfigurationPlugin());
         }
 
         #endregion Plugins
@@ -601,13 +514,10 @@ namespace YellowJacket.Core.Engine
         /// </summary>
         private void RegisterHooks()
         {
-            // cleanup the existing hooks
             ExecutionContext.Instance.ClearHooks();
 
-            // get the hook list from the test assembly
             List<Type> hooks = TypeLocatorHelper.GetImplementedTypes<IHook>(_testAssembly);
 
-            // instantiate each hook class and register it in the execution context
             foreach (Type type in hooks)
             {
                 int priority = 0;
@@ -647,6 +557,36 @@ namespace YellowJacket.Core.Engine
         private void FireExecutionProgressEvent()
         {
             ExecutionProgress?.Invoke(this, new ExecutionProgressEventArgs(RunSummary));
+        }
+
+        /// <summary>
+        /// Fires the feature execution progress event.
+        /// </summary>
+        private void FireFeatureExecutionProgressEvent()
+        {
+            FeatureExecutionProgress?.Invoke(
+                this, 
+                new FeatureExecutionProgressEventArgs(RunSummary.FeatureExecutionPercentage));
+        }
+
+        /// <summary>
+        /// Fires the scenario execution progress event.
+        /// </summary>
+        private void FireScenarioExecutionProgressEvent()
+        {
+            ScenarioExecutionProgress?.Invoke(
+                this,
+                new ScenarioExecutionProgressEventArgs(RunSummary.ScenarioExecutionPercentage));
+        }
+
+        /// <summary>
+        /// Fires the step execution progress event.
+        /// </summary>
+        private void FireStepExecutionProgressEvent()
+        {
+            StepExecutionProgress?.Invoke(
+                this,
+                new StepExecutionProgressEventArgs(RunSummary.StepExecutionPercentage));
         }
 
         /// <summary>

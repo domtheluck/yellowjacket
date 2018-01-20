@@ -34,6 +34,5 @@ namespace YellowJacket.Core.Test.Data.Steps
         {
             Thread.Sleep(100);
         }
-
     }
 }
