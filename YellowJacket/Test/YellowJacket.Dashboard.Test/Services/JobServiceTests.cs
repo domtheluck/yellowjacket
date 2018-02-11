@@ -177,6 +177,58 @@ namespace YellowJacket.Dashboard.Test.Services
                 $"The expected error message '{errorMessage}' doesn't match the actual one {validationResult.Errors.First().ErrorMessage}");
         }
 
+        [Test]
+        public async Task GetAllJob_ExistingJobs_NoError()
+        {
+            // Arrange
+            DbContextOptions<YellowJacketContext> options = new DbContextOptionsBuilder<YellowJacketContext>()
+                .UseInMemoryDatabase("GetAllJob_ExistingJobs_NoError")
+                .Options;
+
+            List<JobModel> expectedJobs = new List<JobModel>
+            {
+                new JobModel
+                {
+                    Name = "JobA"
+                },
+                new JobModel
+                {
+                    Name = "JobB"
+                }
+            };
+
+            using (YellowJacketContext context = new YellowJacketContext(options))
+            {
+                IJobRepository jobRepository = new JobRepository(context);
+
+                JobService service = new JobService(jobRepository, GetMapper());
+
+                foreach (JobModel model in expectedJobs)
+                {
+                    await service.Add(model);
+                }
+
+                context.SaveChanges();
+            }
+
+            List<JobModel> actualJobs;
+
+            // Act
+            using (YellowJacketContext context = new YellowJacketContext(options))
+            {
+                IJobRepository jobRepository = new JobRepository(context);
+
+                JobService service = new JobService(jobRepository, GetMapper());
+
+                actualJobs = await service.GetAll();
+            }
+
+            Assert.That(
+                actualJobs.Count,
+                Is.EqualTo(2),
+                $"The actual job list count {actualJobs.Count} should be equal to the expected one {expectedJobs.Count}");
+        }
+
         #endregion
     }
 }
