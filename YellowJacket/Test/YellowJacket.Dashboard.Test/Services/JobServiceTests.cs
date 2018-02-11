@@ -277,6 +277,58 @@ namespace YellowJacket.Dashboard.Test.Services
             }
         }
 
+        [Test]
+        public async Task RemoveJob_ExistingJob_NoError()
+        {
+            // Arrange
+            DbContextOptions<YellowJacketContext> options = new DbContextOptionsBuilder<YellowJacketContext>()
+                .UseInMemoryDatabase("RemoveJob_ExistingJob_NoError")
+                .Options;
+
+            const string jobName = "MyJob";
+
+            // Act
+            using (YellowJacketContext context = new YellowJacketContext(options))
+            {
+                context.Jobs.Add(new JobEntity
+                {
+                    Name = jobName
+                });
+
+                context.SaveChanges();
+            }
+
+            List<JobModel> models;
+
+            using (YellowJacketContext context = new YellowJacketContext(options))
+            {
+                IJobRepository jobRepository = new JobRepository(context);
+
+                IJobService service = new JobService(jobRepository, GetMapper());
+
+                models = await service.GetAll();
+            }
+
+            JobModel model = models.First();
+
+            // Assert
+            using (YellowJacketContext context = new YellowJacketContext(options))
+            {
+                IJobRepository jobRepository = new JobRepository(context);
+
+                IJobService service = new JobService(jobRepository, GetMapper());
+
+                await service.Remove(model.Id);
+
+                const int expectedCount = 0;
+
+                Assert.That(
+                    expectedCount,
+                    Is.EqualTo(Convert.ToInt32(context.Jobs.Count())),
+                    $"The jobs count should be {expectedCount}.");
+            }
+        }
+
         #endregion
     }
 }
