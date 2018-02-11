@@ -205,7 +205,7 @@ namespace YellowJacket.Dashboard.Test.Services
 
                 IAgentRepository agentRepository = new AgentRepository(context);
 
-                AgentService service = new AgentService(agentRepository, GetMapper());
+                IAgentService service = new AgentService(agentRepository, GetMapper());
 
                 model.Status = expectedStatus;
 
@@ -260,7 +260,7 @@ namespace YellowJacket.Dashboard.Test.Services
             {
                 IAgentRepository agentRepository = new AgentRepository(context);
 
-                AgentService service = new AgentService(agentRepository, GetMapper());
+                IAgentService service = new AgentService(agentRepository, GetMapper());
 
                 await service.Remove(model.Id);
 
