@@ -39,8 +39,6 @@ namespace YellowJacket.Dashboard.Controllers.Api
 
         private readonly IJobService _jobService;
 
-        private readonly IMapper _mapper;
-
         #endregion
 
         #region Constructors
@@ -48,11 +46,9 @@ namespace YellowJacket.Dashboard.Controllers.Api
         /// <summary>
         /// Initializes a new instance of the <see cref="JobController"/> class.
         /// </summary>
-        /// <param name="mapper">The mapper.</param>
         /// <param name="jobService">The job service.</param>
-        public JobController(IMapper mapper, IJobService jobService)
+        public JobController(IJobService jobService)
         {
-            _mapper = mapper;
             _jobService = jobService;
         }
 
