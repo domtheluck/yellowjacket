@@ -106,7 +106,9 @@ export class JobService implements IJobService {
     private toJob = (item: any): IJob => {
         const model = ({
             id: item.id,
-            name: item.name
+            name: item.name,
+            packageName: item.packageName,
+            features: item.features 
         }) as IJob;
 
         return model;
