@@ -101,7 +101,7 @@ namespace YellowJacket.Dashboard.Test.Services
         }
 
         [Test]
-        public async Task GetAllAgent_ExistingAgents_NoError()
+        public async Task GetAllAgents_ExistingAgents_NoError()
         {
             // Arrange
             DbContextOptions<YellowJacketContext> options = new DbContextOptionsBuilder<YellowJacketContext>()
