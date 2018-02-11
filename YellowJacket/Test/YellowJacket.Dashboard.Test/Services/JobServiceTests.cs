@@ -33,6 +33,7 @@ using YellowJacket.Dashboard.Entities;
 using YellowJacket.Dashboard.Repositories;
 using YellowJacket.Dashboard.Repositories.Interfaces;
 using YellowJacket.Dashboard.Services;
+using YellowJacket.Dashboard.Services.Interfaces;
 using YellowJacket.Models;
 
 namespace YellowJacket.Dashboard.Test.Services
@@ -78,7 +79,7 @@ namespace YellowJacket.Dashboard.Test.Services
             {
                 IJobRepository jobRepository = new JobRepository(context);
 
-                JobService service = new JobService(jobRepository, GetMapper());
+                IJobService service = new JobService(jobRepository, GetMapper());
 
                 await service.Add(model);
             }
@@ -121,7 +122,7 @@ namespace YellowJacket.Dashboard.Test.Services
             {
                 IJobRepository jobRepository = new JobRepository(context);
 
-                JobService service = new JobService(jobRepository, GetMapper());
+                IJobService service = new JobService(jobRepository, GetMapper());
 
                 validationResult = service.Validate(model);
             }
@@ -161,7 +162,7 @@ namespace YellowJacket.Dashboard.Test.Services
             {
                 IJobRepository jobRepository = new JobRepository(context);
 
-                JobService service = new JobService(jobRepository, GetMapper());
+                IJobService service = new JobService(jobRepository, GetMapper());
 
                 validationResult = service.Validate(model);
             }
@@ -201,7 +202,7 @@ namespace YellowJacket.Dashboard.Test.Services
             {
                 IJobRepository jobRepository = new JobRepository(context);
 
-                JobService service = new JobService(jobRepository, GetMapper());
+                IJobService service = new JobService(jobRepository, GetMapper());
 
                 foreach (JobModel model in expectedJobs)
                 {
@@ -218,7 +219,7 @@ namespace YellowJacket.Dashboard.Test.Services
             {
                 IJobRepository jobRepository = new JobRepository(context);
 
-                JobService service = new JobService(jobRepository, GetMapper());
+                IJobService service = new JobService(jobRepository, GetMapper());
 
                 actualJobs = await service.GetAll();
             }
