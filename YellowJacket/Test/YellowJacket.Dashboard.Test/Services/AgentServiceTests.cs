@@ -315,7 +315,7 @@ namespace YellowJacket.Dashboard.Test.Services
             {
                 IAgentRepository agentRepository = new AgentRepository(context);
 
-                AgentService service = new AgentService(agentRepository, GetMapper());
+                IAgentService service = new AgentService(agentRepository, GetMapper());
 
                 model = await service.Find(model.Id);
 
