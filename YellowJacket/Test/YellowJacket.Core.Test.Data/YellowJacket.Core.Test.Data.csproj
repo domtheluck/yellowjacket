@@ -56,6 +56,7 @@
     </Compile>
     <Compile Include="Hooks\HookInstanceA.cs" />
     <Compile Include="Hooks\HookInstanceB.cs" />
+    <Compile Include="Plugins\SampleLogPlugin.cs" />
     <Compile Include="Steps\CommonSteps.cs" />
     <Compile Include="Features\Login.feature.cs">
       <AutoGen>True</AutoGen>

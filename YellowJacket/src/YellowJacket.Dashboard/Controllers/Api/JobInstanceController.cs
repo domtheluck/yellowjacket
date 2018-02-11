@@ -23,10 +23,8 @@
 
 using System;
 using System.Threading.Tasks;
-using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using YellowJacket.Dashboard.Entities;
-using YellowJacket.Dashboard.Repositories.Interfaces;
+using YellowJacket.Dashboard.Services.Interfaces;
 using YellowJacket.Models;
 
 namespace YellowJacket.Dashboard.Controllers.Api
@@ -37,9 +35,7 @@ namespace YellowJacket.Dashboard.Controllers.Api
     {
         #region Private Members
 
-        private readonly IJobInstanceRepository _jobInstanceRepository;
-
-        private readonly IMapper _mapper;
+        private readonly IJobInstanceService _jobInstanceService;
 
         #endregion
 
@@ -48,12 +44,10 @@ namespace YellowJacket.Dashboard.Controllers.Api
         /// <summary>
         /// Initializes a new instance of the <see cref="JobInstanceController"/> class.
         /// </summary>
-        /// <param name="mapper">The mapper.</param>
-        /// <param name="jobInstanceRepository">The job instance repository.</param>
-        public JobInstanceController(IMapper mapper, IJobInstanceRepository jobInstanceRepository)
+        /// <param name="jobInstanceService">The job instance service.</param>
+        public JobInstanceController( IJobInstanceService jobInstanceService)
         {
-            _mapper = mapper;
-            _jobInstanceRepository = jobInstanceRepository;
+            _jobInstanceService = jobInstanceService;
         }
 
         #endregion
@@ -65,12 +59,12 @@ namespace YellowJacket.Dashboard.Controllers.Api
         {
             try
             {
-                JobInstanceEntity entity = await _jobInstanceRepository.GetFirstAvailable(agentId);
+                JobInstanceModel model = await _jobInstanceService.GetFirstAvailable(agentId);
 
-                if (entity == null)
+                if (model == null)
                     return StatusCode(404);
 
-                return Ok(_mapper.Map<JobInstanceEntity, JobInstanceModel>(entity));
+                return Ok(model);
             }
             catch (Exception ex)
             {

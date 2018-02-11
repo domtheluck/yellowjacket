@@ -32,7 +32,7 @@ namespace YellowJacket.Core.Test.Data.Steps
         [Then(@"I see register success message")]
         public void ThenISeeRegisterSuccessMessage()
         {
-            Thread.Sleep(100);
+            Thread.Sleep(1);
         }
     }
 }

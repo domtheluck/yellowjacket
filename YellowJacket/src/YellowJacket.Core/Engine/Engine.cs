@@ -34,6 +34,7 @@ using YellowJacket.Core.Enums;
 using YellowJacket.Core.Gherkin;
 using YellowJacket.Core.Hook;
 using YellowJacket.Core.Interfaces;
+using YellowJacket.Core.Logging;
 using YellowJacket.Core.NUnitWrapper;
 using YellowJacket.Core.Plugins;
 using YellowJacket.Core.Plugins.Interfaces;
@@ -452,12 +453,19 @@ namespace YellowJacket.Core.Engine
 
             if (!plugins.Any())
                 plugins.Add(
-                    ClassActivatorHelper<FileLogPlugin>
-                        .CreateInstance(typeof(FileLogPlugin), @"c:\temp")); // TODO: need to have this in the input args
+                    ClassActivatorHelper<BasicFileLogPlugin>
+                        .CreateInstance(
+                            typeof(BasicFileLogPlugin), 
+                            Path.Combine(Path.GetTempPath(), "YellowJacket"))); // TODO: need to have this in the input args
 
             return plugins;
         }
 
+        /// <summary>
+        /// Gets the plugins.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns>List of plugins.</returns>
         private List<T> GetPlugins<T>()
         {
             List<T> plugins = new List<T>();
@@ -465,9 +473,6 @@ namespace YellowJacket.Core.Engine
             foreach (Assembly assembly in _pluginAssemblies)
             {
                 List<Type> types = TypeLocatorHelper.GetImplementedTypes<T>(assembly);
-
-                if (!types.Any())
-                    continue;
 
                 types.ForEach(x =>
                 {
@@ -483,12 +488,15 @@ namespace YellowJacket.Core.Engine
         /// </summary>
         private void LoadPluginAssemblies()
         {
-            string location = Path.GetDirectoryName(_configuration.TestAssemblyFullName);
+            string location = Path.GetDirectoryName(_configuration.TestAssemblyFullName) ?? "";
 
             _configuration.PluginAssemblies.ForEach(x =>
             {
+                string fullName = Path.Combine(location, x);
+
+                if (File.Exists(fullName))
                 _pluginAssemblies.Add(
-                    Assembly.LoadFile(Path.Combine(location ?? throw new InvalidOperationException(), x)));
+                    Assembly.LoadFile(fullName));
             });
         }
 
@@ -618,7 +626,7 @@ namespace YellowJacket.Core.Engine
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void OnBeforeExecution(object sender, System.EventArgs e)
         {
-            // TODO: Add logging
+            LogManager.WriteLine("OnBeforeExecution");
         }
 
         /// <summary>
@@ -628,7 +636,7 @@ namespace YellowJacket.Core.Engine
         /// <param name="e">The event arguments.</param>
         private void OnAfterExecution(object sender, System.EventArgs e)
         {
-            // TODO: Add logging
+            LogManager.WriteLine("OnAfterExecution");
         }
 
         /// <summary>
@@ -638,7 +646,7 @@ namespace YellowJacket.Core.Engine
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void OnExecutionBeforeFeature(object sender, System.EventArgs e)
         {
-            // TODO: Add logging
+            LogManager.WriteLine("OnExecutionBeforeFeature");
         }
 
         /// <summary>
@@ -648,7 +656,7 @@ namespace YellowJacket.Core.Engine
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void OnExecutionAfterFeature(object sender, System.EventArgs e)
         {
-            // TODO: Add logging
+            LogManager.WriteLine("OnExecutionAfterFeature");
 
             UpdateProgress(HookType.AfterFeature);
         }
@@ -660,7 +668,7 @@ namespace YellowJacket.Core.Engine
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void OnExecutionBeforeScenario(object sender, System.EventArgs e)
         {
-            // TODO: Add logging
+            LogManager.WriteLine("OnExecutionBeforeScenario");
         }
 
         /// <summary>
@@ -670,7 +678,7 @@ namespace YellowJacket.Core.Engine
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void OnExecutionAfterScenario(object sender, System.EventArgs e)
         {
-            // TODO: Add logging
+            LogManager.WriteLine("OnExecutionAfterScenario");
 
             UpdateProgress(HookType.AfterScenario);
         }
@@ -682,7 +690,7 @@ namespace YellowJacket.Core.Engine
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void OnExecutionBeforeStep(object sender, System.EventArgs e)
         {
-            // TODO: Add logging
+            LogManager.WriteLine("OnExecutionBeforeStep");
         }
 
         /// <summary>
@@ -692,6 +700,8 @@ namespace YellowJacket.Core.Engine
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void OnExecutionAfterStep(object sender, System.EventArgs e)
         {
+            LogManager.WriteLine("OnExecutionAfterStep");
+
             UpdateProgress(HookType.AfterStep);
         }
 

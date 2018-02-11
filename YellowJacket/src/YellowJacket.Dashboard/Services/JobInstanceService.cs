@@ -28,16 +28,16 @@ using FluentValidation.Results;
 using YellowJacket.Dashboard.Entities;
 using YellowJacket.Dashboard.Repositories.Interfaces;
 using YellowJacket.Dashboard.Services.Interfaces;
-using YellowJacket.Dashboard.Validators.Job;
+using YellowJacket.Dashboard.Validators.JobInstance;
 using YellowJacket.Models;
 
 namespace YellowJacket.Dashboard.Services
 {
-    public class JobService : IJobService
+    public class JobInstanceService : IJobInstanceService
     {
         #region Private Members
 
-        private readonly IJobRepository _jobRepository;
+        private readonly IJobInstanceRepository _jobInstanceRepository;
         private readonly IMapper _mapper;
 
         #endregion
@@ -45,13 +45,13 @@ namespace YellowJacket.Dashboard.Services
         #region Constructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="JobService"/> class.
+        /// Initializes a new instance of the <see cref="JobInstanceService"/> class.
         /// </summary>
         /// <param name="repository">The repository.</param>
         /// <param name="mapper">The mapper.</param>
-        public JobService(IJobRepository repository, IMapper mapper)
+        public JobInstanceService(IJobInstanceRepository repository, IMapper mapper)
         {
-            _jobRepository = repository;
+            _jobInstanceRepository = repository;
             _mapper = mapper;
         }
 
@@ -64,81 +64,97 @@ namespace YellowJacket.Dashboard.Services
         /// Validates the specified model.
         /// </summary>
         /// <param name="model">The model.</param>
-        /// <returns><see cref="ValidationResult"/>.</returns>
-        public ValidationResult Validate(JobModel model)
+        /// <returns>
+        ///   <see cref="T:FluentValidation.Results.ValidationResult" />.
+        /// </returns>
+        public ValidationResult Validate(JobInstanceModel model)
         {
-            return new JobValidator().Validate(model);
+            return new JobInstanceValidator().Validate(model);
         }
 
         /// <inheritdoc />
         /// <summary>
-        /// Adds the specified job to the repository.
+        /// Adds the specified job instance to the repository.
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns>
-        /// <see cref="JobModel" />.
+        /// <see cref="T:YellowJacket.Models.JobInstanceModel" />.
         /// </returns>
-        public async Task<JobModel> Add(JobModel model)
+        public async Task<JobInstanceModel> Add(JobInstanceModel model)
         {
-            return _mapper.Map<JobModel>(
-                await _jobRepository.Add(
-                    _mapper.Map<JobEntity>(model)));
+            return _mapper.Map<JobInstanceModel>(
+                await _jobInstanceRepository.Add(
+                    _mapper.Map<JobInstanceEntity>(model)));
         }
 
         /// <inheritdoc />
         /// <summary>
-        /// Gets all jobs from the repository.
+        /// Gets the first job instance available.
+        /// </summary>
+        /// <param name="agentId">The agent identifier.</param>
+        /// <returns>
+        /// <see cref="T:YellowJacket.Models.JobInstanceModel" />.
+        /// </returns>
+        public async Task<JobInstanceModel> GetFirstAvailable(string agentId)
+        {
+            return _mapper.Map<JobInstanceModel>(
+                await _jobInstanceRepository.GetFirstAvailable(agentId));
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// Gets all job instances from the repository.
         /// </summary>
         /// <returns>
-        /// <see cref="List{JobModel}" />.
+        /// <see cref="T:System.Collections.Generic.List`1" />.
         /// </returns>
-        public async Task<List<JobModel>> GetAll()
+        public async Task<List<JobInstanceModel>> GetAll()
         {
-            List<JobEntity> entities = await _jobRepository.GetAll();
+            List<JobInstanceEntity> entities = await _jobInstanceRepository.GetAll();
 
-            return _mapper.Map<List<JobEntity>, List<JobModel>>(entities);
+            return _mapper.Map<List<JobInstanceEntity>, List<JobInstanceModel>>(entities);
         }
 
         /// <inheritdoc />
         /// <summary>
-        /// Finds a job by its id.
+        /// Finds a job instance by its id.
         /// </summary>
         /// <param name="id">The id.</param>
         /// <returns>
-        /// <see cref="JobModel" />.
+        /// <see cref="T:YellowJacket.Models.JobInstanceModel" />.
         /// </returns>
-        public async Task<JobModel> Find(string id)
+        public async Task<JobInstanceModel> Find(string id)
         {
-            return _mapper.Map<JobEntity, JobModel>(
-                await _jobRepository.Find(id));
+            return _mapper.Map<JobInstanceEntity, JobInstanceModel>(
+                await _jobInstanceRepository.Find(id));
         }
 
         /// <inheritdoc />
         /// <summary>
-        /// Removes the specified job from the repository.
+        /// Removes the specified job instancefrom the repository.
         /// </summary>
-        /// <param name="id">The id of the job to remove.</param>
+        /// <param name="id">The id of the job instance to remove.</param>
         /// <returns>
-        ///   <see cref="Task" />.
+        ///   <see cref="T:System.Threading.Tasks.Task" />.
         /// </returns>
         public async Task Remove(string id)
         {
-            await _jobRepository.Remove(id);
+            await _jobInstanceRepository.Remove(id);
         }
 
         /// <inheritdoc />
         /// <summary>
-        /// Updates the specified job.
+        /// Updates the specified job instance.
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns>
-        ///   <see cref="JobModel" />.
+        ///   <see cref="T:YellowJacket.Models.JobInstanceModel" />.
         /// </returns>
-        public async Task<JobModel> Update(JobModel model)
+        public async Task<JobInstanceModel> Update(JobInstanceModel model)
         {
-            return _mapper.Map<JobEntity, JobModel>(
-                await _jobRepository.Update(
-                    _mapper.Map<JobModel, JobEntity>(model)));
+            return _mapper.Map<JobInstanceEntity, JobInstanceModel>(
+                await _jobInstanceRepository.Update(
+                    _mapper.Map<JobInstanceModel, JobInstanceEntity>(model)));
         }
 
         #endregion

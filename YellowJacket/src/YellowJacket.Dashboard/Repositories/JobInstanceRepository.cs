@@ -21,6 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -63,12 +64,10 @@ namespace YellowJacket.Dashboard.Repositories
 
         /// <inheritdoc />
         /// <summary>
-        /// Adds the specified job instance to the repository.
+        /// Adds the specified job instance.
         /// </summary>
         /// <param name="jobInstance">The job instance.</param>
-        /// <returns>
-        ///   <see cref="JobInstanceEntity" />.
-        /// </returns>
+        /// <returns></returns>
         public async Task<JobInstanceEntity> Add(JobInstanceEntity jobInstance)
         {
             await _context.JobInstances.AddAsync(jobInstance);
@@ -78,12 +77,13 @@ namespace YellowJacket.Dashboard.Repositories
             return jobInstance;
         }
 
+        /// <inheritdoc />
         /// <summary>
         /// Gets the first job instance available.
         /// </summary>
         /// <param name="agentId">The agent identifier.</param>
         /// <returns>
-        /// <see cref="JobInstanceEntity" />.
+        /// <see cref="T:YellowJacket.Dashboard.Entities.JobInstanceEntity" />.
         /// </returns>
         public async Task<JobInstanceEntity> GetFirstAvailable(string agentId)
         {
@@ -112,13 +112,14 @@ namespace YellowJacket.Dashboard.Repositories
         /// </summary>
         /// <param name="id">The id.</param>
         /// <returns>
-        ///   <see cref="JobInstanceEntity" />.
+        ///   <see cref="T:YellowJacket.Dashboard.Entities.JobInstanceEntity" />.
         /// </returns>
         public async Task<JobInstanceEntity> Find(string id)
         {
             return await _context.JobInstances.FirstOrDefaultAsync(x => x.Id == id);
         }
 
+        /// <inheritdoc />
         /// <summary>
         /// Updates the specified job instance.
         /// </summary>
@@ -135,6 +136,33 @@ namespace YellowJacket.Dashboard.Repositories
             return entity;
         }
 
-        #endregion 
+        /// <inheritdoc />
+        /// <summary>
+        /// Gets all job instances from the repository.
+        /// </summary>
+        /// <returns>
+        ///   <see cref="T:System.Collections.Generic.List`1" />.
+        /// </returns>
+        public async Task<List<JobInstanceEntity>> GetAll()
+        {
+            return await _context.JobInstances.ToListAsync();
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// Removes the specified job from the repository.
+        /// </summary>
+        /// <param name="id">The id of the job to remove.</param>
+        /// <returns></returns>
+        public async Task Remove(string id)
+        {
+            JobInstanceEntity entity = await _context.JobInstances.FirstAsync(t => t.Id.Equals(id));
+
+            _context.JobInstances.Remove(entity);
+
+            await _context.SaveChangesAsync();
+        }
+
+        #endregion
     }
 }

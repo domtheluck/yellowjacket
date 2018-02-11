@@ -100,7 +100,7 @@
     <Compile Include="Interfaces\IPackageManager.cs" />
     <Compile Include="Packaging\Feature.cs" />
     <Compile Include="Plugins\ConsoleLogPlugin.cs" />
-    <Compile Include="Plugins\FileLogPlugin.cs" />
+    <Compile Include="Plugins\BasicFileLogPlugin.cs" />
     <Compile Include="Logging\LogManager.cs" />
     <Compile Include="NUnitWrapper\CustomTestEventListener.cs" />
     <Compile Include="NUnitWrapper\NUnitEngineHelper.cs" />

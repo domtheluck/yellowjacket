@@ -94,6 +94,8 @@ namespace YellowJacket.Dashboard
             services.AddScoped<IAgentService, AgentService>();
             services.AddScoped<IPackageService, PackageService>();
             services.AddScoped<IJobService, JobService>();
+            services.AddScoped<IJobInstanceService, JobInstanceService>();
+            services.AddScoped<IPackageService, PackageService>();
 
             services.Configure<ConfigurationSettings>(Configuration.GetSection("Configuration"));
         }

@@ -34,11 +34,30 @@ namespace YellowJacket.Core.Plugins
     /// Used to write log to a file.
     /// </summary>
     /// <seealso cref="T:YellowJacket.Core.Plugins.Interfaces.ILogPlugin" />
-    internal class FileLogPlugin : ILogPlugin
+    internal class BasicFileLogPlugin : ILogPlugin
     {
         #region Private Members
 
         private readonly string _filename;
+
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BasicFileLogPlugin"/> class.
+        /// </summary>
+        /// <param name="path">The path where to create log.</param>
+        public BasicFileLogPlugin(string path)
+        {
+            _filename = Path.Combine(path, $"yellowjacket_{DateTime.Now:yyyyMMddHHmmss}.log");
+
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+
+            if (File.Exists(_filename))
+                File.Delete(_filename);
+        }
 
         #endregion
 
@@ -72,22 +91,6 @@ namespace YellowJacket.Core.Plugins
         public void WriteAllLine(IEnumerable<string> lines)
         {
             File.AppendAllLines(_filename, lines.Select(x => $"{GetLinePrefix()} {x}").ToList());
-        }
-
-        #endregion
-
-        #region Constructors
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="FileLogPlugin"/> class.
-        /// </summary>
-        /// <param name="path">The path where to create log.</param>
-        public FileLogPlugin(string path)
-        {
-            _filename = Path.Combine(path, $"yellowjacket_{DateTime.Now:yyyyMMddHHmmss}.log");
-
-            if (File.Exists(_filename))
-                File.Delete(_filename);
         }
 
         #endregion

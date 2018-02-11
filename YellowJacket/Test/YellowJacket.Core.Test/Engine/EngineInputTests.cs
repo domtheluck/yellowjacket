@@ -72,7 +72,7 @@ namespace YellowJacket.Core.Test.Engine
             // Act
 
             // Assert
-            Assert.Throws<ArgumentException>(() 
+            Assert.Throws<ArgumentException>(()
                 => engine.Run(configuration), "The TestAssemblyFullName must not be empty.");
         }
 
@@ -85,14 +85,14 @@ namespace YellowJacket.Core.Test.Engine
 
             // Act
 
-            Configuration configuration = 
+            Configuration configuration =
                 new Configuration
                 {
                     TestAssemblyFullName = testAssemblyFullName
                 };
 
             // Assert
-            Assert.Throws<IOException>(() 
+            Assert.Throws<IOException>(()
                 => engine.Run(configuration), $"The TestAssemblyFullName {testAssemblyFullName} must contains the path.");
         }
 
@@ -123,7 +123,7 @@ namespace YellowJacket.Core.Test.Engine
 
             string testAssemblyFullName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "YellowJacket.Core.Test.Data.dll");
 
-            List<string> features = new List<string> {"Login"};
+            List<string> features = new List<string> { "Login" };
 
             // Act
             Configuration configuration =
@@ -140,7 +140,7 @@ namespace YellowJacket.Core.Test.Engine
         }
 
         [Test]
-        public void Run_FeatureNotFound_NoError_ArgumentExceptionThrown()
+        public void Run_FeatureNotFound_ArgumentExceptionThrown()
         {
             // Arrange
             IEngine engine = EngineFactory.Create();
@@ -160,6 +160,58 @@ namespace YellowJacket.Core.Test.Engine
             // Assert
             Assert.Throws<ArgumentException>(()
                 => engine.Run(configuration));
+        }
+
+        [Test]
+        public void Run_ValidPluginAssembly_NoError()
+        {
+            // Arrange
+            IEngine engine = EngineFactory.Create();
+
+            string testAssemblyFullName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "YellowJacket.Core.Test.Data.dll");
+
+            List<string> features = new List<string> { "Login" };
+            List<string> plugins = new List<string> { "YellowJacket.Core.Test.Data.dll" };
+
+            // Act
+            Configuration configuration =
+                new Configuration
+                {
+                    TestAssemblyFullName = testAssemblyFullName,
+                    Features = features,
+                    PluginAssemblies = plugins
+                };
+
+            engine.Run(configuration);
+
+            // Assert
+            Assert.That(engine.Status, Is.EqualTo(EngineStatus.Completed));
+        }
+
+        [Test]
+        public void Run_InvalidPluginAssembly_NoError()
+        {
+            // Arrange
+            IEngine engine = EngineFactory.Create();
+
+            string testAssemblyFullName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "YellowJacket.Core.Test.Data.dll");
+
+            List<string> features = new List<string> { "Login" };
+            List<string> plugins = new List<string> { "YellowJacket.Core.Test" };
+
+            // Act
+            Configuration configuration =
+                new Configuration
+                {
+                    TestAssemblyFullName = testAssemblyFullName,
+                    Features = features,
+                    PluginAssemblies = plugins
+                };
+
+            engine.Run(configuration);
+
+            // Assert
+            Assert.That(engine.Status, Is.EqualTo(EngineStatus.Completed));
         }
 
         #endregion

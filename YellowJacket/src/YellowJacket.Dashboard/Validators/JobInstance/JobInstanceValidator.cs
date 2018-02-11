@@ -21,28 +21,21 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System.Diagnostics.CodeAnalysis;
-using System.Threading;
-using TechTalk.SpecFlow;
+using FluentValidation;
+using YellowJacket.Models;
 
-namespace YellowJacket.Core.Test.Data.Steps
+namespace YellowJacket.Dashboard.Validators.JobInstance
 {
-    [ExcludeFromCodeCoverage]
-    [Binding]
-    public class LoginSteps
+
+    public class JobInstanceValidator : AbstractValidator<JobInstanceModel>
     {
-        #region Public Methods
+        #region Constructors
 
-        [Then(@"I see my profile page")]
-        public void ThenISeeMyProfilePage()
+        /// <summary>
+        /// Initializes a new instance of the <see cref="JobInstanceValidator"/> class.
+        /// </summary>
+        public JobInstanceValidator()
         {
-            Thread.Sleep(1);
-        }
-
-        [Then(@"I see invalid password message")]
-        public void ThenISeeInvalidPasswordMessage()
-        {
-            Thread.Sleep(1);
         }
 
         #endregion

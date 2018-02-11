@@ -26,12 +26,19 @@ using YellowJacket.Models;
 
 namespace YellowJacket.Dashboard.Validators.Job
 {
-  public class JobValidator : AbstractValidator<JobModel>
-  {
-    public JobValidator()
+    public class JobValidator : AbstractValidator<JobModel>
     {
-      RuleFor( job => job.Name ).NotEmpty();
-      RuleFor( customer => customer.Name ).Length( 1, 25 );
+        #region Constructors
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="JobValidator"/> class.
+        /// </summary>
+        public JobValidator()
+        {
+            RuleFor(job => job.Name).NotEmpty();
+            RuleFor(job => job.Name).Length(1, 25);
+        }
+
+        #endregion
     }
-  }
 }

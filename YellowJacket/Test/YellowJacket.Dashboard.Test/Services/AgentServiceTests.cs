@@ -39,8 +39,8 @@ namespace YellowJacket.Dashboard.Test.Services
 {
     [ExcludeFromCodeCoverage]
     [TestFixture]
-   // [Parallelizable(ParallelScope.All)]
-    public class AgentServiceTests: TestBase
+    [Category("Service")]
+    public class AgentServiceTests : TestBase
     {
         [SetUp]
         public void Setup()
@@ -88,7 +88,7 @@ namespace YellowJacket.Dashboard.Test.Services
             using (YellowJacketContext context = new YellowJacketContext(options))
             {
                 const int expectedCount = 1;
-                
+
                 Assert.That(
                     expectedCount, Is.EqualTo(Convert.ToInt32(context.Agents.Count())),
                     $"The agents count should be {expectedCount}.");
@@ -98,6 +98,64 @@ namespace YellowJacket.Dashboard.Test.Services
                     Is.EqualTo(context.Agents.Single().Name),
                     $"The expected agent name {agentName} doesn't match the actual value {context.Agents.Single().Name}");
             }
+        }
+
+        [Test]
+        public async Task GetAllAgent_ExistingAgents_NoError()
+        {
+            // Arrange
+            DbContextOptions<YellowJacketContext> options = new DbContextOptionsBuilder<YellowJacketContext>()
+                .UseInMemoryDatabase("GetAllAgent_ExistingAgents_NoError")
+                .Options;
+
+            List<AgentModel> expectedAgents = new List<AgentModel>
+            {
+                new AgentModel
+                {
+                    Name = "AgentA",
+                    LastUpdateOn = DateTime.Now,
+                    RegisteredOn = DateTime.Now,
+                    Status = AgentStatus.Idle.ToString()
+                },
+                new AgentModel
+                {
+                    Name = "AgentB",
+                    LastUpdateOn = DateTime.Now,
+                    RegisteredOn = DateTime.Now,
+                    Status = AgentStatus.Idle.ToString()
+                }
+            };
+
+            using (YellowJacketContext context = new YellowJacketContext(options))
+            {
+                IAgentRepository agentRepository = new AgentRepository(context);
+
+                AgentService service = new AgentService(agentRepository, GetMapper());
+
+                foreach (AgentModel model in expectedAgents)
+                {
+                    await service.Add(model);
+                }
+
+                context.SaveChanges();
+            }
+
+            List<AgentModel> actualAgents = new List<AgentModel>();
+
+            // Act
+            using (YellowJacketContext context = new YellowJacketContext(options))
+            {
+                IAgentRepository agentRepository = new AgentRepository(context);
+
+                AgentService service = new AgentService(agentRepository, GetMapper());
+
+                actualAgents = await service.GetAll();
+            }
+
+            Assert.That(
+                actualAgents.Count, 
+                Is.EqualTo(2), 
+                $"The actual agent list count {actualAgents.Count} should be equal to the expected one {expectedAgents.Count}");
         }
 
         [Test]
@@ -153,8 +211,8 @@ namespace YellowJacket.Dashboard.Test.Services
                 model = await service.Update(model);
 
                 Assert.That(
-                    model.Status, 
-                    Is.EqualTo(expectedStatus), 
+                    model.Status,
+                    Is.EqualTo(expectedStatus),
                     $"The actual agent status {model.Status} should be equal to the expected value {expectedStatus}");
             }
         }
@@ -208,8 +266,8 @@ namespace YellowJacket.Dashboard.Test.Services
                 const int expectedCount = 0;
 
                 Assert.That(
-                    expectedCount, 
-                    Is.EqualTo( Convert.ToInt32(context.Agents.Count())), 
+                    expectedCount,
+                    Is.EqualTo(Convert.ToInt32(context.Agents.Count())),
                     $"The agents count should be {expectedCount}.");
             }
         }

@@ -32,25 +32,25 @@ namespace YellowJacket.Core.Test.Data.Steps
         [Given(@"I enter '(.*)' in '(.*)' textbox")]
         public void GivenIEnterInTextbox(string value, string textboxName)
         {
-            Thread.Sleep(100);
+            Thread.Sleep(1);
         }
 
         [When(@"I click '(.*)' button")]
         public void WhenIClickButton(string buttonName)
         {
-            Thread.Sleep(100);
+            Thread.Sleep(1);
         }
 
         [Given(@"I enter '(.*)'")]
         public void GivenIEnter(string uri)
         {
-            Thread.Sleep(100);
+            Thread.Sleep(1);
         }
 
         [Then(@"I see the '(.*)' page")]
         public void ThenISeeThePage(string pageName)
         {
-            Thread.Sleep(100);
+            Thread.Sleep(1);
         }
     }
 }

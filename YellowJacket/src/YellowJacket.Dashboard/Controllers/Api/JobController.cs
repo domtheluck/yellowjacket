@@ -22,16 +22,11 @@
 // ***********************************************************************
 
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
-using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using YellowJacket.Dashboard.Entities;
-using YellowJacket.Dashboard.Repositories.Interfaces;
 using YellowJacket.Dashboard.Services.Interfaces;
-using YellowJacket.Dashboard.Validators.Job;
 using YellowJacket.Models;
 
 namespace YellowJacket.Dashboard.Controllers.Api

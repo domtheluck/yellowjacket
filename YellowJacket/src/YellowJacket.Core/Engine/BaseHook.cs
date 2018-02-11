@@ -64,6 +64,8 @@ namespace YellowJacket.Core.Engine
         [BeforeFeature]
         public static void BeforeFeature()
         {
+            ExecutionContext.Instance.FireExecutionBeforeFeatureEvent();
+
             HookProcessor.Process(HookType.BeforeFeature);
         }
 
@@ -84,6 +86,8 @@ namespace YellowJacket.Core.Engine
         [BeforeScenario]
         public static void BeforeScenario()
         {
+            ExecutionContext.Instance.FireExecutionBeforeScenarioEvent();
+
             HookProcessor.Process(HookType.BeforeScenario);
         }
 

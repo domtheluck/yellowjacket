@@ -38,8 +38,6 @@ namespace YellowJacket.Dashboard.Controllers.Api
 
         private readonly IPackageService _packageService;
 
-        private readonly IMapper _mapper;
-
         #endregion
 
         #region Constructors
@@ -49,9 +47,8 @@ namespace YellowJacket.Dashboard.Controllers.Api
         /// </summary>
         /// <param name="mapper">The mapper.</param>
         /// <param name="packageService">The package service.</param>
-        public PackageController(IMapper mapper, IPackageService packageService)
+        public PackageController(IPackageService packageService)
         {
-            _mapper = mapper;
             _packageService = packageService;
         }
 
