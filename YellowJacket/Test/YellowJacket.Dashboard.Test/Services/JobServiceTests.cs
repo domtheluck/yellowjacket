@@ -230,6 +230,53 @@ namespace YellowJacket.Dashboard.Test.Services
                 $"The actual job list count {actualJobs.Count} should be equal to the expected one {expectedJobs.Count}");
         }
 
+        [Test]
+        public async Task FindJob_ExistingJob_NoError()
+        {
+            // Arrange
+            DbContextOptions<YellowJacketContext> options = new DbContextOptionsBuilder<YellowJacketContext>()
+                .UseInMemoryDatabase("FindJob_ExistingJob_NoError")
+                .Options;
+
+            const string jobName = "MyJob";
+
+            // Act
+            using (YellowJacketContext context = new YellowJacketContext(options))
+            {
+                context.Jobs.Add(new JobEntity
+                {
+                    Name = jobName
+                });
+
+                context.SaveChanges();
+            }
+
+            List<JobModel> models;
+
+            using (YellowJacketContext context = new YellowJacketContext(options))
+            {
+                IJobRepository jobRepository = new JobRepository(context);
+
+                IJobService service = new JobService(jobRepository, GetMapper());
+
+                models = await service.GetAll();
+            }
+
+            JobModel model = models.First();
+
+            // Assert
+            using (YellowJacketContext context = new YellowJacketContext(options))
+            {
+                IJobRepository jobRepository = new JobRepository(context);
+
+                IJobService service = new JobService(jobRepository, GetMapper());
+
+                model = await service.Find(model.Id);
+
+                Assert.That(model, !Is.Null, "The job shouldn't be null.");
+            }
+        }
+
         #endregion
     }
 }
