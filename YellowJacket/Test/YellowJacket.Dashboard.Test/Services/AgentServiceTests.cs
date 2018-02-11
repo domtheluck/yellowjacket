@@ -140,7 +140,7 @@ namespace YellowJacket.Dashboard.Test.Services
                 context.SaveChanges();
             }
 
-            List<AgentModel> actualAgents = new List<AgentModel>();
+            List<AgentModel> actualAgents;
 
             // Act
             using (YellowJacketContext context = new YellowJacketContext(options))
