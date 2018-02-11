@@ -57,11 +57,11 @@ namespace YellowJacket.Dashboard.Test.Services
         #region Test Methods
 
         [Test]
-        public async Task AddAgent_NameNotExist_NoError()
+        public async Task AddAgent_ValidAgent_NoError()
         {
             // Arrange
             DbContextOptions<YellowJacketContext> options = new DbContextOptionsBuilder<YellowJacketContext>()
-                .UseInMemoryDatabase("AddAgent_NameNotExist_NoError")
+                .UseInMemoryDatabase("AddAgent_ValidAgent_NoError")
                 .Options;
 
             const string agentName = "MyAgent";
