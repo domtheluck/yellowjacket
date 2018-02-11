@@ -33,6 +33,7 @@ using YellowJacket.Dashboard.Entities;
 using YellowJacket.Dashboard.Repositories;
 using YellowJacket.Dashboard.Repositories.Interfaces;
 using YellowJacket.Dashboard.Services;
+using YellowJacket.Dashboard.Services.Interfaces;
 using YellowJacket.Models;
 
 namespace YellowJacket.Dashboard.Test.Services
@@ -71,7 +72,7 @@ namespace YellowJacket.Dashboard.Test.Services
             {
                 IAgentRepository agentRepository = new AgentRepository(context);
 
-                AgentService service = new AgentService(agentRepository, GetMapper());
+                IAgentService service = new AgentService(agentRepository, GetMapper());
 
                 AgentModel model = new AgentModel
                 {
@@ -130,7 +131,7 @@ namespace YellowJacket.Dashboard.Test.Services
             {
                 IAgentRepository agentRepository = new AgentRepository(context);
 
-                AgentService service = new AgentService(agentRepository, GetMapper());
+                IAgentService service = new AgentService(agentRepository, GetMapper());
 
                 foreach (AgentModel model in expectedAgents)
                 {
@@ -147,7 +148,7 @@ namespace YellowJacket.Dashboard.Test.Services
             {
                 IAgentRepository agentRepository = new AgentRepository(context);
 
-                AgentService service = new AgentService(agentRepository, GetMapper());
+                IAgentService service = new AgentService(agentRepository, GetMapper());
 
                 actualAgents = await service.GetAll();
             }
@@ -188,7 +189,7 @@ namespace YellowJacket.Dashboard.Test.Services
             {
                 IAgentRepository agentRepository = new AgentRepository(context);
 
-                AgentService service = new AgentService(agentRepository, GetMapper());
+                IAgentService service = new AgentService(agentRepository, GetMapper());
 
                 models = await service.GetAll();
             }
@@ -247,7 +248,7 @@ namespace YellowJacket.Dashboard.Test.Services
             {
                 IAgentRepository agentRepository = new AgentRepository(context);
 
-                AgentService service = new AgentService(agentRepository, GetMapper());
+                IAgentService service = new AgentService(agentRepository, GetMapper());
 
                 models = await service.GetAll();
             }
@@ -302,7 +303,7 @@ namespace YellowJacket.Dashboard.Test.Services
             {
                 IAgentRepository agentRepository = new AgentRepository(context);
 
-                AgentService service = new AgentService(agentRepository, GetMapper());
+                IAgentService service = new AgentService(agentRepository, GetMapper());
 
                 models = await service.GetAll();
             }
