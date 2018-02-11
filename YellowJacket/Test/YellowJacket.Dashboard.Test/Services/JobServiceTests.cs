@@ -178,7 +178,7 @@ namespace YellowJacket.Dashboard.Test.Services
         }
 
         [Test]
-        public async Task GetAllJob_ExistingJobs_NoError()
+        public async Task GetAllJobs_ExistingJobs_NoError()
         {
             // Arrange
             DbContextOptions<YellowJacketContext> options = new DbContextOptionsBuilder<YellowJacketContext>()
