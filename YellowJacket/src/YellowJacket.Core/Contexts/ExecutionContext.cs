@@ -101,8 +101,6 @@ namespace YellowJacket.Core.Contexts
         /// </summary>
         internal void FireBeforeExecutionEvent()
         {
-            File.AppendAllText(@"d:\temp.log", $"{DateTime.Now} FireBeforeExecutionEvent" + Environment.NewLine);
-
             BeforeExecution?.Invoke(this, new EventArgs());
         }
 
