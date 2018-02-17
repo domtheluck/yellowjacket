@@ -1,6 +1,6 @@
 <h1>Jobs</h1>
 
-<!--<p>Represents the list of active agents.</p>-->
+<!--<p>Represents the list of jobs.</p>-->
 
 <p *ngIf="!jobs"><em>Loading...</em></p>
 <div class="wrapper wrapper-content animated fadeInRight">
@@ -19,20 +19,19 @@
     </div>
     <br />
 
-
-    <div class="row">
-        <div class="col-lg-3" *ngFor="let agent of agents | async">
+    <div *ngIf="jobs" class="row">
+        <div class="col-lg-3 col-md-4 col-sm-6" *ngFor="let job of jobs | async">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
-                    <span class="label label-success pull-right">Monthly</span>
-                    <h5>Income</h5>
+                    <span class="label label-success pull-right">{{job.id}}</span>
+                    <h5>{{job.name}}</h5>
                 </div>
                 <div class="ibox-content">
-                    <h1 class="no-margins">40 886,200</h1>
+                    <h1 class="no-margins">{{job.name}}</h1>
                     <div class="stat-percent font-bold text-success">
-                        {{job.name}} <i class="fa fa-bolt"></i>
+                        <a href="#" title="Details">Details <i class="fa fa-info-circle"></i></a>
                     </div>
-                    <small>Total income</small>
+                    <small>Status</small>
                 </div>
             </div>
         </div>
