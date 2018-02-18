@@ -26,7 +26,8 @@ import { Observable } from 'rxjs/Observable';
 
 import { NotificationService } from '../../services/notification.service';
 
-import { IJobService, JobService } from '../../services/job.service'
+import { IJobService } from '../../services/job.service.interface'
+import { JobService } from '../../services/job.service'
 
 import IJob from '../../models/job.model'
 
@@ -59,16 +60,16 @@ export class JobListComponent {
     }
 
     /**
-     * {Agular} Lifecycle hook that is called after data-bound properties of a directive are initialized.
+     * Used to refresh the jobs from the service.
      */
-    private ngOnInit() {
+    public refreshData() {
         this.jobs = this.jobService.getAll();
     }
 
     /**
-     * Used to refresh the jobs from the service.
+     * {Agular} Lifecycle hook that is called after data-bound properties of a directive are initialized.
      */
-    private refreshData() {
+    private ngOnInit() {
         this.jobs = this.jobService.getAll();
     }
 }

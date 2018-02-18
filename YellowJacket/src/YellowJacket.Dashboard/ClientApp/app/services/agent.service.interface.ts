@@ -1,4 +1,4 @@
-// ***********************************************************************
+﻿// ***********************************************************************
 // Copyright (c) 2017 Dominik Lachance
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -21,43 +21,10 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-import { Component, Inject } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-import { IAgentService } from '../../services/agent.service.interface'
-import { AgentService } from '../../services/agent.service'
+import IAgent from '../models/agent.model'
 
-import IAgent from '../../models/agent.model'
-
-@Component({
-    selector: 'agentList',
-    templateUrl: './agentList.component.html',
-    providers: [{ provide: 'IAgentService', useClass: AgentService }]
-
-})
-export class AgentListComponent {
-    public agentService: IAgentService;
-    public agents: Observable<IAgent[]>;
-
-    /**
-     * Initialize a new instance of AgentListComponent.
-     * @param {IAgentService} An instance of the IAgentService.
-     */
-    constructor( @Inject('IAgentService') agentService: IAgentService) {
-        this.agentService = agentService;
-    }
-
-    /**
-     * Used to refresh the agents from the service.
-     */
-    public refreshData() {
-        this.agents = this.agentService.getAll();
-    }
-
-    /**
-    * {Agular} Lifecycle hook that is called after data-bound properties of a directive are initialized.
-    */
-    private ngOnInit() {
-        this.agents = this.agentService.getAll();
-    }
+export interface IAgentService {
+    getAll(): Observable<IAgent[]>
 }

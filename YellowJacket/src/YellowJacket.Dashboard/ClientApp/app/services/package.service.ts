@@ -29,13 +29,10 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
 
+import { IPackageService } from './package.service.interface';
 import IPackage from '../models/package.model'
 
 import PackageMapper from '../mapping/package.mapper'
-
-export interface IPackageService {
-    getAll(): Observable<IPackage[]>
-}
 
 @Injectable()
 export class PackageService implements IPackageService {

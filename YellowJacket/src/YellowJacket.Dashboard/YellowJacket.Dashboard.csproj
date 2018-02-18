@@ -32,8 +32,13 @@
     <None Remove="ClientApp\app\mapping\feature.mapper.ts" />
     <None Remove="ClientApp\app\models\feature.model.ts" />
     <None Remove="ClientApp\app\models\package.model.ts" />
+    <None Remove="ClientApp\app\services\agent.service.interface.ts" />
+    <None Remove="ClientApp\app\services\job.service.interface.ts" />
     <None Remove="ClientApp\app\services\notification.service.ts" />
+    <None Remove="ClientApp\app\services\package.service.interface.ts" />
     <None Remove="ClientApp\app\services\package.service.ts" />
+    <None Remove="ClientApp\app\services\resource.service.interface.ts" />
+    <None Remove="ClientApp\app\services\resource.service.messageId.ts" />
     <None Remove="ClientApp\app\services\resource.service.ts" />
   </ItemGroup>
 
@@ -53,10 +58,15 @@
     <TypeScriptCompile Include="ClientApp\app\models\job.model.ts" />
     <TypeScriptCompile Include="ClientApp\app\models\agent.model.ts" />
     <TypeScriptCompile Include="ClientApp\app\models\package.model.ts" />
+    <TypeScriptCompile Include="ClientApp\app\services\agent.service.interface.ts" />
+    <TypeScriptCompile Include="ClientApp\app\services\package.service.interface.ts" />
+    <TypeScriptCompile Include="ClientApp\app\services\job.service.interface.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\job.service.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\agent.service.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\notification.service.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\package.service.ts" />
+    <TypeScriptCompile Include="ClientApp\app\services\resource.service.interface.ts" />
+    <TypeScriptCompile Include="ClientApp\app\services\resource.service.messageId.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\resource.service.ts" />
   </ItemGroup>
 

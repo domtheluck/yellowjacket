@@ -23,19 +23,10 @@
 
 import { Injectable } from '@angular/core';
 
-export enum MessageId {
-    OperationSuccessfullyCompleted,
-    ErrorHappened,
-    FieldIsRequired,
-    FieldMaxCharacters
-}
+import { IResourceService } from './resource.service.interface';
+import { MessageId } from './resource.service.messageId';
 
 export type MessageContainer = { messageId: MessageId; value: string };
-
-export interface IResourceService {
-    getMessageWithArguments(message: MessageId, ...args: string[]): string;
-    getMessage(message: MessageId): string;
-}
 
 @Injectable()
 export class ResourceService implements IResourceService {

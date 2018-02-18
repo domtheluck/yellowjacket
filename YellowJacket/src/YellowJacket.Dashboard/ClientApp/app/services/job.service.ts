@@ -29,12 +29,8 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
 
+import { IJobService } from './job.service.interface';
 import IJob from '../models/job.model'
-
-export interface IJobService {
-    getAll(): Observable<IJob[]>,
-    add(job: IJob): Observable<IJob>;
-}
 
 @Injectable()
 export class JobService implements IJobService {

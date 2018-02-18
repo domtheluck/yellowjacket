@@ -25,10 +25,16 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 import { NotificationService } from '../../services/notification.service';
-import { IResourceService, ResourceService, MessageId } from '../../services/resource.service';
 
-import { IJobService, JobService } from '../../services/job.service';
-import { IPackageService, PackageService } from '../../services/package.service';
+import { IResourceService } from '../../services/resource.service.interface';
+import { MessageId } from '../../services/resource.service.messageId';
+import { ResourceService } from '../../services/resource.service';
+
+import { IJobService } from '../../services/job.service.interface'
+import { JobService } from '../../services/job.service'
+
+import { IPackageService } from '../../services/package.service.interface';
+import { PackageService } from '../../services/package.service';
 
 import IJob from '../../models/job.model';
 import IPackage from '../../models/package.model';
@@ -51,10 +57,10 @@ export class JobAddComponent implements OnInit {
 
     private job: IJob;
 
-    private jobAddForm: FormGroup;
-    private name: FormControl;
-    private selectedPackage: FormControl;
-    private selectedFeatures: FormControl;
+    public jobAddForm: FormGroup;
+    public name: FormControl;
+    public selectedPackage: FormControl;
+    public selectedFeatures: FormControl;
 
     public packages: IPackage[];
     public features: IFeature[];
@@ -111,7 +117,7 @@ export class JobAddComponent implements OnInit {
      * Invoked when the selected package changed.
      * @param {any} item The item.
      */
-    private selectedPackageChanged(item: any) {
+    public selectedPackageChanged(item: any) {
         if (this.packages) {
             const selectedPackage = this.packages.filter(x => x.name === item.value)[0] as IPackage;
 
@@ -126,7 +132,7 @@ export class JobAddComponent implements OnInit {
     /**
      * Invoked when submitting the form.
      */
-    private onSubmit() {
+    public onSubmit() {
         this.notificationService.clear();
 
         this.job = this.prepareJob();

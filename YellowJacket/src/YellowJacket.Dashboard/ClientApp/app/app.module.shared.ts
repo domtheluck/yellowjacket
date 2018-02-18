@@ -27,6 +27,12 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 
+import {
+    AlertModule, AccordionModule, ButtonsModule, CarouselModule, CollapseModule, BsDatepickerModule,
+    BsDropdownModule, ModalModule, PaginationModule, ProgressbarModule, SortableModule, TabsModule,
+    TimepickerModule, TooltipModule, TypeaheadModule
+} from 'ngx-bootstrap';
+
 import { AgentModule } from './components/agent/agent.module';
 import { JobModule } from './components/job/job.module';
 
@@ -65,6 +71,21 @@ import { BasicLayoutComponent } from './components/common/layouts/basicLayout.co
                 ]
             }
         ]),
+        AlertModule.forRoot(),
+        AccordionModule.forRoot(),
+        ButtonsModule.forRoot(),
+        CarouselModule.forRoot(),
+        CollapseModule.forRoot(),
+        BsDatepickerModule.forRoot(),
+        BsDropdownModule.forRoot(),
+        ModalModule.forRoot(),
+        PaginationModule.forRoot(),
+        ProgressbarModule.forRoot(),
+        SortableModule.forRoot(),
+        TabsModule.forRoot(),
+        TimepickerModule.forRoot(),
+        TooltipModule.forRoot(),
+        TypeaheadModule.forRoot(),
         AgentModule,
         JobModule
     ],

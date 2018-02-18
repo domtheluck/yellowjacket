@@ -29,11 +29,8 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
 
+import { IAgentService } from './agent.service.interface';
 import IAgent from '../models/agent.model'
-
-export interface IAgentService {
-    getAll(): Observable<IAgent[]>
-}
 
 @Injectable()
 export class AgentService implements IAgentService {
