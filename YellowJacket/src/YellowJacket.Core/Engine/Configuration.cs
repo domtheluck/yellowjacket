@@ -56,6 +56,14 @@ namespace YellowJacket.Core.Engine
         /// </value>
         public List<string> Features { get; set; }
 
+        /// <summary>
+        /// Gets or sets the log path.
+        /// </summary>
+        /// <value>
+        /// The log path.
+        /// </value>
+        public string LogPath { get; set; }
+
         #endregion
 
         #region Constructors
