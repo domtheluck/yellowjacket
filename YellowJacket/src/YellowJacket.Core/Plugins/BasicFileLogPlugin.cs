@@ -50,13 +50,10 @@ namespace YellowJacket.Core.Plugins
         /// <param name="path">The path where to create log.</param>
         public BasicFileLogPlugin(string path)
         {
-            _filename = Path.Combine(path, $"yellowjacket_{DateTime.Now:yyyyMMddHHmmss}.log");
+            _filename = Path.Combine(path, $"yellowjacket_{DateTime.Now:yyyyMMddHHmmssffffff}.log");
 
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
-
-            if (File.Exists(_filename))
-                File.Delete(_filename);
         }
 
         #endregion
