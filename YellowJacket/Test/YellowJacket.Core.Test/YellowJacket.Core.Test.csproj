@@ -58,6 +58,7 @@
     <Compile Include="Engine\EngineHookTests.cs" />
     <Compile Include="Engine\EngineInputTests.cs" />
     <Compile Include="Engine\EngineRunSummaryTests.cs" />
+    <Compile Include="Plugins\BasicFileLogPluginTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
