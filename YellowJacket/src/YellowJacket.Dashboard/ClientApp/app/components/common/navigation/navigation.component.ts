@@ -24,6 +24,9 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
+import * as $ from 'jquery';
+import 'metismenu';
+
 @Component({
     selector: 'navigation',
     templateUrl: 'navigation.template.html'
@@ -31,6 +34,10 @@ import { Router } from '@angular/router';
 
 export class NavigationComponent {
     constructor(private readonly router: Router) { }
+
+    public ngAfterViewInit() {
+        $('#side-menu').metisMenu();
+    }
 
     public activeRoute(routename: string): boolean {
         return this.router.url.indexOf(routename) > -1;

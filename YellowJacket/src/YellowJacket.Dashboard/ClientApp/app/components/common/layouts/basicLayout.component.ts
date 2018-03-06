@@ -26,8 +26,7 @@ import 'font-awesome/css/font-awesome.css';
 import { Component } from '@angular/core';
 import { detectBody } from '../../../app.helpers';
 
-declare var jQuery: any;
-import * as $ from 'jquery';
+declare let $: any;
 
 @Component({
     selector: 'basic',

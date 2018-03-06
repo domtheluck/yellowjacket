@@ -55,6 +55,11 @@ namespace YellowJacket.Core.Test.Plugins
         public void Initialize_LogPathNotExist_NoError()
         {
             // Arrange
+            string logPath = Path.Combine(Path.GetTempPath(), "YellowJacket");
+
+            if (Directory.Exists(logPath))
+                Directory.Delete(logPath, true);
+
             IEngine engine = EngineFactory.Create();
 
             string testAssemblyFullName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "YellowJacket.Core.Test.Data.dll");
@@ -62,11 +67,6 @@ namespace YellowJacket.Core.Test.Plugins
             List<string> features = new List<string> { "Login" };
 
             AutoResetEvent autoResetEvent = new AutoResetEvent(false);
-
-            string logPath = Path.Combine(Path.GetTempPath(), "YellowJacket");
-
-            if (Directory.Exists(logPath))
-                Directory.Delete(logPath, true);
 
             // Act
             Configuration configuration =
@@ -85,6 +85,49 @@ namespace YellowJacket.Core.Test.Plugins
 
             // Assert
             Assert.That(Directory.Exists(logPath), Is.True, "The log path should have been created.");
+        }
+
+        [Test]
+        public void WriteLog_Initialized_NoError()
+        {
+            // Arrange
+            string logPath = Path.Combine(Path.GetTempPath(), "YellowJacket");
+
+            DirectoryInfo directoryInfo = new DirectoryInfo(logPath);
+
+            foreach(FileInfo fileInfo in directoryInfo.GetFiles())
+            {
+                File.Delete(fileInfo.FullName);
+            }
+
+            IEngine engine = EngineFactory.Create();
+
+            string testAssemblyFullName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "YellowJacket.Core.Test.Data.dll");
+
+            List<string> features = new List<string> { "Login" };
+
+            AutoResetEvent autoResetEvent = new AutoResetEvent(false);
+
+            // Act
+            Configuration configuration =
+                new Configuration
+                {
+                    TestAssemblyFullName = testAssemblyFullName,
+                    Features = features
+                };
+
+            engine.ExecutionStart += (sender, e) =>
+            {
+                autoResetEvent.Set();
+            };
+
+            engine.Run(configuration);
+
+            // Assert
+            Assert.That(
+                new DirectoryInfo(logPath).GetFiles().Length, 
+                Is.AtLeast(1), 
+                "We should have at least one log file.");
         }
 
         #endregion

@@ -39,6 +39,7 @@ namespace YellowJacket.Core.Plugins
         #region Private Members
 
         private readonly string _filename;
+        private readonly string _path;
 
         #endregion
 
@@ -50,10 +51,9 @@ namespace YellowJacket.Core.Plugins
         /// <param name="path">The path where to create log.</param>
         public BasicFileLogPlugin(string path)
         {
-            _filename = Path.Combine(path, $"yellowjacket_{DateTime.Now:yyyyMMddHHmmssffffff}.log");
+            _path = path;
 
-            if (!Directory.Exists(path))
-                Directory.CreateDirectory(path);
+            _filename = Path.Combine(path, $"yellowjacket_{DateTime.Now:yyyyMMddHHmmssffffff}.log");
         }
 
         #endregion
@@ -67,6 +67,9 @@ namespace YellowJacket.Core.Plugins
         /// <param name="value">The value.</param>
         public void Write(string value)
         {
+            if (!Directory.Exists(_path))
+                Directory.CreateDirectory(_path);
+
             File.AppendAllText(_filename, value);
         }
 
@@ -87,6 +90,9 @@ namespace YellowJacket.Core.Plugins
         /// <param name="lines">The lines to write.</param>
         public void WriteAllLine(IEnumerable<string> lines)
         {
+            if (!Directory.Exists(_path))
+                Directory.CreateDirectory(_path);
+
             File.AppendAllLines(_filename, lines.Select(x => $"{GetLinePrefix()} {x}").ToList());
         }
 

@@ -23,8 +23,7 @@
 
 import { Component } from '@angular/core';
 
-declare var jQuery: any;
-import * as $ from 'jquery';
+declare let $: any;
 
 @Component({
     selector: 'blank',

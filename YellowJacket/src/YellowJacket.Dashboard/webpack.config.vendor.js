@@ -47,7 +47,8 @@ const nonTreeShakableModules = [
     'inspinia/dist/fonts.css',
     'inspinia/dist/inspinia.css',
     'font-awesome/css/font-awesome.css',
-    'animate.css/animate.css'
+    'animate.css/animate.css',
+    'metismenu'
 ];
 const allModules = treeShakableModules.concat(nonTreeShakableModules);
 

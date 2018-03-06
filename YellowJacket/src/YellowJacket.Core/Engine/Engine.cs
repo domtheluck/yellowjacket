@@ -326,6 +326,8 @@ namespace YellowJacket.Core.Engine
         /// <param name="configuration">The configuration.</param>
         private void ValidateConfiguration(Configuration configuration)
         {
+            LogManager.Write("Validate the configuration... ");
+
             if (string.IsNullOrEmpty(configuration.TestAssemblyFullName))
                 throw new ArgumentException("You must provide a value for the Test assembly");
 
@@ -336,6 +338,8 @@ namespace YellowJacket.Core.Engine
 
             if (!File.Exists(configuration.TestAssemblyFullName))
                 throw new IOException($"Cannot found the Test assembly {configuration.TestAssemblyFullName}");
+
+            LogManager.Write("Completed!" + Environment.NewLine);
         }
 
         /// <summary>
