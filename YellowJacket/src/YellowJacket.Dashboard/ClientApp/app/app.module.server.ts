@@ -28,7 +28,7 @@ import { AppModuleShared } from './app.module.shared';
 import { AppComponent } from './components/app/app.component';
 
 // App modules/components
-import { LayoutsModule } from './components/common/layouts/layouts.module';
+import { LayoutsModule } from './components/layout/layouts/layouts.module';
 
 @NgModule({
     bootstrap: [ AppComponent ],

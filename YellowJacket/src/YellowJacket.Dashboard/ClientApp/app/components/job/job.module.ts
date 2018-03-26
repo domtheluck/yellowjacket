@@ -25,18 +25,15 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
 import { DualListBoxModule } from 'ng2-dual-list-box';
 
 import { IboxtoolsModule } from '../../components/common/iboxtools/iboxtools.module';
-
-import { NotificationComponent } from '../common/notification/index';
 
 import { JobListComponent } from './jobList.component';
 import { JobAddComponent } from './jobAdd.component';
 
 @NgModule({
-    declarations: [JobListComponent, JobAddComponent, NotificationComponent],
+    declarations: [JobListComponent, JobAddComponent],
     imports: [
         BrowserModule,
         FormsModule,

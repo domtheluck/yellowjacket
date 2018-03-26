@@ -21,27 +21,26 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-import 'font-awesome/css/font-awesome.css';
-
 import { Component } from '@angular/core';
-import { detectBody } from '../../../app.helpers';
 
 declare let $: any;
 
 @Component({
-    selector: 'basic',
-    templateUrl: 'basicLayout.template.html',
-    host: {
-        '(window:resize)': 'onResize()'
-    }
+    selector: 'blank',
+    templateUrl: 'blankLayout.template.html'
 })
-
-export class BasicLayoutComponent {
-    public ngOnInit(): any {
-        detectBody();
+export class BlankLayoutComponent {
+    /**
+     * {Agular} Lifecycle hook that is called after a component's view has been fully initialized.
+     */
+    public ngAfterViewInit() {
+        $('body').addClass('gray-bg');
     }
 
-    public onResize() {
-        detectBody();
+    /**
+     * {Agular} Lifecycle hook that is called when a directive, pipe or service is destroyed.
+     */
+    public ngOnDestroy() {
+        $('body').removeClass('gray-bg');
     }
 }

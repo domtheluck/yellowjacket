@@ -49,7 +49,7 @@ export class NotificationComponent implements OnInit {
      * Initialize a new instance of NotificationComponent.
      * @param {NotificationService} notificationService An instance of the notification service.
      */
-    constructor(private readonly notificationService: NotificationService) {}
+    constructor(private readonly notificationService: NotificationService) { }
 
     /**
      * {Agular} Lifecycle hook that is called after data-bound properties of a directive are initialized.

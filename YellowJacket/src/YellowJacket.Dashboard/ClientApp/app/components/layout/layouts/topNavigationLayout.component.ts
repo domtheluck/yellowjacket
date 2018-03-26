@@ -22,19 +22,27 @@
 // ***********************************************************************
 
 import { Component } from '@angular/core';
-import {Router} from '@angular/router';
-import { smoothlyMenu } from '../../../app.helpers';
-
-import * as $ from 'jquery';
+import { detectBody } from '../../helpers/app.helpers';
 
 @Component({
-  selector: 'topnavigationnavbar',
-  templateUrl: 'topnavigationnavbar.template.html'
+    selector: 'topnavigationlayout',
+    templateUrl: 'topNavigationlayout.template.html',
+    host: {
+        '(window:resize)': 'onResize()'
+    }
 })
-export class TopNavigationNavbarComponent {
+export class TopNavigationLayoutComponent {
+    /**
+     * {Agular} Lifecycle hook that is called after data-bound properties of a directive are initialized.
+     */
+    public ngOnInit(): any {
+        detectBody();
+    }
 
-  public toggleNavigation(): void {
-    $('body').toggleClass('mini-navbar');
-    smoothlyMenu();
-  }
+    /**
+     * Called on component resize.
+     */
+    public onResize() {
+        detectBody();
+    }
 }

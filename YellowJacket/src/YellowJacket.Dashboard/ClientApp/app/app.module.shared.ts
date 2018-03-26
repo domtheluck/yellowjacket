@@ -33,6 +33,8 @@ import {
     TimepickerModule, TooltipModule, TypeaheadModule
 } from 'ngx-bootstrap';
 
+import { NotificationModule } from './components/common/notification/notification.module';
+
 import { AgentModule } from './components/agent/agent.module';
 import { JobModule } from './components/job/job.module';
 
@@ -47,7 +49,7 @@ import { AgentListComponent } from './components/agent/agentList.component';
 import { JobListComponent } from './components/job/jobList.component';
 import { JobAddComponent } from './components/job/jobAdd.component';
 
-import { BasicLayoutComponent } from './components/common/layouts/basicLayout.component';
+import { BasicLayoutComponent } from './components/layout/layouts/basicLayout.component';
 
 @NgModule({
     declarations: [
@@ -86,6 +88,7 @@ import { BasicLayoutComponent } from './components/common/layouts/basicLayout.co
         TimepickerModule.forRoot(),
         TooltipModule.forRoot(),
         TypeaheadModule.forRoot(),
+        NotificationModule,
         AgentModule,
         JobModule
     ],

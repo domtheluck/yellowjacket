@@ -22,17 +22,18 @@
 // ***********************************************************************
 
 import { Component } from '@angular/core';
-import { smoothlyMenu } from '../../../app.helpers';
+import { smoothlyMenu } from '../../helpers/app.helpers';
 
-declare var jQuery: any;
 import * as $ from 'jquery';
 
 @Component({
-    selector: 'topnavbar',
-    templateUrl: 'topnavbar.template.html'
+    selector: 'topnavigationnavbar',
+    templateUrl: 'topnavigationnavbar.template.html'
 })
-
-export class TopNavbarComponent {
+export class TopNavigationNavbarComponent {
+    /**
+     * Toggle the navigation bar.
+     */
     public toggleNavigation(): void {
         $('body').toggleClass('mini-navbar');
         smoothlyMenu();

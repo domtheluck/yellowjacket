@@ -63,11 +63,11 @@ export class ResourceService implements IResourceService {
     }
 
     /**
- * Gets a message by his id.
- * @param {MessageId} messageId The message to get.
- * @param {string[]} args The message arguments.
- * @returns {string} The message.
- */
+     * Gets a message by his id.
+     * @param {MessageId} messageId The message to get.
+     * @param {string[]} args The message arguments.
+     * @returns {string} The message.
+     */
     public getMessage(messageId: MessageId): string {
         const messageContainer = this.messages.find(x => x.messageId === messageId);
 

@@ -22,24 +22,10 @@
 // ***********************************************************************
 
 import { Component } from '@angular/core';
-import { detectBody } from '../../../app.helpers';
-
-declare let $: any;
 
 @Component({
-    selector: 'topnavigationlayout',
-    templateUrl: 'topNavigationlayout.template.html',
-    host: {
-        '(window:resize)': 'onResize()'
-    }
+    selector: 'footer',
+    templateUrl: 'footer.template.html'
 })
 
-export class TopNavigationLayoutComponent {
-    public ngOnInit(): any {
-        detectBody();
-    }
-
-    public onResize() {
-        detectBody();
-    }
-}
+export class FooterComponent { }

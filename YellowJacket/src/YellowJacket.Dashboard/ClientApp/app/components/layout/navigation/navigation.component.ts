@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2017 Dominik Lachance
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -21,4 +21,33 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-export * from './notification.component';
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+
+import * as $ from 'jquery';
+import 'metismenu';
+
+@Component({
+    selector: 'navigation',
+    templateUrl: 'navigation.template.html'
+})
+
+export class NavigationComponent {
+    constructor(private readonly router: Router) { }
+
+    /**
+     * {Agular} Lifecycle hook that is called after a component's view has been fully initialized.
+     */
+    public ngAfterViewInit() {
+        $('#side-menu').metisMenu();
+    }
+
+    /**
+     * Check if the current route is the active one.
+     * @param {string} routename The route name.
+     * @returns true if the current route is the active one.
+     */
+    public activeRoute(routename: string): boolean {
+        return this.router.url.indexOf(routename) > -1;
+    }
+}

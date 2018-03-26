@@ -23,15 +23,17 @@
 
 import { Component } from '@angular/core';
 
-declare var jQuery: any;
 import * as $ from 'jquery';
 
 @Component({
     selector: 'iboxtools',
     templateUrl: 'iboxtools.template.html'
 })
-
 export class IboxtoolsComponent {
+    /**
+     * Triggered on IBoxTools collapse event.
+     * @param {any} e The argument.
+     */
     public collapse(e: any): void {
         e.preventDefault();
 
@@ -49,6 +51,10 @@ export class IboxtoolsComponent {
 
     }
 
+    /**
+     * Triggered on IBoxTools close event.
+     * @param {any} e The argument.
+     */
     public close(e: any): void {
         e.preventDefault();
 

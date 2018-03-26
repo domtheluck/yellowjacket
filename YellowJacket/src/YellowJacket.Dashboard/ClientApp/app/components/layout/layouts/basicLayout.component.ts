@@ -21,20 +21,30 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-import { Component } from '@angular/core';
+import 'font-awesome/css/font-awesome.css';
 
-declare let $: any;
+import { Component } from '@angular/core';
+import { detectBody } from '../../helpers/app.helpers';
 
 @Component({
-    selector: 'blank',
-    templateUrl: 'blankLayout.template.html'
+    selector: 'basic',
+    templateUrl: 'basicLayout.template.html',
+    host: {
+        '(window:resize)': 'onResize()'
+    }
 })
-export class BlankLayoutComponent {
-    public ngAfterViewInit() {
-        $('body').addClass('gray-bg');
+export class BasicLayoutComponent {
+    /**
+     * {Agular} Lifecycle hook that is called after data-bound properties of a directive are initialized.
+     */
+    public ngOnInit(): any {
+        detectBody();
     }
 
-    public ngOnDestroy() {
-        $('body').removeClass('gray-bg');
+    /**
+     * Called on component resize.
+     */
+    public onResize() {
+        detectBody();
     }
 }

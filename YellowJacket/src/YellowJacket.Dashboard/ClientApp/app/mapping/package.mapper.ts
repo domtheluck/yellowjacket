@@ -59,7 +59,7 @@ export class PackageMapper {
             name: item.name,
             testAssemblyName: item.testAssemblyName,
             features: this.featureMapper.mapFeatures(item.features)
-    }) as IPackage;
+        }) as IPackage;
 
         return model;
     }

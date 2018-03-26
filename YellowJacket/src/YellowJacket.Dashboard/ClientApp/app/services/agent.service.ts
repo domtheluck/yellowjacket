@@ -35,7 +35,7 @@ import IAgent from '../models/agent.model'
 @Injectable()
 export class AgentService implements IAgentService {
     private readonly http: Http;
-    private readonly baseUrl: string;    
+    private readonly baseUrl: string;
 
     /**
      * Initialize a new instance of AgentService.

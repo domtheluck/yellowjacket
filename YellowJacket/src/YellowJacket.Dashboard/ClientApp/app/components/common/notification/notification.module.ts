@@ -21,25 +21,15 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
 
-import * as $ from 'jquery';
-import 'metismenu';
+import {NotificationComponent} from './notification.component';
 
-@Component({
-    selector: 'navigation',
-    templateUrl: 'navigation.template.html'
+@NgModule({
+    declarations: [NotificationComponent],
+    imports: [BrowserModule],
+    exports: [NotificationComponent]
 })
 
-export class NavigationComponent {
-    constructor(private readonly router: Router) { }
-
-    public ngAfterViewInit() {
-        $('#side-menu').metisMenu();
-    }
-
-    public activeRoute(routename: string): boolean {
-        return this.router.url.indexOf(routename) > -1;
-    }
-}
+export class NotificationModule { }

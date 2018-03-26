@@ -21,19 +21,11 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-/*
- * Inspinia js helpers:
- *
- * correctHeight() - fix the height of main wrapper
- * detectBody() - detect windows size
- * smoothlyMenu() - add smooth fade in/out on navigation show/ide
- *
- */
-
-declare var jQuery: any;
-
 import * as $ from 'jquery';
 
+/**
+ * Fix the height of main wrapper.
+ */
 export function correctHeight() {
     const pageWrapper = $('#page-wrapper');
     const navbarHeight = $('nav.navbar-default').height();
@@ -47,7 +39,7 @@ export function correctHeight() {
 
         if (navbarHeight <= wrapperHeight) {
             if (navbarHeight < windowHeight) {
-                pageWrapper.css('min-height', jQuery(window).height() + 'px');
+                pageWrapper.css('min-height', $(window).height() + 'px');
             } else {
                 pageWrapper.css('min-height', navbarHeight + 'px');
             }
@@ -63,8 +55,12 @@ export function correctHeight() {
     }
 }
 
+/**
+ * Detect windows size.
+ */
 export function detectBody() {
     const documentWidth = $(document).width();
+
     if (documentWidth) {
         if (documentWidth < 769) {
             $('body').addClass('body-small');
@@ -74,23 +70,26 @@ export function detectBody() {
     }
 }
 
+/**
+ * Add smooth fade in/out on navigation show/hide.
+ */
 export function smoothlyMenu() {
-    if (!jQuery('body').hasClass('mini-navbar') || jQuery('body').hasClass('body-small')) {
+    if (!$('body').hasClass('mini-navbar') || $('body').hasClass('body-small')) {
         // Hide menu in order to smoothly turn on when maximize menu
-        jQuery('#side-menu').hide();
+        $('#side-menu').hide();
         // For smoothly turn on menu
         setTimeout(
             () => {
-                jQuery('#side-menu').fadeIn(400);
+                $('#side-menu').fadeIn(400);
             }, 200);
-    } else if (jQuery('body').hasClass('fixed-sidebar')) {
-        jQuery('#side-menu').hide();
+    } else if ($('body').hasClass('fixed-sidebar')) {
+        $('#side-menu').hide();
         setTimeout(
             () => {
-                jQuery('#side-menu').fadeIn(400);
+                $('#side-menu').fadeIn(400);
             }, 100);
     } else {
         // Remove all inline style from jquery fadeIn function to reset menu state
-        jQuery('#side-menu').removeAttr('style');
+        $('#side-menu').removeAttr('style');
     }
 }

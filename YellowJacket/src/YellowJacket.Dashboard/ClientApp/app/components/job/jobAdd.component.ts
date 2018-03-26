@@ -103,7 +103,8 @@ export class JobAddComponent implements OnInit {
             },
             selectedPackage: {
                 fieldRequired: this.resourceService.getMessageWithArguments(MessageId.FieldIsRequired, 'Package')
-        }}
+            }
+        }
     }
 
     /**

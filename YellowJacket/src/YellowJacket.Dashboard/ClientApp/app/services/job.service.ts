@@ -104,7 +104,7 @@ export class JobService implements IJobService {
             id: item.id,
             name: item.name,
             packageName: item.packageName,
-            features: item.features 
+            features: item.features
         }) as IJob;
 
         return model;
